@@ -20,10 +20,7 @@ from sklearn.externals import joblib
 from nltk.stem.snowball import SnowballStemmer
 
 ######## PARAMETER #########
-home = expanduser("~")
-racine = os.path.join(home, 'Documents', 'project',
-                      'agu_data', 'repo', 'agu_data')
-year = 'agu2014'
+racine = os.getcwd()
 
 ###### Recom_utils #########
 
@@ -87,7 +84,7 @@ class MyCorpus(Tokenizer):
 
 
 def load_source():
-    data = get_all_data('agu2015')
+    data = get_all_data('2015')
     sources = [df for df in data if (''.join(df.title) != "") and (
         df.abstract != '') and (len(df.abstract.split(' ')) > 100)]
     sections = [df.section for df in sources]
@@ -99,9 +96,9 @@ def load_source():
 class RecomendationSystem(object):
 
     def __init__(self):
-        self.model_saved = os.path.join('Notebook', 'Models')
+        self.model_saved = os.path.join(racine, 'data')
         self.abstractf = os.path.join(
-            self.model_saved, 'gensim', 'abstract', 'abstract')
+            self.model_saved, 'model_abstract', 'abstract')
 
         # Load the titles and abstract + links
         self.sources = pd.read_csv(os.path.join(self.abstractf + '_sources.txt'),
@@ -312,11 +309,11 @@ def get_all_data(year):
     ''' Go looking for all the files and load it as a list of
     Paper object '''
 
-    name = os.listdir(os.path.join(racine, 'Data', year))
+    name = os.listdir(os.path.join(racine, 'data', 'data_agu' + str(year)))
     name = [f for f in name if f.split('_')[-1] == 'V3.json']
     papers = []
     for json in tqdm(name):
-        json_file = os.path.join(racine, 'Data', year, json)
+        json_file = os.path.join(racine, 'data', 'data_agu' + str(year), json)
         papers += [Paper(key, val) for key, val
                    in load_json(json_file)['papers'].iteritems()]
 
@@ -409,12 +406,12 @@ def get_all_contrib(year):
     ''' Go looking for all the files and load it as a list of
     Paper object '''
 
-    names = os.listdir(os.path.join(racine, 'Data', year))
+    names = os.listdir(os.path.join(racine, 'data', 'data_agu' + str(year)))
     names = [f for f in names if f.split(
         '_')[-1] == 'V1.json' and f.split('_')[0] == 'Name']
     contributors = []
     for json in tqdm(names):
-        json_file = os.path.join(racine, 'Data', year, json)
+        json_file = os.path.join(racine, 'data', 'data_agu' + str(year), json)
         try:
             contributors += [Contributor(key, val) for key, val
                              in load_json(json_file)['names'].iteritems()]
