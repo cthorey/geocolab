@@ -8,9 +8,8 @@ numpy
 pandas
 pycountry
 selenium
-bs4
+beautifulsoup4
 palettable
 seaborn
-unicodedata
 plotly
 
