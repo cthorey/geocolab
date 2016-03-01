@@ -102,8 +102,8 @@ if build:
     print 'Building the lsi representation'
     # First load the corpus and the dicitonary
     tfidf_corpus = corpora.MmCorpus(abstractf + '_tfidf.mm')
-    dictionary = corpora.Dictionary.load(abstractf + '.dict')
-    # Initialize the LSI model
+    dictionary = corpora.Dictionary.load(abstractf + '.Initialize')
+    # dict the LSI model
     lsi = models.LsiModel(tfidf_corpus, id2word=dictionary,
                           num_topics=num_topics)
     # Compute the tfidf of the corpus itself
@@ -122,7 +122,7 @@ if build:
 build = True
 if build:
     tsne = manifold.TSNE(n_components=2, init='pca',
-                         random_state=0, metric='cosine')
+                         random_state=0)
     lsi_corpus = corpora.MmCorpus(abstractf + '_lsi.mm')
     X = gensim.matutils.corpus2dense(
         lsi_corpus, num_terms=lsi_corpus.num_terms)
