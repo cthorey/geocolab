@@ -6,7 +6,6 @@ import re
 import time
 from tqdm import *
 import numpy as np
-from os.path import expanduser
 import pandas as pd
 import unicodedata
 import seaborn as sns
@@ -19,9 +18,6 @@ from gensim import corpora, models, similarities
 from sklearn.externals import joblib
 from stop_words import get_stop_words
 import Stemmer  # Load an inplementation of the snow-ball stemmer
-
-######## PARAMETER #########
-racine = '..'
 
 ###### Recom_utils #########
 
@@ -86,8 +82,8 @@ class MyCorpus(Tokenizer):
                 break
 
 
-def load_source():
-    data = get_all_data('2015')
+def load_source(path_data):
+    data = get_all_data(path_data)
     sources = [df for df in data if (''.join(df.title) != "") and (
         df.abstract != '') and (len(df.abstract.split(' ')) > 100)]
     sections = [df.section for df in sources]
@@ -98,10 +94,9 @@ def load_source():
 
 class RecomendationSystem(object):
 
-    def __init__(self):
-        self.model_saved = os.path.join(racine, 'data')
-        self.abstractf = os.path.join(
-            self.model_saved, 'model_abstract', 'abstract')
+    def __init__(self, path_model):
+        self.model_saved = path_model
+        self.abstractf = os.path.join(self.model_saved, 'abstract')
 
         # Load the titles and abstract + links
         self.sources = pd.read_csv(os.path.join(self.abstractf + '_sources.txt'),
@@ -308,15 +303,15 @@ class Paper(object):
             setattr(self, key, val)
 
 
-def get_all_data(year):
+def get_all_data(path_data):
     ''' Go looking for all the files and load it as a list of
     Paper object '''
 
-    name = os.listdir(os.path.join(racine, 'data', 'data_agu' + str(year)))
+    name = os.listdir(path_data)
     name = [f for f in name if f.split('_')[-1] == 'V3.json']
     papers = []
     for json in tqdm(name):
-        json_file = os.path.join(racine, 'data', 'data_agu' + str(year), json)
+        json_file = os.path.join(path_data, json)
         papers += [Paper(key, val) for key, val
                    in load_json(json_file)['papers'].iteritems()]
 
@@ -405,16 +400,16 @@ class Contributor(object):
         self.tag_sections = [self._tag_to_tagsections(tag) for tag in tags]
 
 
-def get_all_contrib(year):
+def get_all_contrib(path_data):
     ''' Go looking for all the files and load it as a list of
     Paper object '''
 
-    names = os.listdir(os.path.join(racine, 'data', 'data_agu' + str(year)))
+    names = os.listdir(path_data)
     names = [f for f in names if f.split(
         '_')[-1] == 'V1.json' and f.split('_')[0] == 'Name']
     contributors = []
     for json in tqdm(names):
-        json_file = os.path.join(racine, 'data', 'data_agu' + str(year), json)
+        json_file = os.path.join(path_data, json)
         try:
             contributors += [Contributor(key, val) for key, val
                              in load_json(json_file)['names'].iteritems()]
