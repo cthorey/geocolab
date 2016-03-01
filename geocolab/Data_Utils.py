@@ -14,13 +14,14 @@ import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
 import pycountry
+import gensim
 from gensim import corpora, models, similarities
-import nltk
 from sklearn.externals import joblib
-from nltk.stem.snowball import SnowballStemmer
+from stop_words import get_stop_words
+import Stemmer  # Load an inplementation of the snow-ball stemmer
 
 ######## PARAMETER #########
-racine = os.getcwd()
+racine = '..'
 
 ###### Recom_utils #########
 
@@ -29,8 +30,10 @@ class Tokenizer(object):
 
     def __init__(self, add_bigram):
         self.add_bigram = add_bigram
-        self.stopwords = nltk.corpus.stopwords.words('english')
-        self.stemmer = nltk.stem.snowball.SnowballStemmer("english")
+        self.stopwords = get_stop_words('english')
+        self.stopwords += [u's', u't', u'can',
+                           u'will', u'just', u'don', u'now']
+        self.stemmer = Stemmer.Stemmer('english')
 
     def bigram(self, tokens):
         if len(tokens) > 1:
@@ -38,8 +41,7 @@ class Tokenizer(object):
                 yield tokens[i] + '_' + tokens[i + 1]
 
     def tokenize_and_stem(self, text):
-        tokens = [word.lower() for sent in nltk.sent_tokenize(text)
-                  for word in nltk.word_tokenize(sent)]
+        tokens = list(gensim.utils.tokenize(text))
         filtered_tokens = []
         bad_tokens = []
         # filter out any tokens not containing letters (e.g., numeric tokens, raw
@@ -51,7 +53,7 @@ class Tokenizer(object):
                 bad_tokens.append(token)
         filtered_tokens = [
             token for token in filtered_tokens if token not in self.stopwords]
-        stems = map(self.stemmer.stem, filtered_tokens)
+        stems = map(self.stemmer.stemWord, filtered_tokens)
         if self.add_bigram:
             stems += [f for f in self.bigram(stems)]
         return map(str, stems)
@@ -62,6 +64,7 @@ class MyCorpus(Tokenizer):
     def __init__(self, name, add_bigram):
         super(MyCorpus, self).__init__(add_bigram)
         self.name = name
+        self.load_dict()
 
     def load_dict(self):
         if not os.path.isfile(self.name + '.dict'):
