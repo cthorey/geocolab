@@ -33,7 +33,6 @@ if not os.path.isdir(os.path.join(model_saved, name)):
     os.mkdir(os.path.join(model_saved, name))
 abstractf = os.path.join(model_saved, 'abstract')
 
-sys.exit()
 ##################################################
 # Get the data
 data = get_all_data('agu2015')
