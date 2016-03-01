@@ -31,12 +31,11 @@ else:
 
 if not os.path.isdir(os.path.join(model_saved, name)):
     os.mkdir(os.path.join(model_saved, name))
-abstractf = os.path.join(model_saved, 'abstract')
+abstractf = os.path.join(model_saved, name, 'abstract')
 
-sys.exit()
 ##################################################
 # Get the data
-data = get_all_data('agu2015')
+data = get_all_data('2015')
 sources = [df for df in data if (''.join(df.title) != "") and (
     df.abstract != '') and (len(df.abstract.split(' ')) > 100)]
 abstracts = get_clean_abstracts(sources)
@@ -55,17 +54,18 @@ if build:
     write_clean_corpus(abstracts, abstractf + '_data.txt')
 
     # Initialize the model
-    bow_corpus = MyCorpus(abstractf, add_bigram=add_bigram)
+    tokenizer = Tokenizer(add_bigram)
     # load the dictionary
     # Next create the dictionary by iterating of the abstract, one per line in
     # the txt file
-    dictionary = corpora.Dictionary(bow_corpus.tokenize_and_stem(
+    dictionary = corpora.Dictionary(tokenizer.tokenize_and_stem(
         line) for line in open(abstractf + '_data.txt'))
     dictionary.save(abstractf + '_raw.dict')
     dictionary.filter_extremes(no_below=5, no_above=0.80, keep_n=200000)
     dictionary.id2token = {k: v for v, k in dictionary.token2id.iteritems()}
     dictionary.save(abstractf + '.dict')
     # Builde corpus
+    bow_corpus = MyCorpus(abstractf, add_bigram=add_bigram)
     bow_corpus.load_dict()
     corpora.MmCorpus.serialize(abstractf + '_bow.mm', bow_corpus)
     # index for similarities
@@ -119,7 +119,7 @@ if build:
 
 ##################################################
 # Build the t-sne represenation
-build = False
+build = True
 if build:
     tsne = manifold.TSNE(n_components=2, init='pca',
                          random_state=0, metric='cosine')
