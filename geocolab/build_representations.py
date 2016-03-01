@@ -31,11 +31,11 @@ else:
 
 if not os.path.isdir(os.path.join(model_saved, name)):
     os.mkdir(os.path.join(model_saved, name))
-abstractf = os.path.join(model_saved, 'abstract')
+abstractf = os.path.join(model_saved, name, 'abstract')
 
 ##################################################
 # Get the data
-data = get_all_data('agu2015')
+data = get_all_data('2015')
 sources = [df for df in data if (''.join(df.title) != "") and (
     df.abstract != '') and (len(df.abstract.split(' ')) > 100)]
 abstracts = get_clean_abstracts(sources)
@@ -54,17 +54,18 @@ if build:
     write_clean_corpus(abstracts, abstractf + '_data.txt')
 
     # Initialize the model
-    bow_corpus = MyCorpus(abstractf, add_bigram=add_bigram)
+    tokenizer = Tokenizer(add_bigram)
     # load the dictionary
     # Next create the dictionary by iterating of the abstract, one per line in
     # the txt file
-    dictionary = corpora.Dictionary(bow_corpus.tokenize_and_stem(
+    dictionary = corpora.Dictionary(tokenizer.tokenize_and_stem(
         line) for line in open(abstractf + '_data.txt'))
     dictionary.save(abstractf + '_raw.dict')
     dictionary.filter_extremes(no_below=5, no_above=0.80, keep_n=200000)
     dictionary.id2token = {k: v for v, k in dictionary.token2id.iteritems()}
     dictionary.save(abstractf + '.dict')
     # Builde corpus
+    bow_corpus = MyCorpus(abstractf, add_bigram=add_bigram)
     bow_corpus.load_dict()
     corpora.MmCorpus.serialize(abstractf + '_bow.mm', bow_corpus)
     # index for similarities
@@ -101,8 +102,8 @@ if build:
     print 'Building the lsi representation'
     # First load the corpus and the dicitonary
     tfidf_corpus = corpora.MmCorpus(abstractf + '_tfidf.mm')
-    dictionary = corpora.Dictionary.load(abstractf + '.dict')
-    # Initialize the LSI model
+    dictionary = corpora.Dictionary.load(abstractf + '.Initialize')
+    # dict the LSI model
     lsi = models.LsiModel(tfidf_corpus, id2word=dictionary,
                           num_topics=num_topics)
     # Compute the tfidf of the corpus itself
@@ -118,10 +119,10 @@ if build:
 
 ##################################################
 # Build the t-sne represenation
-build = False
+build = True
 if build:
     tsne = manifold.TSNE(n_components=2, init='pca',
-                         random_state=0, metric='cosine')
+                         random_state=0)
     lsi_corpus = corpora.MmCorpus(abstractf + '_lsi.mm')
     X = gensim.matutils.corpus2dense(
         lsi_corpus, num_terms=lsi_corpus.num_terms)
