@@ -7,19 +7,16 @@ import pickle
 from sklearn import manifold
 from sklearn.externals import joblib
 from tqdm import *
-from os.path import expanduser
 import numpy as np
-home = expanduser('~')
-os.chdir(os.path.join(home, 'Documents', 'project',
-                      'agu_data', 'repo', 'agu_data'))
 from Data_Utils import *
-import nltk
-from nltk.stem.snowball import SnowballStemmer
 import gensim
 from gensim import corpora, models, similarities
 from pprint import pprint
-model_saved = os.path.join(
-    home, 'Documents', 'project', 'agu_data', 'repo', 'Notebook', 'Models')
+model_saved = os.path.join('..', 'data')
+
+if not os.path.isdir(model_saved):
+    os.mkdir(model_saved)
+
 
 ################################################
 # Get the args
@@ -32,11 +29,11 @@ elif add_bigram == 'False':
 else:
     raise ValueError('Second arg must be either True of False (bigrams)')
 
-if not os.path.isdir(os.path.join(model_saved, 'gensim', name)):
-    os.mkdir(os.path.join(model_saved, 'gensim', name))
-abstractf = os.path.join(model_saved, 'gensim', name, name)
-print abstractf
+if not os.path.isdir(os.path.join(model_saved, name)):
+    os.mkdir(os.path.join(model_saved, name))
+abstractf = os.path.join(model_saved, 'abstract')
 
+sys.exit()
 ##################################################
 # Get the data
 data = get_all_data('agu2015')
@@ -122,7 +119,7 @@ if build:
 
 ##################################################
 # Build the t-sne represenation
-build = True
+build = False
 if build:
     tsne = manifold.TSNE(n_components=2, init='pca',
                          random_state=0, metric='cosine')
