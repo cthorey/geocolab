@@ -147,12 +147,14 @@ class RecomendationSystem(object):
         return results
 
     def get_recomendation(self, query, n):
-
+        # produce a query of size 300
+        query = ' '.join(query.split(' ') * (300 // len(query.split(' '))))
         df = self.recomendation(query).head(n)
-        for i, row in df.iterrows():
-            print 'The %d recomendation, cosine sililarity of %1.3f is ' % (i + 1, float(row.CosineSimilarity))
-            print ' %s' % (row.title)
-            print '%s \n' % (row.link)
+        return df
+        # for i, row in df.iterrows():
+        #     print 'The %d recomendation, cosine sililarity of %1.3f is ' % (i + 1, float(row.CosineSimilarity))
+        #     print ' %s' % (row.title)
+        #     print '%s \n' % (row.link)
 
     def collaborators(self, query, n):
         ''' Return a list of the potential contributors based
