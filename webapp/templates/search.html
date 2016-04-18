@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="search">
+  <h2>Welcome to the geocollab app<h2>
+      <form>
+        Give me your query:<br>
+        <input type="text" name="query" value="" id="querybox"></input>
+      </form>
+</div>
+
+<div class="container">
+  <p> Output of your search </p>
+  <ol class="recomlists">
+    {% for i,row in rquery.iterrows(): %}
+    <li>
+      <ul class="specificrecom">
+        <li>{{ row['title']}} </li> 
+        <li>Cosine similarity: {{ row['CosineSimilarity']}} </li>
+        <li> <a href={{row['link']}}> abstract </a></li>
+      </ul>
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+{% endblock %}
+
