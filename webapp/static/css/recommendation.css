@@ -1,0 +1,24 @@
+/*
+ * Recommendation 
+ */
+
+ul.specificrecom{
+    border: 25px solid navy;
+}
+
+ol.recomlists li {
+    padding: 5px;
+}
+
+ul.specificrecom li {
+    background: #ff9933;
+    opacity:1.0;
+}
+#querybox {
+    margin:auto;
+    width:300px;
+    background-color:#ff9933;
+    opacity:.8;
+    height:45px;
+}
+
