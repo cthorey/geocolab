@@ -15,7 +15,14 @@ def home():
 
 @app.route("/search", methods=['GET'])
 def search():
+
+    print request.args.keys()
     query = request.args.get('query', '')  # get the search request
-    # perform the query and get sorted documents
+    search_type = request.args.get('search_type', '')  # get the search request
     rquery = RECOM.get_recomendation(query, 10)
-    return render_template('search.html', rquery=rquery)
+    return render_template('search.html', rquery=rquery, search_type=search_type)
+
+
+@app.route("/about", methods=['GET'])
+def about():
+    return render_template('about.html')

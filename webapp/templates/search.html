@@ -1,7 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
+<form>
+    <input type="radio" name="search_type" value="lcollab" checked>List of your collaborators</input><br>
+    <input type="radio" name="search_type" value="lcontrib">List of interesting contributions</input><br>
+    <input type="radio" name="search_type" value="mcollab">Map of potential collaborators</input><br>
+</form>
 <div class="search">
-  <h2>Welcome to the geocollab app<h2>
       <form>
         Give me your query:<br>
         <input type="text" name="query" value="" id="querybox"></input>
@@ -9,6 +13,7 @@
 </div>
 
 <div class="container">
+  <p> The search type is {{ search_type }}</p>
   <p> Output of your search </p>
   <ol class="recomlists">
     {% for i,row in rquery.iterrows(): %}
