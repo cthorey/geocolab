@@ -4,6 +4,8 @@
     <title>Geocollab</title>
     <link rel="stylesheet" href="{{url_for('static',filename='css/main.css') }}"></link>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/recommendation.css') }}"></link>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
   </head>
 
   <body>
@@ -14,6 +16,7 @@
           <ul class="menu">
             <li><a href="{{ url_for('home') }}">Home</a></li>
             <li><a href="{{ url_for('search') }}">Search</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
           </ul>
         </nav>
       </div>
@@ -23,7 +26,8 @@
       {% block content %}
       {% endblock %}
     </div>
-    
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>    
   </body>
 </html>
 
