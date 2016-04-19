@@ -1,31 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
-<form>
-    <input type="radio" name="search_type" value="lcollab" checked>List of your collaborators</input><br>
-    <input type="radio" name="search_type" value="lcontrib">List of interesting contributions</input><br>
-    <input type="radio" name="search_type" value="mcollab">Map of potential collaborators</input><br>
-</form>
-<div class="search">
+<div class="container">
       <form>
         Give me your query:<br>
-        <input type="text" name="query" value="" id="querybox"></input>
+        <input class="form-control form-control-lg"
+               type="text"
+               placeholder="Dynamics of lunar magmatic intrusions"
+               name="query"></input>
       </form>
 </div>
 
-<div class="container">
-  <p> The search type is {{ search_type }}</p>
-  <p> Output of your search </p>
-  <ol class="recomlists">
-    {% for i,row in rquery.iterrows(): %}
-    <li>
-      <ul class="specificrecom">
-        <li>{{ row['title']}} </li> 
-        <li>Cosine similarity: {{ row['CosineSimilarity']}} </li>
-        <li> <a href={{row['link']}}> abstract </a></li>
-      </ul>
-    </li>
-    {% endfor %}
-  </ol>
-</div>
+<div class="container"> 
+  <p> The search type is {{ search_type }}</p> 
+  <p> Output of your search </p> 
+  <ol class="recomlists"> 
+    {% for i,row in rquery.iterrows(): %} 
+    <li> 
+      <ul class="specificrecom"> 
+        <li>{{ row['title']}} </li>  
+        <li>Cosine similarity: {{ row['CosineSimilarity']}} </li> 
+        <li> <a href={{row['link']}}> abstract </a></li> 
+      </ul> 
+    </li> 
+    {% endfor %} 
+  </ol> 
+</div> 
 {% endblock %}
 
