@@ -4,7 +4,7 @@ import sys
 sys.path.append('../')
 from geocolab.Data_Utils import *
 
-path_model = '/Users/thorey/Documents/project/geocolab/data/model_abstract'
+path_model = '/Users/cthorey/Documents/project/agu_data/geocolab/data/model_abstract'
 RECOM = RecomendationSystem(path_model)
 
 
