@@ -1,8 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
-  <div class="welcome">
-    <h2>Welcome to the geocollab app<h2>
-    <h3>This is the home page for the Flask app<h3>
+
+<!-- jumbotron -->
+<div class="jumbotron">
+  <div class="container">
+    <h1> Welcome to the geocollab app</h1>
+    <p class="lead">Bacon ipsum dolor sit amet tenderloin chuck jowl, drumstick pork loin kevin andouille tri-tip. Turkey biltong sirloin, tongue rump pork belly t-bone tail sausage venison corned beef. Jerky pig shoulder beef, tri-tip turducken kevin ribeye prosciutto spare ribs.</p> 
+    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('about') }}"> Learn more</a>
   </div>
+</div>
 {% endblock %}
 
