@@ -4,8 +4,8 @@ import sys
 sys.path.append('../')
 from geocolab.Data_Utils import *
 
-path_model = '/Users/cthorey/Documents/project/agu_data/geocolab/data/model_abstract'
-RECOM = RecomendationSystem(path_model)
+path_model = '/Users/thorey/Documents/project/agu_data/geocolab/data/model_abstract'
+#RECOM = RecomendationSystem(path_model)
 
 
 @app.route('/')
@@ -16,11 +16,14 @@ def home():
 @app.route("/search", methods=['GET'])
 def search():
 
-    print request.args.keys()
+    button = request.args.get('sel1')
     query = request.args.get('query', '')  # get the search request
-    search_type = request.args.get('search_type', '')  # get the search request
-    rquery = RECOM.get_recomendation(query, 10)
-    return render_template('search.html', rquery=rquery, search_type=search_type)
+    search_type = request.args.get(
+        'search_type', '')  # get the search request
+    #rquery = RECOM.get_recomendation(query, 10)
+    return render_template('search.html', rquery=query, button=button)
+    # elif request.args.get('button') == 'schedule':
+    #     return render_template('home.html')
 
 
 @app.route("/about", methods=['GET'])
