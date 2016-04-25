@@ -115,10 +115,19 @@ class RecomendationSystem(object):
         self.authors = joblib.load(self.abstractf + '_authors.dict')
         self.name_to_iso3 = {
             elt.name.upper(): elt.alpha3 for elt in pycountry.countries}
+        self.iso3_to_name = {
+            elt.alpha3: elt.name.upper() for elt in pycountry.countries}
+        self.n_base_recom = 25
 
     def _country_to_iso3(self, name):
         try:
             return self.name_to_iso3[name.upper()]
+        except:
+            return ''
+
+    def iso3_to_country(self, iso3):
+        try:
+            return self.iso3_to_name[iso3.upper()]
         except:
             return ''
 
@@ -146,22 +155,18 @@ class RecomendationSystem(object):
                                columns=['CosineSimilarity', 'title', 'link'])
         return results
 
-    def get_recomendation(self, query, n):
+    def get_recomendation(self, query):
         # produce a query of size 300
         query = ' '.join(query.split(' ') * (300 // len(query.split(' '))))
-        df = self.recomendation(query).head(n)
+        df = self.recomendation(query).head(self.n_base_recom)
         return df
-        # for i, row in df.iterrows():
-        #     print 'The %d recomendation, cosine sililarity of %1.3f is ' % (i + 1, float(row.CosineSimilarity))
-        #     print ' %s' % (row.title)
-        #     print '%s \n' % (row.link)
 
-    def collaborators(self, query, n):
+    def collaborators(self, query):
         ''' Return a list of the potential contributors based
         on the n first abstract proposed by the recommendation 
         system '''
 
-        df = self.recomendation(query).head(n)
+        df = self.recomendation(query).head(self.n_base_recom)
         collab = {}
         for i, row in df.iterrows():
             try:
@@ -171,47 +176,40 @@ class RecomendationSystem(object):
 
         return collab
 
-    def get_collaborators(self, query, n=5):
+    def get_collaborators(self, query):
 
-        collab = self.collaborators(query, n)
+        collab = self.collaborators(query)
+        collab = pd.DataFrame(collab.values(), index=collab.keys())
         return collab
-        # for name, description in collab.iteritems():
-        #     try:
-        #         print '%s from the %s, %s' % (name.upper(), description['inst'], description['country'])
-        #         print 'Based on his/her abstract untitled'
-        #         print ' %s' % (description['title'])
-        #         print '%s \n' % ($description['link'])
-        #     except:
-        #         pass
 
     def get_map_specification(self, query):
-        collabs = self.collaborators(query, 25)
+        collabs = self.collaborators(query)
         df = pd.DataFrame(collabs.values())
         df['name'] = collabs.keys()
         df['iso3'] = map(lambda x: self._country_to_iso3(x), df.country)
 
         gp = df.groupby('iso3')
-        max_col_for_one_country = gp.size().max()
-        colors = sns.color_palette('Reds', max_col_for_one_country)
-        colorscale = dict(zip(range(max_col_for_one_country), colors.as_hex()))
-
+        values = list(set(gp.size().tolist()))
+        values.sort()
+        colors = sns.color_palette('Reds', len(values))
+        colorscale = dict(
+            zip(values, colors.as_hex()))
+        print colorscale
         data = {str(f): {"Nbcollab": 0,
                          "fillKey": str(f)}
                 for f in self.name_to_iso3.values()}
         fills = {}
 
         for country, n in gp.size().iteritems():
-            try:
+            if country not in ['']:
                 data[country].update({"Nbcollab": n})
                 fills[country] = str(colorscale[n]).upper()
-            except:
-                pass
 
         fills.update({'defaultFill': 'grey'})
         return data, fills
 
-    def plot_map_collaborator(self, query, n):
-        collabs = self.collaborators(query, n)
+    def plot_map_collaborator(self, query):
+        collabs = self.collaborators(query)
         df = pd.DataFrame(collabs.values())
         df['name'] = collabs.keys()
         df['iso3'] = map(lambda x: self._country_to_iso3(x), df.country)
