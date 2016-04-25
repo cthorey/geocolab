@@ -1,11 +1,7 @@
-from webapp import app
+from webapp import app, RECOM
 from flask import Flask, render_template, request
+import json
 import sys
-sys.path.append('../')
-from geocolab.Data_Utils import *
-
-path_model = '/Users/thorey/Documents/project/agu_data/geocolab/data/model_abstract'
-#RECOM = RecomendationSystem(path_model)
 
 
 @app.route('/')
@@ -16,14 +12,20 @@ def home():
 @app.route("/search", methods=['GET'])
 def search():
 
-    button = request.args.get('sel1')
-    query = request.args.get('query', '')  # get the search request
-    search_type = request.args.get(
-        'search_type', '')  # get the search request
-    #rquery = RECOM.get_recomendation(query, 10)
-    return render_template('search.html', rquery=query, button=button)
-    # elif request.args.get('button') == 'schedule':
-    #     return render_template('home.html')
+    # get the search request
+    query = request.args.get('query', 'Dynamics of lunar magmatic intrusions')
+    rquery = RECOM.get_recomendation(query, 10)
+    return render_template('search.html', rquery=rquery)
+
+
+@app.route("/collab", methods=['GET'])
+def collab():
+
+    # get the search request
+    query = request.args.get('query', 'Dynamics of lunar magmatic intrusions')
+    collabs = RECOM.get_collaborators(query, 10)
+    data, colors = RECOM.get_map_specification(query)
+    return render_template('collab.html', data=json.dumps(data), colors=json.dumps(colors), collabs=collabs)
 
 
 @app.route("/about", methods=['GET'])
