@@ -174,14 +174,41 @@ class RecomendationSystem(object):
     def get_collaborators(self, query, n=5):
 
         collab = self.collaborators(query, n)
-        for name, description in collab.iteritems():
+        return collab
+        # for name, description in collab.iteritems():
+        #     try:
+        #         print '%s from the %s, %s' % (name.upper(), description['inst'], description['country'])
+        #         print 'Based on his/her abstract untitled'
+        #         print ' %s' % (description['title'])
+        #         print '%s \n' % ($description['link'])
+        #     except:
+        #         pass
+
+    def get_map_specification(self, query):
+        collabs = self.collaborators(query, 25)
+        df = pd.DataFrame(collabs.values())
+        df['name'] = collabs.keys()
+        df['iso3'] = map(lambda x: self._country_to_iso3(x), df.country)
+
+        gp = df.groupby('iso3')
+        max_col_for_one_country = gp.size().max()
+        colors = sns.color_palette('Reds', max_col_for_one_country)
+        colorscale = dict(zip(range(max_col_for_one_country), colors.as_hex()))
+
+        data = {str(f): {"Nbcollab": 0,
+                         "fillKey": str(f)}
+                for f in self.name_to_iso3.values()}
+        fills = {}
+
+        for country, n in gp.size().iteritems():
             try:
-                print '%s from the %s, %s' % (name.upper(), description['inst'], description['country'])
-                print 'Based on his/her abstract untitled'
-                print ' %s' % (description['title'])
-                print '%s \n' % (description['link'])
+                data[country].update({"Nbcollab": n})
+                fills[country] = str(colorscale[n]).upper()
             except:
                 pass
+
+        fills.update({'defaultFill': 'grey'})
+        return data, fills
 
     def plot_map_collaborator(self, query, n):
         collabs = self.collaborators(query, n)

@@ -13,10 +13,16 @@
     </head>
 
     <body>
+        <!-- js files  -->
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/topojson.v1.min.js"></script>
+        <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+        <script src="{{url_for('static',filename='js/collab_map.js')}}"></script>
+        <script src="{{url_for('static',filename='js/home_map.js')}}"></script>
+        
         <!-- navbar -->
         <div class="navbar-wrapper">
             <div class="container">
-                
                 
                 <nav class="navbar navbar-inverse navbar-static-top">
                     <div class="container">
@@ -31,8 +37,9 @@
                         </div>
                         <div id="navbar" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav">
-                                <li class="active"><a href="{{ url_for('home') }}">Home</a></li>
+                                <li><a href="{{ url_for('home') }}">Home</a></li>
                                 <li><a href="{{ url_for('search') }}">Search</a></li>
+                                <li><a href="{{ url_for('collab') }}">Collaborators</a></li>
                                 <li><a href="{{ url_for('about') }}">About</a></li>
                             </ul>
                         </div>

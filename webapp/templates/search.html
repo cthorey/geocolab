@@ -1,15 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="form-group">
-    <label for="sel1">Select list:</label>
-    <select class="form-control" id="sel1">
-        <option>collab</option>
-        <option>Schedule</option>
-        <option>Map</option>
-    </select>
-</div>
-
 <div class="container">
     <form>
         Give me your query:<br>
@@ -21,15 +12,20 @@
 </div>
 
 <div class="container">
-    <p> The search type is</p>
-    <p>{{ rquery }} </p>
-    <p> The button is {{button}}</p>
+    <p> The search type is {{ search_type }}</p>
+    <p> Output of your search </p>
+    <ol class="recomlists">
+        {% for i,row in rquery.iterrows(): %}
+        <li>
+            <ul class="specificrecom">
+                <li>{{ row['title']}} </li>
+                <li>Cosine similarity: {{ row['CosineSimilarity']}} </li>
+                <li> <a href={{row['link']}}> abstract </a></li>
+            </ul>
+        </li>
+        {% endfor %}
+    </ol>
 </div>
-
-
-<div class="container">
-    {% block search_content %}
-    {% endblock %}
-</div>
+    
 {% endblock %}
 

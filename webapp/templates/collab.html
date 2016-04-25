@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container">
+    <form>
+        Give me your query:<br>
+        <input class="form-control form-control-lg"
+               type="text"
+               placeholder="Dynamics of lunar magmatic intrusions"
+               name="query"></input>
+    </form>
+</div>
+
+<div class="container">
+    <div id="map-container-collab" style=" width: 600; height: 600px;">
+        <script type=text/javascript>
+            displayMapCollab({{data|safe}},{{colors|safe}})
+        </script>
+    </div>
+</div>
+
+
+<div class="container">
+    <p> The search type is {{ search_type }}</p>
+    <p> Output of your search </p>
+    <ol class="recomlists">
+        {% for name, description in collabs.iteritems(): %}
+        <li> {{ name.upper()}} from the {{ description['inst'] }},  {{ description['country'] }}<br>
+            Based on his/her abstract untitled <br>
+            {{description['title']}} (<a href="{{description['link']}}"> abstract </a>)
+        </li>
+        {% endfor %}
+    </ol>
+</div>
+
+{% endblock %}
