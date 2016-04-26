@@ -16,7 +16,6 @@ def home():
 
 @app.route("/search", methods=['GET'])
 def search():
-
     # get the search request
     query = request.args.get('query', 'Dynamics of lunar magmatic intrusions')
     rquery = RECOM.get_recomendation(query)
