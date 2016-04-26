@@ -2,8 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">        
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
         <!-- Title of the app--> 
         <title>Geocollab</title>
         
@@ -17,7 +17,7 @@
         <script src="http://d3js.org/topojson.v1.min.js"></script>
         <!-- Datamaps -->
         <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
-    </head>
+        </head>
 
     <body>
 
@@ -27,7 +27,7 @@
         </script>  
         <script src="{{url_for('static',filename='js/collab_map.js')}}"></script>
         <script src="{{url_for('static',filename='js/home_map.js')}}"></script>
-        
+        <script src="{{url_for('static',filename='js/jquery-helper.js')}}"></script>        
 
         <div class="navbar-wrapper">
             <div class="container">
@@ -60,6 +60,13 @@
             {% block content %}
             {% endblock %}
         </div>
+
+        <!-- js late -->
+        <script text="type/javascript">
+         $(document).ready(function() {
+             refreshTogleNbAbstract()
+         });
+        </script>
     </body>
 </html>
 

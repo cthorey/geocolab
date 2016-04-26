@@ -1,5 +1,5 @@
 from webapp import app, RECOM
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import json
 import sys
 import pandas as pd
@@ -29,10 +29,20 @@ def refresh_collab():
     collabs = RECOM.get_collaborators(query)
     country = RECOM.iso3_to_country(iso3)
     collabs = collabs[collabs.country == country]
-    return json.dumps(df2dict(collabs[collabs.country == country]))
+    return jsonify(df2dict(collabs[collabs.country == country]))
 
 
-@app.route("/collab", methods=['GET', 'POST'])
+@app.route("/collab/_refresh_nb_collab", methods=['GET'])
+def refresh_nb_collab():
+    nb = request.args.get('nb', '')
+    query = request.args.get('query', '')
+    RECOM.n_base_recom = int(nb)
+    collabs = RECOM.get_collaborators(query)
+    data, colors = RECOM.get_map_specification(query)
+    return jsonify({'data': data, 'colors': colors, 'query': query})
+
+
+@app.route("/collab", methods=['GET'])
 def collab():
     # get the search request
     query = request.args.get(
