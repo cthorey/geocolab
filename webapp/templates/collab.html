@@ -4,9 +4,6 @@
 <!-- Get the query and greatings  -->
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-header text-center"> Hello
-            <small> Let's get you some new collaborators</small>
-        </h1>
         <div class="col-md-10">
             <form>
                 <input class="form-control form-control-lg"
@@ -33,7 +30,8 @@
 
 <div class="row">
     <div class="col-md-12">
-        <p id="name-query" class="text-center"> <br>Your query is: {{query}} </p>
+        <h2> Congratulations ! </h2>
+        <h2>   Your query about : <small id="name-query"> {{query}} </small> </h2>
         <div id="map-container-collab" style="position: relative; height: 100%; width: 100%;">
             <script type=text/javascript>
              displayMapCollab({{data|safe}},{{colors|safe}})
