@@ -1,49 +1,65 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="container">
-    <div class="col-xs-8">
-        <input class="form-control form-control-lg"
-               type="text"
-               placeholder="Set your query here"
-               name="query"></input>
-    </div>
-    <div class="col-xs-3">
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> Number of abstracts
-                <span class="caret"></span></button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                <li>n = 25 </li>
-                <li>n = 50 </li>
-                <li>n = 100 </li>
-            </ul>
+<!-- Get the query and greatings  -->
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="page-header text-center"> Hello
+            <small> Let's get you some new collaborators</small>
+        </h1>
+        <div class="col-md-10">
+            <form>
+                <input class="form-control form-control-lg"
+                       type="text"
+                       placeholder="Set your query here"
+                       name="query"></input>
+            </form>
+        </div>
+        <div class="col-md-2">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Number abstracts
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="dropdown-nb-abstracts" aria-labelledby="dropdownMenu1">
+                    <li><a href="#" data-value="25">Nb = 25</a></li>
+                    <li><a href="#" data-value="50">Nb = 50</a></li>
+                    <li><a href="#" data-value="100">Nb = 100</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container">
-    <div>
-        <p id="name-query"> Your query is: {{query}} </p>
-    </div>
-    <div class="col-lg-12" id="map-container-collab">
-        <script type=text/javascript>
-         displayMapCollab({{data|safe}},{{colors|safe}})
-        </script>
+<div class="row">
+    <div class="col-md-12">
+        <p id="name-query" class="text-center"> <br>Your query is: {{query}} </p>
+        <div id="map-container-collab" style="position: relative; height: 100%; width: 100%;">
+            <script type=text/javascript>
+             displayMapCollab({{data|safe}},{{colors|safe}})
+            </script>
+        </div>
     </div>
 </div>
 
-
-<div class="container">
-    <p> The search type is {{ search_type }}</p>
-    <p> Output of your search </p>
-    <ol id="recomlists">
-        {% for name, description in collabs.iterrows(): %}
-        <li> {{ name.upper()}} from the {{ description['inst'] }},  {{ description['country'] }}<br>
-            Based on his/her abstract untitled <br>
-            {{description['title']}} (<a href="{{description['link']}}"> abstract </a>)
-        </li>
-        {% endfor %}
-    </ol>
+<div class="row-fluid">
+    <div class="container" id="thumbmail-collab">
+    </div>
 </div>
+<!-- 
+     <div class="row-fluid">
+     <div class="container">
+     <p> Output of your search </p>
+     <ol id="recomlists">
+     {% for name, description in collabs.iterrows(): %}
+     <li> {{ name.upper()}} from the {{ description['inst'] }},  {{ description['country'] }}<br>
+     Based on his/her abstract untitled <br>
+     {{description['title']}} (<a href="{{description['link']}}"> abstract </a>)
+     </li>
+     {% endfor %}
+     </ol>
+     </div>
+     </div> -->
 
 {% endblock %}
+
