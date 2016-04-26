@@ -13,6 +13,7 @@
     </head>
 
     <body>
+
         <!-- js files  -->
         <script type="text/javascript">
          var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -26,10 +27,9 @@
         <script src="{{url_for('static',filename='js/collab_map.js')}}"></script>
         <script src="{{url_for('static',filename='js/home_map.js')}}"></script>
         
-        <!-- navbar -->
+
         <div class="navbar-wrapper">
             <div class="container">
-                
                 <nav class="navbar navbar-inverse navbar-static-top">
                     <div class="container">
                         <div class="navbar-header">
@@ -46,7 +46,6 @@
                                 <li><a href="{{ url_for('home') }}">Home</a></li>
                                 <li><a href="{{ url_for('search') }}">Search</a></li>
                                 <li><a href="{{ url_for('collab') }}">Collaborators</a></li>
-                                <li><a href="{{ url_for('about') }}">About</a></li>
                             </ul>
                         </div>
                     </div>
