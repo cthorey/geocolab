@@ -156,7 +156,7 @@ class RecomendationSystem(object):
                                          np.array(self.titles)[
                                              np.argsort(cosine)[::-1]],
                                          np.array(self.links)[np.argsort(cosine)[::-1]])).T,
-                               columns=['CosineSimilarity', 'title', 'link'])
+                               columns=['score', 'title', 'link'])
         return results
 
     def get_recomendation(self, query):
@@ -165,13 +165,13 @@ class RecomendationSystem(object):
         df = self.recomendation(query).head(self.n_base_recom)
         return df
 
-    def get_collaborators(self, query):
+    def get_collaborators(self, query, threeshold_score=0.3):
         ''' Return a list of the potential contributors based
         on the n first abstract proposed by the recommendation
         system '''
 
-        df = self.recomendation(query).head(self.n_base_recom)
-        links = df.link.tolist()
+        df0 = self.recomendation(query).head(self.n_base_recom)
+        links = df0.link.tolist()
         qry = 'select p2a.name,p2a.inst,auth.country,p.title,p2a.linkp ' +\
             'from p2a, authors as auth, papers as p ' +\
             'where auth.name = p2a.name and p2a.linkp=p.linkp ' +\
@@ -179,8 +179,12 @@ class RecomendationSystem(object):
         res = self.query_db(qry, links)
         df = pd.DataFrame([[row[f] for f in res[0].keys()]
                            for row in res], columns=res[0].keys())
+        df = df.rename(columns={'linkp': 'link'})
+        df = pd.merge(df, df0[['link', 'score']],
+                      on='link', how='outer')
         df.index = df.name.tolist()
-        return df
+        df = df.sort_values('score', ascending=False)
+        return df[df.score > threeshold_score]
 
     def get_map_specification(self, query):
         df = self.get_collaborators(query)

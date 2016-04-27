@@ -5,10 +5,6 @@ import sys
 import pandas as pd
 
 
-def df2dict(df):
-    return {name: dict(zip(row.index, row.values)) for name, row in df.iterrows()}
-
-
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -29,7 +25,9 @@ def refresh_collab():
     collabs = RECOM.get_collaborators(query)
     country = RECOM.iso3_to_country(iso3)
     collabs = collabs[collabs.country == country]
-    return jsonify(df2dict(collabs[collabs.country == country]))
+    json = {'result': collabs[collabs.country ==
+                              country].to_dict('index').values()}
+    return jsonify(json)
 
 
 @app.route("/collab/_refresh_nb_collab", methods=['GET'])

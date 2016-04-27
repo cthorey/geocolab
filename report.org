@@ -16,13 +16,15 @@ Listing of all the important task to do
 ** DONE [#A] Create table for the join a2p
    CLOSED: [2016-04-27 Wed 15:17]
 
-** IN-PROGRESS Incorporate the database in the recommendation system
+** DONE Incorporate the database in the recommendation system
+   CLOSED: [2016-04-27 Wed 17:44]
 
 
 * Web app stuff
 
-** 
-
+** TODO Incorporate the score to the result of the query !
+   It is meaningless  to return resutl with score less  than a certain
+   value, make a selection !
  
 * Geocollab
 
