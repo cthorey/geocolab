@@ -14,7 +14,7 @@ function ListCollab(result)
         items.push( "<li id='" + key + "'>"+
                     key + " from the " + val['inst'] + ", " + val['country']+ "<br>"+
                     "Based on his/her abstract untitled: <br> "+
-                    val['title'] + "<a href="+val['link']+"> abstract </a>"+
+                    val['title'] + "<a href="+val['linkp']+"> abstract </a>"+
                     "</li>" );
     });
     $("#recomlists").html(items.join(""));
@@ -31,7 +31,7 @@ function CollabDisplay(key,val)
         '<h3>' + key + '</h3>' +
         '<p>' + val['inst'] + '</p>' +
         '<p>' + val['title'] + '</p>'+
-        '<p><a href="'+val['link']+'" class="btn btn-primary" role="button">Abstract</a></p>'+
+        '<p><a href="'+val['linkp']+'" class="btn btn-primary" role="button">Abstract</a></p>'+
         '</div>'+
         '</div>'+
         '</div>'
