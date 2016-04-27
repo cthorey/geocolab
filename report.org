@@ -1,0 +1,24 @@
+#-*- mode: org -*-
+#+STARTUP: showall
+#+TODO: TODO IN-PROGRESS WAITING DONE
+
+Listing of all the important task to do 
+
+* Database stuff
+
+** IN-PROGRESS Create Table for agupaper for both years (sqlite ?)
+   This table should have a unique key .
+
+** TODO Create a Table for the annuary (sqlite ?)
+
+
+* Web app stuff
+
+** 
+
+ 
+* Geocollab
+
+** TODO Remove the loading of the authors (replace it by sql query) in the recomm system
+This part of the code take the much memory
+
