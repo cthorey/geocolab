@@ -2,7 +2,7 @@ import os
 from flask import Flask
 import sys
 sys.path.append('../')
-from geocolab.Data_Utils import *
+from src.model.recomendation import *
 
 if os.path.isfile('secret_key.txt'):
     SECRET_KEY = open('secret_key.txt', 'r').read()
@@ -13,7 +13,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 # Load the model
-path_model = '/Users/thorey/Documents/project/agu_data/geocolab/data/model_abstract'
+path_model = os.path.expanduser(
+    '~/Documents/project/agu_data/geocolab/models/LSA_abstract')
 RECOM = RecomendationSystem(path_model)
 
 import webapp.routes

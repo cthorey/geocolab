@@ -6,10 +6,17 @@ Listing of all the important task to do
 
 * Database stuff
 
-** IN-PROGRESS Create Table for agupaper for both years (sqlite ?)
+** DONE Create Table for agupaper for both years (sqlite ?)
+   CLOSED: [2016-04-27 Wed 15:17]
    This table should have a unique key .
 
-** TODO Create a Table for the annuary (sqlite ?)
+** DONE Create a Table for the annuary (sqlite ?)
+   CLOSED: [2016-04-27 Wed 15:17]
+
+** DONE [#A] Create table for the join a2p
+   CLOSED: [2016-04-27 Wed 15:17]
+
+** IN-PROGRESS Incorporate the database in the recommendation system
 
 
 * Web app stuff
