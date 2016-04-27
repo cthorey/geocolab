@@ -168,7 +168,8 @@ if __name__ == "__main__":
     # Parse parameters
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', required=True, help='Name of the database')
-    parser.add_argument('--overwrite', action='store_false')
+    parser.add_argument('--if_exist', action="store", default='fail')
+
     conf = vars(parser.parse_args())
     pprogress("Name of the database %s.db" % (conf['name']))
 
@@ -178,7 +179,7 @@ if __name__ == "__main__":
 
     # Create the table for papers
     pprogress('Construction of the papers table')
-    papers = get_all_papers(os.path.join(ROOT, 'data', 'data_agu2015'))
+    papers = get_all_papers(os.path.join(ROOT, 'data', 'scrapped', '2015'))
     # Get the keys of the table
     keys = [f for f in papers[0].__dict__.keys() if f not in ['authors']]
     keys_name = map(lambda x: 'linkp' if x == 'link' else x, keys)
@@ -186,11 +187,11 @@ if __name__ == "__main__":
                         for paper in papers], columns=keys_name)
     dfp['id_paper'] = dfp.index
     dfp.to_sql('papers', con=conn, flavor='sqlite',
-               if_exists='replace', index=False)
+               if_exists=conf['if_exist'], index=False)
 
     # Create a table for authors
     pprogress('Construction of the authors table')
-    authors = get_all_contrib(os.path.join(ROOT, 'data', 'data_agu2015'))
+    authors = get_all_contrib(os.path.join(ROOT, 'data', 'scrapped', '2015'))
     keys = [f for f in authors[0].__dict__.keys() if f not in [
         'session', 'papers', 'tag_sections']]
     keys_name = map(lambda x: 'linka' if x == 'link' else x, keys)
@@ -198,16 +199,16 @@ if __name__ == "__main__":
                         for author in authors], columns=keys_name)
     dfa['id_author'] = dfa.index
     dfa.to_sql('authors', con=conn, flavor='sqlite',
-               if_exists='replace', index=False)
+               if_exists=conf['if_exist'], index=False)
 
     # Create paper2author
     pprogress('Construction of the p2a table')
     paper2author = [list(zip([paper.link] * len(paper.authors.keys()),
-                             paper.authors.keys())) for paper in papers]
+                             paper.authors.keys(), paper.authors.values())) for paper in papers]
     paper2author = pd.DataFrame(
-        reduce(lambda a, b: a + b, paper2author), columns=['link', 'name'])
+        reduce(lambda a, b: a + b, paper2author), columns=['linkp', 'name', 'inst'])
     paper2author.to_sql('p2a', con=conn, flavor='sqlite',
-                        if_exists='replace', index_label='id')
+                        if_exists=conf['if_exist'], index_label='id')
 
     # Insert primary keys into all tables
     pprogress('Insert primary keys in all tables')

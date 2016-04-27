@@ -39,6 +39,7 @@ CREATE TABLE "p2a2" (
 "id" INTEGER,
   "linkp" TEXT,
   "name" TEXT,
+  "inst" TEXT,
   PRIMARY KEY(id)
 );
 
