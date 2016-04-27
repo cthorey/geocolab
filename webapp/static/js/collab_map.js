@@ -14,7 +14,7 @@ function ListCollab(result)
         items.push( "<li id='" + key + "'>"+
                     key + " from the " + val['inst'] + ", " + val['country']+ "<br>"+
                     "Based on his/her abstract untitled: <br> "+
-                    val['title'] + "<a href="+val['linkp']+"> abstract </a>"+
+                    val['title'] + "<a href="+val['link']+"> abstract </a>"+
                     "</li>" );
     });
     $("#recomlists").html(items.join(""));
@@ -28,10 +28,10 @@ function CollabDisplay(key,val)
     var div='<div class="col-md-4">'+
         '<div class="thumbnail">'+
         '<div class="caption">'+
-        '<h3>' + key + '</h3>' +
+        '<h3>' + key + '</h3>' + '<p>' +val['score'] + '</p>'+
         '<p>' + val['inst'] + '</p>' +
         '<p>' + val['title'] + '</p>'+
-        '<p><a href="'+val['linkp']+'" class="btn btn-primary" role="button">Abstract</a></p>'+
+        '<p><a href="'+val['link']+'" class="btn btn-primary" role="button">Abstract</a></p>'+
         '</div>'+
         '</div>'+
         '</div>'
@@ -50,6 +50,12 @@ function DisplayCollabThumbmail(result,country)
         '</div>';
     $("#thumbmail-collab").append(div);
     // Fill in the thumbnails
+    // First sort the results
+    console.log([result.result])
+    result.sort(function(a, b) {
+        return parseFloat(a.score) - parseFloat(b.score);
+    });
+    // Next fill in 
     $.each( result, function( key, val ) {
         $("#thumbmail-collab").append(CollabDisplay(key,val));
     });
