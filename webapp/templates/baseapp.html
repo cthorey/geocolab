@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Get the query and greatings  -->
+<div class="row">
+    <div class="container">
+        {% block search_by %}
+        {% endblock %}
+    </div>
+</div>
+
+<!-- Show a message for how much people found  -->
+<div class="row">
+    <div class="col-md-12" id="nbcollab">
+        <div id="nb-collab">
+            <script type=text/javascript>
+             refreshMessage({{nbcollabs}})
+            </script>                
+        </div>
+    </div>
+</div>
+
+<!-- Display the map  -->
+<div class="row">
+    <div class="col-md-12">
+        <div id="map-container-collab" style="position: relative; height: 100%; width: 100%;">
+            <script type=text/javascript>
+             displayMapCollab({{data|safe}},{{colors|safe}})
+            </script>
+        </div>
+    </div>
+</div>
+
+<!-- Display the thumbnail  -->
+<div class="row-fluid">
+    <div class="container" id="thumbmail-collab">
+    </div>
+</div>
+
+{% endblock %}

@@ -85,7 +85,7 @@ function  ajaxCallCollab(country)
     console.log(query)
     $.ajax({
         dataType:"json",
-        url: $SCRIPT_ROOT + "/collab/_refresh_collab",
+        url: $SCRIPT_ROOT + "/query_based/_refresh_collab",
         data: {'country': dict_code_country[country],'query':query},
         success: function(result) {
             if (jQuery.isEmptyObject(result))
