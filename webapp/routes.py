@@ -10,12 +10,12 @@ def home():
     return render_template('home.html')
 
 
-@app.route("/search", methods=['GET'])
-def search():
-    # get the search request
-    query = request.args.get('query', 'Dynamics of lunar magmatic intrusions')
-    rquery = RECOM.get_recomendation(query)
-    return render_template('search.html', rquery=rquery)
+# @app.route("/search", methods=['GET'])
+# def search():
+#     # get the search request
+#     query = request.args.get('query', 'Dynamics of lunar magmatic intrusions')
+#     rquery = RECOM.get_recomendation(query)
+#     return render_template('search.html', rquery=rquery)
 
 
 @app.route("/collab/_refresh_collab", methods=['GET'])
