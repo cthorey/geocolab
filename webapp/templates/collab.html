@@ -8,7 +8,8 @@
             <form>
                 <input class="form-control form-control-lg"
                        type="text"
-                       placeholder="Set your query here"
+                       placeholder="{{query}}"
+                       id="name-query"
                        name="query"></input>
             </form>
         </div>
@@ -19,7 +20,7 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" id="dropdown-nb-abstracts" aria-labelledby="dropdownMenu1">
-                    <li><a href="#" data-value="25">Nb = 25</a></li>
+                    <li><a href="#" data-value="25" default>Nb = 25</a></li>
                     <li><a href="#" data-value="50">Nb = 50</a></li>
                     <li><a href="#" data-value="100">Nb = 100</a></li>
                 </ul>
@@ -29,9 +30,17 @@
 </div>
 
 <div class="row">
+    <div class="col-md-12" id="nbcollab">
+        <h2> Congratulations:</h2>
+        <div id="nb-collab">
+            <p class="lead"> Our recommendation system detect at least <mark>{{nb_collab}} potential collaborators</mark> accross the world.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-md-12">
-        <h2> Congratulations ! </h2>
-        <h2>   Your query about : <small id="name-query"> {{query}} </small> </h2>
+        <p class="lead"> Click on a specific country to get more details. </p>
         <div id="map-container-collab" style="position: relative; height: 100%; width: 100%;">
             <script type=text/javascript>
              displayMapCollab({{data|safe}},{{colors|safe}})

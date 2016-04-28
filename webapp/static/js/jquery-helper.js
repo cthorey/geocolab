@@ -4,12 +4,19 @@ function refreshMap(data,colors)
     displayMapCollab(data,colors)
 }
 
+function refreshMessage(nbcollabs)
+{
+    $('#nb-collab').empty()
+    var message= '<p class="lead">Our recommendation system detect at least <mark>'+
+        nbcollabs +' potential collaborators</mark> accross the world </p>'
+    $('#nb-collab').append(message)
+}
 
 // ajax call to increase or decrease the number of abraacts to take
 // in consideration
 function  ajaxCallNbAbstrats(nb,query)
 {
-    var query = $("#name-query").text()
+    var query = $('#name-query').attr('placeholder')
     var nb = parseInt(nb)
     $.ajax({
         dataType:"json",
@@ -17,6 +24,7 @@ function  ajaxCallNbAbstrats(nb,query)
         data: {'query':query,'nb': nb },
         success: function(result) {
             refreshMap(result.data,result.colors)
+            refreshMessage(result.nbcollabs)
         }
     });     
 }

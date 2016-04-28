@@ -22,21 +22,27 @@ Listing of all the important task to do
 
 * Web app stuff
 
-** IN-PROGRESS Incorporate the score to the result of the query !
+** DONE Incorporate the score to the result of the query !
+   CLOSED: [2016-04-28 Thu 13:45]
    It is meaningless  to return resutl with score less  than a certain
    value, make a selection !
    Sort the result by score
 
 *** DONE Sort them by score 
-    CLOSED: [2016-04-28 Thu 11:07]
+    CLOSED: [2016-04-28 Thu 13:44]
 
-*** Reduce the number of precision
+*** DONE Reduce the number of precision
+    CLOSED: [2016-04-28 Thu 13:44]
 
-** Add a bandeau at the top to precise the total nb of potential collab
+** DONE Add a bandeau at the top to precise the total nb of potential collab
+   CLOSED: [2016-04-28 Thu 13:48]
+
+** IN-PROGRESS Reduce time !! All the time spent in looking the query of the database 
  
 * Geocollab
 
-** TODO Remove the loading of the authors (replace it by sql query) in the recomm system
+** DONE Remove the loading of the authors (replace it by sql query) in the recomm system
+   CLOSED: [2016-04-28 Thu 13:49]
 This part of the code take the much memory
 
 

@@ -19,7 +19,6 @@ function ListCollab(result)
     });
     $("#recomlists").html(items.join(""));
 }
-
     
 // Success ajaxcall - thumbmail fashion
 
@@ -28,10 +27,11 @@ function CollabDisplay(author)
     var div='<div class="col-md-4">'+
         '<div class="thumbnail">'+
         '<div class="caption">'+
-        '<h3>' + author['name'] + '</h3>' + '<p>' +author['score'] + '</p>'+
-        '<p>' + author['inst'] + '</p>' +
-        '<p>' + author['title'] + '</p>'+
-        '<p><a href="'+author['link']+'" class="btn btn-primary" role="button">Abstract</a></p>'+
+        '<h3>' + author['name'] + '</h3>' + 
+        '<p> <strong>Inst. </strong>' + author['inst'] + '</p>' +
+        '<p> <strong>Confidence: </strong>' + parseFloat(author['score']).toFixed(2) + '</p>'+
+        '<p> <strong> Based on his/her contribution untitled: </strong><br>' + author['title'] + '</p>'+
+        '<p><a href="'+author['link']+'" class="btn btn-primary btn-block" role="button">Abstract</a></p>'+
         '</div>'+
         '</div>'+
         '</div>'
@@ -81,7 +81,8 @@ function DisplayNullCollab(country)
 // ajax call to get the collaborators from a specific country
 function  ajaxCallCollab(country)
 {
-    var query = $("#name-query").text()
+    var query = $('#name-query').attr('placeholder')
+    console.log(query)
     $.ajax({
         dataType:"json",
         url: $SCRIPT_ROOT + "/collab/_refresh_collab",
