@@ -116,10 +116,8 @@ class RecomendationSystem(object):
 
     def query_db(self, query, args=(), one=False):
         db = self.get_db()
-        cur = db.cursor()
-        query = cur.execute(query, args)
-        rv = query.fetchall()
-        cur.close()
+        res = db.cursor().execute(query, args)
+        rv = res.fetchall()
         db.close()
         return (rv[0] if rv else None) if one else rv
 
@@ -190,24 +188,29 @@ class RecomendationSystem(object):
 
     def get_map_specification(self, query):
         df = self.get_collaborators(query)
-        df['iso3'] = map(lambda x: self._country_to_iso3(x), df.country)
+        if len(df) == 0:
+            data = {str(f): {"Nbcollab": 0,
+                             "fillKey": str(f)}
+                    for f in self.name_to_iso3.values()}
+            fills = {}
+        else:
+            df['iso3'] = map(lambda x: self._country_to_iso3(x), df.country)
 
-        gp = df.groupby('iso3')
-        values = list(set(gp.size().tolist()))
-        values.sort()
-        colors = sns.color_palette('Reds', len(values))
-        colorscale = dict(
-            zip(values, colors.as_hex()))
-        print colorscale
-        data = {str(f): {"Nbcollab": 0,
-                         "fillKey": str(f)}
-                for f in self.name_to_iso3.values()}
-        fills = {}
+            gp = df.groupby('iso3')
+            values = list(set(gp.size().tolist()))
+            values.sort()
+            colors = sns.color_palette('Reds', len(values))
+            colorscale = dict(
+                zip(values, colors.as_hex()))
+            data = {str(f): {"Nbcollab": 0,
+                             "fillKey": str(f)}
+                    for f in self.name_to_iso3.values()}
+            fills = {}
 
-        for country, n in gp.size().iteritems():
-            if country not in ['']:
-                data[country].update({"Nbcollab": n})
-                fills[country] = str(colorscale[n]).upper()
+            for country, n in gp.size().iteritems():
+                if country not in ['']:
+                    data[country].update({"Nbcollab": n})
+                    fills[country] = str(colorscale[n]).upper()
 
         fills.update({'defaultFill': 'grey'})
         nb_collab = len(df)

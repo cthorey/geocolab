@@ -31,7 +31,7 @@ function CollabDisplay(author)
         '<p> <strong>Inst. </strong>' + author['inst'] + '</p>' +
         '<p> <strong>Confidence: </strong>' + parseFloat(author['score']).toFixed(2) + '</p>'+
         '<p> <strong> Based on his/her contribution untitled: </strong><br>' + author['title'] + '</p>'+
-        '<p><a href="'+author['link']+'" class="btn btn-primary btn-block" role="button">Abstract</a></p>'+
+        '<p><a href="'+author['link']+'" class="btn btn-primary btn-block btn-thumbnail" role="button">Abstract</a></p>'+
         '</div>'+
         '</div>'+
         '</div>'
@@ -64,8 +64,8 @@ function DisplayCollabThumbmail(result,country)
         if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
     });			
     $(".thumbnail").height(maxHeight);
-}
 
+}
 // Display null message - no collab in this country
 
 function DisplayNullCollab(country)
