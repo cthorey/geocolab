@@ -4,28 +4,10 @@
 <!-- jumbotron -->
 <div class="jumbotron">
     <div class="container">
-        <h1> Welcome to the geocollab app</h1>
-        <div class="container">
-            <div id="map-container" style=" width: 600; height: 600px;">
-                <p> AGU on a map </p>
-            </div>
-        </div>
-        <p class="lead"> hello</p> 
-        <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('about') }}"> Learn more</a>
+        <h1> Welcome to you geoscientist</h1>
+        <p class="lead"> If you ever felt loss into the nearly 25000 people of AGU, this
+        app is for you. </p> 
+        <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('collab') }}"> Try it yourself</a>
     </div>
-</div>
-
-<div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        Dropdown
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li><a href="#">Action</a></li>
-        <li><a href="#">Another action</a></li>
-        <li><a href="#">Something else here</a></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="#">Separated link</a></li>
-    </ul>
 </div>
 {% endblock %}
