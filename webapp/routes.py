@@ -32,9 +32,8 @@ def refresh_nb_collab():
     nb = request.args.get('nb', '')
     query = request.args.get('query', '')
     RECOM.n_base_recom = int(nb)
-    collabs = RECOM.get_collaborators(query)
-    data, colors = RECOM.get_map_specification(query)
-    return jsonify({'data': data, 'colors': colors, 'query': query})
+    nbcollabs, data, colors = RECOM.get_map_specification(query)
+    return jsonify({'data': data, 'colors': colors, 'query': query, 'nbcollabs': nbcollabs})
 
 
 @app.route("/collab", methods=['GET'])
@@ -42,12 +41,11 @@ def collab():
     # get the search request
     query = request.args.get(
         'query', 'Dynamics of magmatic intrusions: laccoliths')
-    collabs = RECOM.get_collaborators(query)
-    data, colors = RECOM.get_map_specification(query)
+    nb_collab, data, colors = RECOM.get_map_specification(query)
     return render_template('collab.html',
                            data=json.dumps(data),
                            colors=json.dumps(colors),
-                           collabs=collabs,
+                           nb_collab=nb_collab,
                            query=query)
 
 

@@ -182,8 +182,10 @@ class RecomendationSystem(object):
         df = df.rename(columns={'linkp': 'link'})
         df = pd.merge(df, df0[['link', 'score']],
                       on='link', how='outer')
+        df.score = map(lambda x: float(x), df.score)
         df.index = df.name.tolist()
-        df = df.sort_values('score', ascending=False)
+        df = df.sort_values(
+            'score', ascending=False).drop_duplicates(subset=['name'])
         return df[df.score > threeshold_score]
 
     def get_map_specification(self, query):
@@ -208,7 +210,8 @@ class RecomendationSystem(object):
                 fills[country] = str(colorscale[n]).upper()
 
         fills.update({'defaultFill': 'grey'})
-        return data, fills
+        nb_collab = len(df)
+        return nb_collab, data, fills
 
     def plot_map_collaborator(self, query):
         collabs = self.collaborators(query)
