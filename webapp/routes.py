@@ -41,11 +41,11 @@ def collab():
     # get the search request
     query = request.args.get(
         'query', 'Dynamics of magmatic intrusions: laccoliths')
-    nb_collab, data, colors = RECOM.get_map_specification(query)
+    nbcollabs, data, colors = RECOM.get_map_specification(query)
     return render_template('collab.html',
                            data=json.dumps(data),
                            colors=json.dumps(colors),
-                           nb_collab=nb_collab,
+                           nbcollabs=nbcollabs,
                            query=query)
 
 

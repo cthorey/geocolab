@@ -4,26 +4,35 @@
 <!-- Get the query and greatings  -->
 <div class="row">
     <div class="col-md-12">
-        <div class="col-md-10">
-            <form>
-                <input class="form-control form-control-lg"
-                       type="text"
-                       placeholder="{{query}}"
-                       id="name-query"
-                       name="query"></input>
-            </form>
-        </div>
-        <div class="col-md-2">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Number abstracts
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="dropdown-nb-abstracts" aria-labelledby="dropdownMenu1">
-                    <li><a href="#" data-value="25" default>Nb = 25</a></li>
-                    <li><a href="#" data-value="50">Nb = 50</a></li>
-                    <li><a href="#" data-value="100">Nb = 100</a></li>
-                </ul>
+        <div class="container">
+            <div class="jumbotron hero-spacer">
+                <form role="form"> 
+                    <div class="form-group has-feedback has-feedback-right">
+                        <label class="control-label">Query</label>
+                        <input class="form-control input-lg"
+                               type="text"
+                               placeholder="{{query}}"
+                               id="name-query"
+                               name="query"></input>
+                        <i class="form-control-feedback glyphicon glyphicon-search"></i>
+                    </div>
+                </form>
+
+                <div class="dropdown">
+                    <button class="btn btn-large btn-primary dropdown-toggle"
+                            type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="true">
+                        Number abstracts
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" id="dropdown-nb-abstracts" aria-labelledby="dropdownMenu1">
+                        <li><a href="#" data-value="25" default>Nb = 25</a></li>
+                        <li><a href="#" data-value="50">Nb = 50</a></li>
+                        <li><a href="#" data-value="100">Nb = 100</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -31,16 +40,16 @@
 
 <div class="row">
     <div class="col-md-12" id="nbcollab">
-        <h2> Congratulations:</h2>
         <div id="nb-collab">
-            <p class="lead"> Our recommendation system detect at least <mark>{{nb_collab}} potential collaborators</mark> accross the world.</p>
+            <script type=text/javascript>
+                refreshMessage({{nbcollabs}})
+            </script>                
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <p class="lead"> Click on a specific country to get more details. </p>
         <div id="map-container-collab" style="position: relative; height: 100%; width: 100%;">
             <script type=text/javascript>
              displayMapCollab({{data|safe}},{{colors|safe}})
