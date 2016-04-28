@@ -29,7 +29,7 @@ function  ajaxCallNbAbstrats(nb,query)
     var nb = parseInt(nb)
     $.ajax({
         dataType:"json",
-        url: $SCRIPT_ROOT + "/collab/_refresh_nb_collab",
+        url: $SCRIPT_ROOT + "/query_based/_refresh_nb_collab",
         data: {'query':query,'nb': nb },
         success: function(result) {
             refreshMap(result.data,result.colors)
