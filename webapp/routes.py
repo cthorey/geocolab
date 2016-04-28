@@ -24,10 +24,7 @@ def refresh_collab():
     query = request.args.get('query', '')
     collabs = RECOM.get_collaborators(query)
     country = RECOM.iso3_to_country(iso3)
-    collabs = collabs[collabs.country == country]
-    json = {'result': collabs[collabs.country ==
-                              country].to_dict('index').values()}
-    return jsonify(json)
+    return jsonify(collabs[collabs.country == country].to_dict('index'))
 
 
 @app.route("/collab/_refresh_nb_collab", methods=['GET'])

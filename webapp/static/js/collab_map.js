@@ -23,15 +23,15 @@ function ListCollab(result)
     
 // Success ajaxcall - thumbmail fashion
 
-function CollabDisplay(key,val)
+function CollabDisplay(author)
 {
     var div='<div class="col-md-4">'+
         '<div class="thumbnail">'+
         '<div class="caption">'+
-        '<h3>' + key + '</h3>' + '<p>' +val['score'] + '</p>'+
-        '<p>' + val['inst'] + '</p>' +
-        '<p>' + val['title'] + '</p>'+
-        '<p><a href="'+val['link']+'" class="btn btn-primary" role="button">Abstract</a></p>'+
+        '<h3>' + author['name'] + '</h3>' + '<p>' +author['score'] + '</p>'+
+        '<p>' + author['inst'] + '</p>' +
+        '<p>' + author['title'] + '</p>'+
+        '<p><a href="'+author['link']+'" class="btn btn-primary" role="button">Abstract</a></p>'+
         '</div>'+
         '</div>'+
         '</div>'
@@ -51,13 +51,12 @@ function DisplayCollabThumbmail(result,country)
     $("#thumbmail-collab").append(div);
     // Fill in the thumbnails
     // First sort the results
-    console.log([result.result])
-    result.sort(function(a, b) {
-        return parseFloat(a.score) - parseFloat(b.score);
-    });
-    // Next fill in 
-    $.each( result, function( key, val ) {
-        $("#thumbmail-collab").append(CollabDisplay(key,val));
+    var arr = $.map(result,function(obj,idx){return obj}) //Create the array
+    var arr = arr.sort(function(a, b) {
+        return -(parseFloat(a.score) - parseFloat(b.score));});
+    // Next fill in
+    arr.forEach(function(author) {
+        $("#thumbmail-collab").append(CollabDisplay(author));
     });
     // Some jquery to uniform their sizes
     var maxHeight = 0;			

@@ -22,12 +22,25 @@ Listing of all the important task to do
 
 * Web app stuff
 
-** TODO Incorporate the score to the result of the query !
+** IN-PROGRESS Incorporate the score to the result of the query !
    It is meaningless  to return resutl with score less  than a certain
    value, make a selection !
+   Sort the result by score
+
+*** DONE Sort them by score 
+    CLOSED: [2016-04-28 Thu 11:07]
+
+*** Reduce the number of precision
+
+** Add a bandeau at the top to precise the total nb of potential collab
  
 * Geocollab
 
 ** TODO Remove the loading of the authors (replace it by sql query) in the recomm system
 This part of the code take the much memory
 
+
+* New stuff not to forgetr
+
+- In js,  array are object  !!! If you want  to iter over  array, user
+  forEach ! If you use $.each instead, will get the index ! bad
