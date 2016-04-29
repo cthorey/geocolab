@@ -10,6 +10,7 @@ import pandas as pd
 import unicodedata
 import argparse
 import pycountry
+from src.model.helper import *
 
 #### utils ####
 
@@ -31,7 +32,16 @@ class Paper(object):
                 setattr(self, key, val.strip())
             except:
                 setattr(self, key, val)
-        self.title = ':'.join(self.title).strip()
+        self.title = '; '.join(self.title)
+        self.title = clean_title(self.title).strip()
+        self.abstract = clean_abstract(self.abstract).strip()
+
+
+def get_ride_of_bad_ones(paper):
+    if (paper.title == "") or (paper.abstract == '') or (len(paper.abstract.split(' ')) <= 100):
+        return 0
+    else:
+        return paper
 
 
 def get_all_papers(path_data):
@@ -45,7 +55,8 @@ def get_all_papers(path_data):
         json_file = os.path.join(path_data, json)
         papers += [Paper(key, val) for key, val
                    in load_json(json_file)['papers'].iteritems()]
-    return papers
+    papers = np.array(map(get_ride_of_bad_ones, papers))
+    return list(papers[papers != 0])
 
 #### Annuary #####
 
@@ -153,3 +164,62 @@ def get_all_contrib(path_data):
     [contributors.remove(miss) for miss in missed_contribs]
 
     return contributors
+
+
+def clean_abstract(text):
+    ''' Clean an abstract '''
+    if text.split('\n')[0].split(' ')[0] == 'ePoster':
+        text = ' '.join(text.split('\n')[1:])
+    try:
+        text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore')
+    except:
+        pass
+    text = text.replace('\n', ' ')
+    return text
+
+
+def get_raw_titles(sources):
+    raw_titles = [' '.join(df.title) for df in sources]
+    return raw_titles
+
+
+def clean_title(text):
+    if text.split(' ')[-1] == '(Invited)':
+        text = ' '.join(text.split(' ')[:-1])
+    try:
+        text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore')
+    except:
+        pass
+    text = text.replace('\n', ' ')
+    return text
+
+
+def get_raw_abstracts(sources):
+    raw_abstracts = [df.abstract for df in sources]
+    return raw_abstracts
+
+
+def get_clean_titles(sources):
+    ''' Return a clean version of the  abstract corpus '''
+
+    raw_titles = get_raw_titles(sources)
+    titles = map(clean_title, raw_titles)
+    return titles
+
+
+def get_clean_abstracts(sources):
+    ''' Return a clean version of the  abstract corpus '''
+
+    raw_abstracts = get_raw_abstracts(sources)
+    abstracts = map(clean_abstract, raw_abstracts)
+    return abstracts
+
+
+def load_source(path_data):
+    data = get_all_papers(path_data)
+    sources = [df for df in data if (''.join(df.title) != "") and (
+        df.abstract != '') and (len(df.abstract.split(' ')) > 100)]
+    sections = [df.section for df in sources]
+    abstracts = get_clean_abstracts(sources)
+    titles = get_clean_titles(sources)
+    return abstracts, titles

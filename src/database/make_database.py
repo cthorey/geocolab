@@ -42,6 +42,7 @@ if __name__ == "__main__":
     keys_name = map(lambda x: 'linkp' if x == 'link' else x, keys)
     dfp = pd.DataFrame([[getattr(paper, feat) for feat in keys]
                         for paper in papers], columns=keys_name)
+    dfp['formatTitle'] = map(lambda x: x.lower(), dfp.title)
     dfp['id_paper'] = dfp.index
     dfp.to_sql('papers', con=conn, flavor='sqlite',
                if_exists=conf['if_exist'], index=False)
@@ -64,6 +65,7 @@ if __name__ == "__main__":
                              paper.authors.keys(), paper.authors.values())) for paper in papers]
     paper2author = pd.DataFrame(
         reduce(lambda a, b: a + b, paper2author), columns=['linkp', 'name', 'inst'])
+    paper2author['formatName'] = map(lambda x: x.lower(), paper2author.name)
     paper2author.to_sql('p2a', con=conn, flavor='sqlite',
                         if_exists=conf['if_exist'], index_label='id')
 
