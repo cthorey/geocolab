@@ -26,9 +26,8 @@
         <script type="text/javascript">
          var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         </script>  
-        <script src="{{url_for('static',filename='js/collab_map.js')}}"></script>
-        <script src="{{url_for('static',filename='js/home_map.js')}}"></script>
-        <script src="{{url_for('static',filename='js/jquery-helper.js')}}"></script>        
+        <script src="{{url_for('static',filename='js/helper-DOM.js')}}"></script>
+        <script src="{{url_for('static',filename='js/baseapp.js')}}"></script>
 
         <!-- nav bar: http://www.bootply.com/ceoQOzQykG# -->
         <div class="navbar-wrapper">
@@ -76,19 +75,8 @@
         <script text="type/javascript">
          $(document).ready(function() {
              refreshTogleNbAbstract()
-             
-             
+             dropdownMenuNav()
          });
-         (function($){
-             $(document).ready(function(){
-                 $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
-                     event.preventDefault(); 
-                     event.stopPropagation(); 
-                     $(this).parent().siblings().removeClass('open');
-                     $(this).parent().toggleClass('open');
-                 });
-             });
-         })(jQuery);
         </script>
     </body>
 </html>
