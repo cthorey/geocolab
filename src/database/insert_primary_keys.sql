@@ -10,6 +10,7 @@ CREATE TABLE "papers2" (
   "date" TEXT,
   "place" TEXT,
   "section" TEXT,
+  "formatTitle" TEXT,  
   "id_paper" INTEGER,
   PRIMARY KEY (linkp)    
 );
@@ -40,6 +41,7 @@ CREATE TABLE "p2a2" (
   "linkp" TEXT,
   "name" TEXT,
   "inst" TEXT,
+  "formatName" TEXT,  
   PRIMARY KEY(id)
 );
 

@@ -14,7 +14,7 @@ app.config.from_object(__name__)
 
 # Load the model
 path_model = os.path.expanduser(
-    '~/Documents/project/agu_data/geocolab/models/LSA_abstract')
+    '~/Documents/project/agu_data/geocolab/models/LSA_500_GDrive')
 RECOM = RecomendationSystem(path_model)
 
 import webapp.routes

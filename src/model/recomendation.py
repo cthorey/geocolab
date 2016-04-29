@@ -15,32 +15,9 @@ from helper import *
 from sklearn.externals import joblib
 
 
-class RecomendationSystem(object):
+class mydb(object):
 
-    def __init__(self, path_model):
-        self.model_saved = path_model
-        self.abstractf = os.path.join(self.model_saved, 'abstract')
-        self.db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
-
-        # Load the titles and abstract + links
-        self.sources = pd.read_csv(os.path.join(self.abstractf + '_sources.txt'),
-                                   names=['title', 'link'])
-        self.titles = self.sources.title.tolist()
-        self.links = self.sources.link.tolist()
-
-        # Load the necessary models, the lsi corpus and the corresponding index
-        self.tokeniser = Tokenizer(False)
-        self.dictionary = corpora.Dictionary.load(self.abstractf + '.dict')
-        self.tfidf = models.TfidfModel.load(self.abstractf + '_tfidf.model')
-        self.lsi = models.LsiModel.load(self.abstractf + '_lsi.model')
-        self.corpus = corpora.MmCorpus(self.abstractf + '_lsi.mm')
-        self.index = similarities.MatrixSimilarity.load(
-            self.abstractf + '_lsi.index')
-        self.name_to_iso3 = {
-            elt.name.upper(): elt.alpha3 for elt in pycountry.countries}
-        self.iso3_to_name = {
-            elt.alpha3: elt.name.upper() for elt in pycountry.countries}
-        self.n_base_recom = 25
+    db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
 
     def get_db(self):
         db = sqlite3.connect(self.db_path)
@@ -53,6 +30,74 @@ class RecomendationSystem(object):
         rv = res.fetchall()
         db.close()
         return (rv[0] if rv else None) if one else rv
+
+
+class Query(mydb):
+    ''' Handle the various kind of approaching the query
+    by link,title, authors or simply specifyign a query '''
+
+    def __init__(self):
+        self.query = ""
+
+    def query2query(self, search):
+        self.query = search
+
+    def link2query(self, search):
+        link = search
+        res = self.query_db(
+            'select abstract from papers where linkp=?', [link])
+        if len(res) == 0:
+            self.query = ''
+        else:
+            self.query = res[0]['abstract']
+
+    def title2query(self, search):
+        title = search.lower()
+        qry = 'select distinct(abstract) from papers where formatTitle=? '
+        res = self.query_db(qry, [title])
+        if len(res) == 0:
+            self.query = ""
+        else:
+            self.query = res[0]['abstract']
+
+    def author2query(self, search):
+        author = search.lower()
+        qry = 'select distinct(abstract) from papers,p2a ' +\
+              'where p2a.linkp=papers.linkp and p2a.formatName = ?'
+        res = self.query_db(qry, [author])
+        if len(res) == 0:
+            self.query = ""
+        else:
+            self.query = res[0]['abstract']
+
+    def get_query(self):
+        return self.query
+
+
+class RecomendationSystem(object):
+
+    def __init__(self, name_model):
+        self.name = os.path.join(ROOT, 'models', name_model, name_model)
+        self.db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
+
+        # Load the titles and abstract + links
+        qry = self.query_db('select title,linkp from papers')
+        self.titles = [f['title'] for f in qry]
+        self.links = [f['linkp'] for f in qry]
+
+        # Load the necessary models, the lsi corpus and the corresponding index
+        self.tokeniser = Tokenizer(False)
+        self.dictionary = corpora.Dictionary.load(self.name + '.dict')
+        self.tfidf = models.TfidfModel.load(self.name + '_tfidf.model')
+        self.lsi = models.LsiModel.load(self.name + '_lsi.model')
+        self.corpus = corpora.MmCorpus(self.name + '_lsi.mm')
+        self.index = similarities.MatrixSimilarity.load(
+            self.name + '_lsi.index')
+        self.name_to_iso3 = {
+            elt.name.upper(): elt.alpha3 for elt in pycountry.countries}
+        self.iso3_to_name = {
+            elt.alpha3: elt.name.upper() for elt in pycountry.countries}
+        self.n_base_recom = 25
 
     def _country_to_iso3(self, name):
         try:
@@ -148,51 +193,3 @@ class RecomendationSystem(object):
         fills.update({'defaultFill': 'grey'})
         nb_collab = len(df)
         return nb_collab, data, fills
-
-    def plot_map_collaborator(self, query):
-        collabs = self.collaborators(query)
-        df = pd.DataFrame(collabs.values())
-        df['name'] = collabs.keys()
-        df['iso3'] = map(lambda x: self._country_to_iso3(x), df.country)
-
-        counts = {f: 0 for f in self.name_to_iso3.values()}
-        texts = {f: '' for f in self.name_to_iso3.values()}
-        for key, group in df.groupby('iso3'):
-            counts[key] = len(group)
-            texts[key] = '<br>'.join(
-                [name + ': ' + inst[:20] + '...' for (name, inst) in zip(group.name, group.inst)][: 30])
-            colors = sns.color_palette('Blues', max(counts.values()))
-            colorscale = zip(range(max(counts.values())), sns.color_palette(
-                'Reds', max(counts.values())).as_hex())
-
-        world = go.Choropleth(
-            autocolorscale=True,
-            colorscale=[list(f) for f in colorscale],
-            locations=counts.keys(),
-            showscale=False,
-            z=counts.values(),
-            locationmode='ISO-3',
-            text=texts.values(),
-            marker=dict(
-                line=dict(
-                    color='rgb(255,255,255)',
-                    width=2)
-            ))
-
-        data = [world]
-
-        layout = dict(
-            title='Potential collaborators by country based on the first %d recommendations.' % (
-                n),
-            height=600,
-            width=900,
-            geo=dict(
-                scope='world',
-                projection=dict(type='mercator'),
-                showframe=False,
-                lataxis={'range': [-52, 80]},
-                framecolor='grey'),
-            margin={'b': 0, 'r': 0, 'l': 0, 't': 40})
-
-        fig = dict(data=data, layout=layout)
-        plotly.offline.iplot(fig, show_link=False)

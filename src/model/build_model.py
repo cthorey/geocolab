@@ -13,46 +13,57 @@ import gensim
 from gensim import corpora, models, similarities
 from pprint import pprint
 from helper import *
+import sqlite3
 from src.scrapping.data_utils import *
 
-model_saved = os.path.join(ROOT, 'models')
-path_data = os.path.join(ROOT, 'data', 'scrapped')
 
-if not os.path.isdir(model_saved):
-    os.mkdir(model_saved)
+def query_db(query, args=(), one=False):
+    db = sqlite3.connect(db_path)
+    db.row_factory = sqlite3.Row
+    res = db.cursor().execute(query, args)
+    rv = res.fetchall()
+    db.close()
+    return (rv[0] if rv else None) if one else rv
 
-################################################
-# Get the args
-parser = argparse.ArgumentParser()
-parser.add_argument('--name', required=True, help='Name of the model')
-parser.add_argument('--add_bigram', action='store', default=False)
-parser.add_argument('--ntopics', action="store", default=500)
-conf = vars(parser.parse_args())
+if __name__ == "__main__":
 
-name_model = conf['name'] + '_' + str(conf['ntopics'])
-if conf['add_bigram']:
-    name_model += '_bigra'
-if not os.path.isdir(os.path.join(model_saved, name_model)):
-    os.mkdir(os.path.join(model_saved, name_model))
+    model_saved = os.path.join(ROOT, 'models')
+    path_data = os.path.join(ROOT, 'data', 'scrapped')
+    db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
 
-abstractf = os.path.join(model_saved, name_model, name_model)
+    if not os.path.isdir(model_saved):
+        os.mkdir(model_saved)
 
-##################################################
-# Get the data
-data = get_all_papers(os.path.join(path_data, '2015'))
-sources = [df for df in data if (''.join(df.title) != "") and (
-    df.abstract != '') and (len(df.abstract.split(' ')) > 100)]
-abstracts = get_clean_abstracts(sources)
-titles = get_clean_titles(sources)
+    ################################################
+    # Get the args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--name', required=True, help='Name of the model')
+    parser.add_argument('--add_bigram', action='store', default=False)
+    parser.add_argument('--ntopics', action="store", default=500)
+    parser.add_argument('--build_tsne', action="store", default=False)
+    conf = vars(parser.parse_args())
 
-# abstracts = abstracts[:100]
-# titles = titles[:100]
+    name_model = conf['name'] + '_' + str(conf['ntopics'])
+    print('The model is called %s' % (name_model))
+    if conf['add_bigram']:
+        name_model += '_bigra'
+    if not os.path.isdir(os.path.join(model_saved, name_model)):
+        os.mkdir(os.path.join(model_saved, name_model))
 
-##################################################
-# Build Bow_To_Vec_Representation
+    abstractf = os.path.join(model_saved, name_model, name_model)
 
-build = True
-if build:
+    ##################################################
+    # Get the data
+    papers = query_db('select title,abstract from papers')
+    abstracts = [f['abstract'] for f in papers]
+    titles = [f['title'] for f in papers]
+
+    # abstracts = abstracts[:5000]
+    # titles = titles[:5000]
+
+    ##################################################
+    # Build Bow_To_Vec_Representation
+
     print 'Building the bow representation'
     # First, write the document corpus on a txt file, one document perline.
     write_clean_corpus(abstracts, abstractf + '_data.txt')
@@ -77,11 +88,9 @@ if build:
                                                     num_features=len(dictionary))
     index_bow.save(abstractf + '_bow.index')
 
-##################################################
-# Build Tf-idf representation
+    ##################################################
+    # Build Tf-idf representation
 
-build = True
-if build:
     print 'Building the tfidf representation'
     # First load the corpus and the dicitonary
     bow_corpus = corpora.MmCorpus(abstractf + '_bow.mm')
@@ -98,11 +107,10 @@ if build:
                                                       num_features=len(dictionary))
     index_tfidf.save(abstractf + '_tfidf.index')
 
-##################################################
-# Build lsa representation
-build = True
-num_topics = int(conf['ntopics'])
-if build:
+    ##################################################
+    # Build lsa representation
+
+    num_topics = int(conf['ntopics'])
     print 'Building the lsi representation'
     # First load the corpus and the dicitonary
     tfidf_corpus = corpora.MmCorpus(abstractf + '_tfidf.mm')
@@ -121,16 +129,16 @@ if build:
                                                 num_features=num_topics)
     index_tfidf.save(abstractf + '_lsi.index')
 
-##################################################
-# Build the t-sne represenation
-build = True
-if build:
-    tsne = manifold.TSNE(n_components=2, init='pca',
-                         random_state=0)
-    lsi_corpus = corpora.MmCorpus(abstractf + '_lsi.mm')
-    X = gensim.matutils.corpus2dense(
-        lsi_corpus, num_terms=lsi_corpus.num_terms)
-    X_data = np.asarray(X).astype('float64')
-    X_tsne = tsne.fit_transform(X_data.T)
-    joblib.dump(X, abstractf + '_X.pkl')
-    joblib.dump(X_tsne, abstractf + '_Xtsne.pkl')
+    ##################################################
+    # Build the t-sne represenation
+    if conf['build_tsne']:
+        print 'Building the tsne representation'
+        tsne = manifold.TSNE(n_components=2, init='pca',
+                             random_state=0)
+        lsi_corpus = corpora.MmCorpus(abstractf + '_lsi.mm')
+        X = gensim.matutils.corpus2dense(
+            lsi_corpus, num_terms=lsi_corpus.num_terms)
+        X_data = np.asarray(X).astype('float64')
+        X_tsne = tsne.fit_transform(X_data.T)
+        joblib.dump(X, abstractf + '_X.pkl')
+        joblib.dump(X_tsne, abstractf + '_Xtsne.pkl')
