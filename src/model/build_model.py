@@ -1,3 +1,4 @@
+from __init__ import *
 import os
 import re
 import time
@@ -8,34 +9,37 @@ from sklearn import manifold
 from sklearn.externals import joblib
 from tqdm import *
 import numpy as np
-from Data_Utils import *
 import gensim
 from gensim import corpora, models, similarities
 from pprint import pprint
-model_saved = os.path.join('..', 'data')
+from helper import *
+from src.scrapping.data_utils import *
+
+model_saved = os.path.join(ROOT, 'models')
+path_data = os.path.join(ROOT, 'data', 'scrapped')
 
 if not os.path.isdir(model_saved):
     os.mkdir(model_saved)
 
-
 ################################################
 # Get the args
-name = sys.argv[1]
-add_bigram = sys.argv[2]
-if add_bigram == 'True':
-    add_bigram = True
-elif add_bigram == 'False':
-    add_bigram = False
-else:
-    raise ValueError('Second arg must be either True of False (bigrams)')
+parser = argparse.ArgumentParser()
+parser.add_argument('--name', required=True, help='Name of the model')
+parser.add_argument('--add_bigram', action='store', default=False)
+parser.add_argument('--ntopics', action="store", default=500)
+conf = vars(parser.parse_args())
 
-if not os.path.isdir(os.path.join(model_saved, name)):
-    os.mkdir(os.path.join(model_saved, name))
-abstractf = os.path.join(model_saved, name, 'abstract')
+name_model = conf['name'] + '_' + str(conf['ntopics'])
+if conf['add_bigram']:
+    name_model += '_bigra'
+if not os.path.isdir(os.path.join(model_saved, name_model)):
+    os.mkdir(os.path.join(model_saved, name_model))
+
+abstractf = os.path.join(model_saved, name_model, name_model)
 
 ##################################################
 # Get the data
-data = get_all_data('2015')
+data = get_all_papers(os.path.join(path_data, '2015'))
 sources = [df for df in data if (''.join(df.title) != "") and (
     df.abstract != '') and (len(df.abstract.split(' ')) > 100)]
 abstracts = get_clean_abstracts(sources)
@@ -47,14 +51,14 @@ titles = get_clean_titles(sources)
 ##################################################
 # Build Bow_To_Vec_Representation
 
-build = False
+build = True
 if build:
     print 'Building the bow representation'
     # First, write the document corpus on a txt file, one document perline.
     write_clean_corpus(abstracts, abstractf + '_data.txt')
 
     # Initialize the model
-    tokenizer = Tokenizer(add_bigram)
+    tokenizer = Tokenizer(conf['add_bigram'])
     # load the dictionary
     # Next create the dictionary by iterating of the abstract, one per line in
     # the txt file
@@ -65,7 +69,7 @@ if build:
     dictionary.id2token = {k: v for v, k in dictionary.token2id.iteritems()}
     dictionary.save(abstractf + '.dict')
     # Builde corpus
-    bow_corpus = MyCorpus(abstractf, add_bigram=add_bigram)
+    bow_corpus = MyCorpus(abstractf, add_bigram=conf['add_bigram'])
     bow_corpus.load_dict()
     corpora.MmCorpus.serialize(abstractf + '_bow.mm', bow_corpus)
     # index for similarities
@@ -76,7 +80,7 @@ if build:
 ##################################################
 # Build Tf-idf representation
 
-build = False
+build = True
 if build:
     print 'Building the tfidf representation'
     # First load the corpus and the dicitonary
@@ -96,13 +100,13 @@ if build:
 
 ##################################################
 # Build lsa representation
-build = False
-num_topics = 500
+build = True
+num_topics = int(conf['ntopics'])
 if build:
     print 'Building the lsi representation'
     # First load the corpus and the dicitonary
     tfidf_corpus = corpora.MmCorpus(abstractf + '_tfidf.mm')
-    dictionary = corpora.Dictionary.load(abstractf + '.Initialize')
+    dictionary = corpora.Dictionary.load(abstractf + '.dict')
     # dict the LSI model
     lsi = models.LsiModel(tfidf_corpus, id2word=dictionary,
                           num_topics=num_topics)

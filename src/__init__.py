@@ -1,8 +1,7 @@
+import imp
+import os
+import sys
 
-"""
-
-A library to easily scrapped the papers from the AGU website 
-
-.. moduleauthor:: Clement Thorey <clement.thorey@gmail.com>
-
-"""
+# root path
+ROOT = os.path.expanduser('~/Documents/project/agu_data/geocolab')
+sys.path.append(ROOT)

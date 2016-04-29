@@ -1,19 +1,25 @@
 {% extends "baseapp.html" %}
 {% block search_by %}
 
-<div class="jumbotron hero-spacer">
-    <form role="form"> 
-        <div class="form-group has-feedback has-feedback-right">
-            <label class="control-label">Link of the abstract you want to use for your search</label>
-            <input class="form-control input-lg"
-                   type="text"
-                   placeholder="{{query}}"
-                   id="name-query"
-                   name="query"></input>
-            <i class="form-control-feedback glyphicon glyphicon-search"></i>
-        </div>
-    </form>
-
+<div class="panel panel-primary">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <form role="form"> 
+            <div class="form-group has-feedback has-feedback-right">
+                <label class="control-label">Query based recomendation system</label>
+                <input class="form-control input-lg"
+                       type="text"
+                       placeholder="{{search}}"
+                       id="search"
+                       name="search"></input>
+                <i class="form-control-feedback glyphicon glyphicon-search"></i>
+            </div>
+        </form>
+    </div>
+    <div class="panel-body">
+        <p class="lead"> <strong>Query:</strong> <br>
+            {{query}} </p>
+    </div>
     <div class="dropdown">
         <button class="btn btn-large btn-primary dropdown-toggle"
                 type="button"
@@ -30,5 +36,4 @@
         </ul>
     </div>
 </div>
-
 {% endblock %}

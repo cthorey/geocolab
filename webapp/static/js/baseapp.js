@@ -74,12 +74,10 @@ function  ajaxCallCollab(country)
  * @param str $country coutry clicked.
  **/
 {
-    var query = $('#name-query').attr('placeholder')
-    console.log(query)
     $.ajax({
         dataType:"json",
         url: $SCRIPT_ROOT + "/query_based/_refresh_collab",
-        data: {'country': dict_code_country[country],'query':query},
+        data: {'country': dict_code_country[country]},
         success: function(result) {
             if (jQuery.isEmptyObject(result))
             {
@@ -176,14 +174,13 @@ the recommendation should be based on
 **********************************************************************
 *********************************************************************/
 
-function  ajaxCallNbAbstrats(nb,query)
+function  ajaxCallNbAbstrats(nb)
 {
-    var query = $('#name-query').attr('placeholder')
     var nb = parseInt(nb)
     $.ajax({
         dataType:"json",
-        url: $SCRIPT_ROOT + "/query_based/_refresh_nb_collab",
-        data: {'query':query,'nb': nb },
+        url: $SCRIPT_ROOT + "/query_based/_refresh_nbcollab",
+        data: {'nb': nb },
         success: function(result) {
             refreshMap(result.data,result.colors)
             refreshMessage(result.nbcollabs)
