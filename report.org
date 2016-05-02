@@ -58,9 +58,10 @@ Listing of all the important task to do
     Harder than  I though.  Title from the  query to the  db ?  how to
     match both ?
 
+** IN-PROGRESS [#A] Implement an app for plan a journey sort of app
 
-** WAITING Place the button at the bottom of thumbnail
-   Complicated to so smth responsiv
+** TODO Rerun the scrapping to get the email adrresses !
+** TODO Input some text, embellish everything and put online !
 
 ** TODO Arrange something for query-based recom
    The recom  is based  only on  what is  search by  the user  for the
@@ -68,11 +69,9 @@ Listing of all the important task to do
    Implement smth that male the  query more large (like abstract-sized
    stuff) for compleness
 
-** IN-PROGRESS Implement an app for plan a journey sort of app
 
-
-** TODO Rerun the scrapping to get the email adrresses !
-** TODO Input some text, embellish everything and put online !
+** WAITING Place the button at the bottom of thumbnail
+   Complicated to so smth responsiv
 
 
  
