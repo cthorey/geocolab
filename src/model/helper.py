@@ -78,3 +78,24 @@ def write_clean_corpus(corpus, path):
     with open(path, 'w+') as f:
         for elt in corpus:
             f.write(elt + '\n')
+
+
+def get_type_pres(x):
+    room = x.split('-')[-1].strip()
+    if room == "Poster Hall":
+        return 'poster'
+    else:
+        return 'oral'
+
+
+def get_room(x):
+    room = x.split('-')[-1].strip()
+    if room == 'Poster Hall':
+        return room
+    else:
+        return 'Room %s' % (room)
+
+
+def get_day(x):
+    day = x.split(',')[0].strip()
+    return day

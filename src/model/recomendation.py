@@ -135,12 +135,6 @@ class RecomendationSystem(mydb):
                                columns=['score', 'title', 'link'])
         return results
 
-    def get_recomendation(self, query):
-        # produce a query of size 300
-        query = ' '.join(query.split(' ') * (300 // len(query.split(' '))))
-        df = self.recomendation(query).head(self.n_base_recom)
-        return df
-
     def get_collaborators(self, query, threeshold_score=0.3):
         ''' Return a list of the potential contributors based
         on the n first abstract proposed by the recommendation
@@ -193,3 +187,23 @@ class RecomendationSystem(mydb):
         fills.update({'defaultFill': 'grey'})
         nb_collab = len(df)
         return nb_collab, data, fills
+
+    def get_schedule_bday(self, query, day):
+
+        df0 = self.recomendation(query).head(self.n_base_recom)
+        links = df0.link.tolist()
+        qry = 'select date,time,place,linkp ' +\
+              'from papers ' +\
+              'where date like ?' +\
+              ' and linkp in (%s)' % (', '.join(['?'] * len(links)))
+        res = self.query_db(qry, [day + '%'] + links)
+        df = pd.DataFrame([[row[f] for f in res[0].keys()]
+                           for row in res], columns=res[0].keys())
+        df = df.rename(columns={'linkp': 'link'})
+        df = pd.merge(df, df0[['link', 'score', 'title']],
+                      on='link', how='outer').dropna()
+        df.score = map(lambda x: float(x), df.score)
+        df = df.sort_values(by='score', ascending=False)
+        df['room'] = map(get_room, df.place)
+        df['type'] = map(get_type_pres, df.place)
+        return df

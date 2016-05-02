@@ -5,9 +5,17 @@ import sys
 import pandas as pd
 
 
+####################################################
+# Home
+####################################################
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
+####################################################
+# Collaborators search
+####################################################
 
 
 @app.route("/query_based/_refresh_collab", methods=['GET'])
@@ -86,4 +94,30 @@ def abstract_based_sbauthor():
                            colors=json.dumps(colors),
                            nbcollabs=nbcollabs,
                            search=author,
+                           query=Qry.get_query())
+
+####################################################
+# Plan your journey
+####################################################
+
+
+@app.route("/query_based_journey/_get_schedule_day", methods=['GET'])
+def _get_schedule_day():
+    day = request.args.get('day', 'Monday')
+    df = RECOM.get_schedule_bday(Qry.get_query(), day)
+    dfg = df.groupby('type')
+    posters = dfg.get_group('poster').to_dict('index')
+    orals = dfg.get_group('oral').to_dict('index')
+    return jsonify({'orals': orals, 'posters': posters})
+
+
+@app.route("/query_based_journey", methods=['GET'])
+def query_based_journey():
+    # get the search request
+    search = request.args.get(
+        'search', 'Dynamics of magmatic intrusions: laccoliths')
+    Qry.query2query(search)
+    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
+    return render_template('query_based_journey.html',
+                           search=search,
                            query=Qry.get_query())
