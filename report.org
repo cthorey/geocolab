@@ -44,19 +44,28 @@ Listing of all the important task to do
    OK, you don't have to run several isntance on the same database (emacs/juptyer/browser..)
 
 
-** TODO Create a login page, associated db, to be able to look for abstract
+** DONE Create a login page, associated db, to be able to look for abstract
+   CLOSED: [2016-05-02 Mon 12:55]
 
-*** IN-PROGRESS SB link
+*** DONE SB link
+    CLOSED: [2016-05-02 Mon 12:55]
 
-*** TODO SB Name
+*** DONE SB Name
+    CLOSED: [2016-05-02 Mon 12:56]
 
-*** WAITING SB title
+*** DONE SB title
+    CLOSED: [2016-05-02 Mon 12:56]
     Harder than  I though.  Title from the  query to the  db ?  how to
     match both ?
 
 
 ** WAITING Place the button at the bottom of thumbnail
    Complicated to so smth responsiv
+
+** TODO Rerun the scrapping to get the email adrresses !
+** TODO Input some text, embellish everything and put online !
+
+
  
 * Geocollab
 

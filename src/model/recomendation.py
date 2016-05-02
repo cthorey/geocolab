@@ -74,7 +74,7 @@ class Query(mydb):
         return self.query
 
 
-class RecomendationSystem(object):
+class RecomendationSystem(mydb):
 
     def __init__(self, name_model):
         self.name = os.path.join(ROOT, 'models', name_model, name_model)

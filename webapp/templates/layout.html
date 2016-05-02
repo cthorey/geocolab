@@ -9,15 +9,15 @@
         
         <!-- Bootstrap -->
         <link rel="stylesheet" href="{{url_for('static',filename='css/mycss.css')}}">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="{{url_for('static',filename='bower_components/bootstrap/dist/css/bootstrap-theme.min.css')}}">
+        <link rel="stylesheet" href="{{url_for('static',filename='bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
+        <script src="{{url_for('static',filename='bower_components/jquery/dist/jquery.min.js')}}"></script>
+        <script src="{{url_for('static',filename='bower_components/bootstrap/dist/js/bootstrap.min.js')}}">></script>
         <!-- D3 -->
-        <script src="http://d3js.org/d3.v3.min.js"></script>
-        <script src="http://d3js.org/topojson.v1.min.js"></script>
+        <script src="{{url_for('static',filename='bower_components/topojson/topojson.js')}}"></script>
+        <script src="{{url_for('static',filename='bower_components/d3/d3.min.js')}}"></script>
         <!-- Datamaps -->
-        <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+        <script src="{{url_for('static',filename='bower_components/datamaps/dist/datamaps.world.min.js')}}"></script>
         </head>
 
     <body>
@@ -53,7 +53,7 @@
                                     <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract based suggestion</a>
 		                        <ul class="dropdown-menu">
 		                            <li><a href="{{url_for('abstract_based_sbtitle')}}">Title</a></li>
-		                            <li><a href="#">Authors</a></li>
+		                            <li><a href="{{url_for('abstract_based_sbauthor')}}">Authors</a></li>
 		                            <li><a href="{{url_for('abstract_based_sblink')}}">Link</a></li>
 		                        </ul>
 		                    </li>
