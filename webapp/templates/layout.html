@@ -28,7 +28,7 @@
         </script>  
         <script src="{{url_for('static',filename='js/helper-DOM.js')}}"></script>
         <script src="{{url_for('static',filename='js/baseapp.js')}}"></script>
-
+        <script src="{{url_for('static',filename='js/basejourney.js')}}"></script>
         <!-- nav bar: http://www.bootply.com/ceoQOzQykG# -->
         <div class="navbar-wrapper">
             <div class="container">        
@@ -41,14 +41,26 @@
                             <span class="icon-bar"></span>
                         </button>
                         <a class="navbar-brand" href="#" target="_blank">Geocolab</a>
-                    </div>
-                    
+                    </div>                    
                     <div class="collapse navbar-collapse" id="navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="{{url_for('home')}}">Home</a></li>
-                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">App <b class="caret"></b></a>
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Find collaborators <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{url_for('query_based')}}">Query based suggestion</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract based suggestion</a>
+		                        <ul class="dropdown-menu">
+		                            <li><a href="{{url_for('abstract_based_sbtitle')}}">Title</a></li>
+		                            <li><a href="{{url_for('abstract_based_sbauthor')}}">Authors</a></li>
+		                            <li><a href="{{url_for('abstract_based_sblink')}}">Link</a></li>
+		                        </ul>
+		                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Plan your journey <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{url_for('query_based_journey')}}">Query based suggestion</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract based suggestion</a>
 		                        <ul class="dropdown-menu">
@@ -76,6 +88,7 @@
          $(document).ready(function() {
              refreshTogleNbAbstract()
              dropdownMenuNav()
+             refreshSchedule()
          });
         </script>
     </body>

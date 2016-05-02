@@ -9,6 +9,15 @@ function refreshTogleNbAbstract()
     });
 }
 
+function refreshSchedule()
+// Helper to refresh the nb of abstract in the togle
+{
+    $("#whichday .btn").click(function(){
+        var day = $(this).text();
+        ajaxScheduleDay(day)
+    });
+}
+
 function dropdownMenuNav()
 
 {
