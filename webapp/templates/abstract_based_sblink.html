@@ -1,39 +1,5 @@
 {% extends "baseapp.html" %}
 {% block search_by %}
-
-<div class="panel panel-primary">
-    <!-- Default panel contents -->
-    <div class="panel-heading">
-        <form role="form"> 
-            <div class="form-group has-feedback has-feedback-right">
-                <label class="control-label">Query based recomendation system</label>
-                <input class="form-control input-lg"
-                       type="text"
-                       placeholder="{{search}}"
-                       id="search"
-                       name="search"></input>
-                <i class="form-control-feedback glyphicon glyphicon-search"></i>
-            </div>
-        </form>
-    </div>
-    <div class="panel-body">
-        <p class="lead"> <strong>Query:</strong> <br>
-            {{query}} </p>
-    </div>
-    <div class="dropdown">
-        <button class="btn btn-large btn-primary dropdown-toggle"
-                type="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="true">
-            Number abstracts
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" id="dropdown-nb-abstracts" aria-labelledby="dropdownMenu1">
-            <li><a href="#" data-value="25" default>Nb = 25</a></li>
-            <li><a href="#" data-value="50">Nb = 50</a></li>
-            <li><a href="#" data-value="100">Nb = 100</a></li>
-        </ul>
-    </div>
-</div>
+<h2> Link-based recommendation system </h2>
+<p class="lead"> Type the link of an abstract your wish to use to base your collaboration recommendation.</p>
 {% endblock %}

@@ -1,4 +1,5 @@
 data/*
+webapp/static/bower_components/*
 *Similar_Papers*
 # Byte-compiled / optimized / DLL files
 __pycache__/
