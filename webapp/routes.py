@@ -105,7 +105,7 @@ def abstract_based_sbauthor():
 ####################################################
 
 
-def get_sess(dfg, type_sess):
+def get_sess(df, type_sess):
     n = len(df.groupby(['type']).groups[type_sess])
     dfg = df.groupby(['type', 'sess_time'])
     try:
@@ -128,63 +128,62 @@ def _get_schedule_day():
         posters = ""
         orals = ""
     else:
-        dfg = df.groupby(['type', 'sess_time'])
-        poster_am, poster_pm = get_sess(dfg, 'poster')
-        oral_am, oral_pm = get_sess(dfg, 'oral'))
-    return jsonify({'orals': {'n': norals, 'am': oral_am, 'pm': oral_pm},
-                    'posters': {'n': nposters, 'am': poster_am, 'pm': poster_pm}})
+        n_orals, poster_am, poster_pm = get_sess(df, 'poster')
+        n_posters, oral_am, oral_pm = get_sess(df, 'oral')
+    return jsonify({'orals': {'n': n_orals, 'am': oral_am, 'pm': oral_pm},
+                    'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
 
 
-@app.route("/query_based_journey", methods = ['GET'])
+@app.route("/query_based_journey", methods=['GET'])
 def query_based_journey():
     # get the search request
-    search=request.args.get(
+    search = request.args.get(
         'search', 'Dynamics of magmatic intrusions: laccoliths')
     Qry.query2query(search)
-    nbcollabs, data, colors=RECOM.get_map_specification(Qry.get_query())
+    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
     return render_template('schedule.html',
-                           search = search,
-                           query = Qry.get_query(),
-                           searchby = Qry.get_sby())
+                           search=search,
+                           query=Qry.get_query(),
+                           searchby=Qry.get_sby())
 
 
-@app.route("/abstract_based_sblink_journey", methods = ['GET'])
+@app.route("/abstract_based_sblink_journey", methods=['GET'])
 def abstract_based_sblink_journey():
     # get the search request
-    link=request.args.get(
+    link = request.args.get(
         'search', 'https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/67077')
     # Look if the abstract exist
     Qry.link2query(link)
-    nbcollabs, data, colors=RECOM.get_map_specification(Qry.get_query())
+    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
     return render_template('schedule.html',
-                           search = link,
-                           query = Qry.get_query(),
-                           searchby = Qry.get_sby())
+                           search=link,
+                           query=Qry.get_query(),
+                           searchby=Qry.get_sby())
 
 
-@app.route("/abstract_based_sbtitle_journey", methods = ['GET'])
+@app.route("/abstract_based_sbtitle_journey", methods=['GET'])
 def abstract_based_sbtitle_journey():
     # get the search request
-    title=request.args.get(
+    title = request.args.get(
         'search', '')
     # Look if the abstract exist
     Qry.title2query(title)
-    nbcollabs, data, colors=RECOM.get_map_specification(Qry.get_query())
+    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
     return render_template('schedule.html',
-                           search = title,
-                           query = Qry.get_query(),
-                           searchby = Qry.get_sby())
+                           search=title,
+                           query=Qry.get_query(),
+                           searchby=Qry.get_sby())
 
 
-@app.route("/abstract_based_sbauthor_journey", methods = ['GET'])
+@app.route("/abstract_based_sbauthor_journey", methods=['GET'])
 def abstract_based_sbauthor_journey():
     # get the search request
-    author=request.args.get(
+    author = request.args.get(
         'search', 'Clement Thorey')
     # Look if the abstract exist
     Qry.author2query(author)
-    nbcollabs, data, colors=RECOM.get_map_specification(Qry.get_query())
+    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
     return render_template('schedule.html',
-                           search = author,
-                           query = Qry.get_query(),
-                           searchby = Qry.get_sby())
+                           search=author,
+                           query=Qry.get_query(),
+                           searchby=Qry.get_sby())

@@ -7,8 +7,10 @@ function  ajaxScheduleDay(day)
         data: {'day': day },
         success: function(result) {
             refreshSpan(result.orals.n,result.posters.n)
-            displayOrals(result.orals)
-            displayPosters(result.posters)
+            displayOrals('am',result.orals.am)
+            displayOrals('pm',result.orals.pm)
+            displayPosters('am',result.posters.am)
+            displayPosters('pm',result.posters.pm)
         }
     });     
 }
@@ -20,37 +22,30 @@ function refreshSpan(orals,posters)
 }
 
 
-function displayOrals(orals)
+function displayOrals(timeframe,orals)
 {
     // oral = {'item0':{'score':0.3,'title':'dezze','room':'dezde'}}
-    $('#Orals').empty()
-    $('#Orals').append('<ul class="list-group">')
+    var selector = $('#orals-%s'.format(timeframe))
+    selector.empty()
+    selector.append('<ul class="list-group">')
     var orals_arr = $.map(orals,function(obj,idx){return obj}) //Create the array
     var arr = orals_arr.sort(function(a, b) {
         return parseTime(a.time.split('-')[0]) - parseTime(b.time.split('-')[0]);});
     // Next fill in
     arr.forEach(function(oral) {
-        $("#Orals").append(displayOral(oral));
+        selector.append(displayOral(oral));
     });
-    $('#Orals').append('</ul">')
+    selector.append('</ul">')
 }
 
-function displayPosters(posters)
+function displayPosters(timeframe,posters)
 {
-    $('#poster-morning').empty()
-    var posters_html = $.map(posters.am,function(obj,idx) {return displayPoster(obj)})
-    $('#Posters').append(posters_html)
-    $('#Posters').append('</ul">')
-    $('#Posters').append('</li">')
-    $('#Posters').append('<li class="list-group-item">')
-    $('#Posters').append('<h3>Afternoon - 14h30-18h30 </h3>')
-    $('#Posters').append('<ul class="list-group">')
+    var selector = $('#posters-%s'.format(timeframe))
+    selector.empty()
+    selector.append('<ul class="list-group">')
     var posters_html = $.map(posters,function(obj,idx) {return displayPoster(obj)})
-    $('#Posters').append(posters_html)
-    $('#Posters').append('</ul">')
-    $('#Posters').append('</li">')    
-    $('#Posters').append('</ul">')    
-    
+    selector.append(posters_html)
+    selector.append('</ul">')    
 }
 
 function displayOral(oral)
@@ -63,6 +58,7 @@ Given a poster, return the div balise
         '<p class="list-group-item-text"> %s </p>'+
         '</li>'
     return a.format(oral.time,oral.room,oral.title)
+    
 }
 
 function displayPoster(poster)
@@ -71,11 +67,10 @@ Given a poster, return the div balise
 */
 {
 
-    var a = '<li class="list-group-item" id="toggle-posters">'+
-        '<h4 class="list-group-item-heading">%s</h4>'+
+    var a = '<li class="list-group-item">'+
         '<p class="list-group-item-text"> %s </p>'+
         '</li>'
-    return a.format(poster.time,poster.title)
+    return a.format(poster.title)
 }
 
 
