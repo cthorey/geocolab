@@ -17,22 +17,17 @@ poster = {'item0':{'score':0.3,'title':'dezze','room':'dezde'}}
 oral = {'item0':{'score':0.3,'title':'dezze','room':'dezde'}}
 */
 {
-    $('#schedule').empty()
-    $('#schedule').append('<div class="list-group">')
-    var a = '<a href="#" class="list-group-item active" data-toggle="collapse" data-target="#toggle-orals">'+
-        '<h3>Oral presentation </h3></a>'
-    $('#schedule').append(a)
+    $('#Orals').empty()
+    $('#Orals').append('<ul class="list-group">')
     var orals_html = $.map(orals,function(obj,idx) {return displayOral(obj)})
-    $('#schedule').append(orals_html)
-    $('#schedule').append('</div">')
+    $('#Orals').append(orals_html)
+    $('#Orals').append('</ul">')
 
-    $('#schedule').append('<div class="list-group">')
-    var a = '<a href="#" class="list-group-item active" data-toggle="collapse" data-target="#toggle-posters">'+
-        '<h3>Poster presentation </h3></a>'
-    $('#schedule').append(a)
+    $('#Posters').empty()
+    $('#Posters').append('<ul class="list-group">')
     var posters_html = $.map(posters,function(obj,idx) {return displayOral(obj)})
-    $('#schedule').append(posters_html)
-    $('#schedule').append('</div">')    
+    $('#Posters').append(posters_html)
+    $('#Posters').append('</ul">')    
 }
 
 function displayOral(oral)
@@ -40,10 +35,10 @@ function displayOral(oral)
 Given a poster, return the div balise
 */
 {
-    var a = '<a href="#" class="list-group-item" id ="toggle-orals">'+
+    var a = '<li class="list-group-item">'+
         '<h4 class="list-group-item-heading">%s - %s</h4>'+
         '<p class="list-group-item-text"> %s </p>'+
-        '</a>'
+        '</li>'
     return a.format(oral.time,oral.room,oral.title)
 }
 
@@ -53,10 +48,10 @@ Given a poster, return the div balise
 */
 {
 
-    var a = '<a href="#" class="list-group-item" id="toggle-posters">'+
+    var a = '<li class="list-group-item" id="toggle-posters">'+
         '<h4 class="list-group-item-heading">%s</h4>'+
         '<p class="list-group-item-text"> %s </p>'+
-        '</a>'
+        '</li>'
     return a.format(poster.time,poster.title)
 }
 
