@@ -79,7 +79,10 @@ Listing of all the important task to do
 
 ** DONE Remove the loading of the authors (replace it by sql query) in the recomm system
    CLOSED: [2016-04-28 Thu 13:49]
-This part of the code take the much memory
+   This part of the code take the much memory
+
+** Implement word2vec method
+
 
 
 * New stuff not to forgetr
