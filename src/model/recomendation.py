@@ -41,6 +41,7 @@ class Query(mydb):
 
     def query2query(self, search):
         self.query = search
+        self.sby = 'byquery'
 
     def link2query(self, search):
         link = search
@@ -50,6 +51,7 @@ class Query(mydb):
             self.query = ''
         else:
             self.query = res[0]['abstract']
+        self.sby = 'bylink'
 
     def title2query(self, search):
         title = search.lower()
@@ -59,6 +61,7 @@ class Query(mydb):
             self.query = ""
         else:
             self.query = res[0]['abstract']
+        self.sby = 'bytitle'
 
     def author2query(self, search):
         author = search.lower()
@@ -69,9 +72,13 @@ class Query(mydb):
             self.query = ""
         else:
             self.query = res[0]['abstract']
+        self.sby = 'byauthor'
 
     def get_query(self):
         return self.query
+
+    def get_sby(self):
+        return self.sby
 
 
 class RecomendationSystem(mydb):
@@ -197,13 +204,18 @@ class RecomendationSystem(mydb):
               'where date like ?' +\
               ' and linkp in (%s)' % (', '.join(['?'] * len(links)))
         res = self.query_db(qry, [day + '%'] + links)
-        df = pd.DataFrame([[row[f] for f in res[0].keys()]
-                           for row in res], columns=res[0].keys())
-        df = df.rename(columns={'linkp': 'link'})
-        df = pd.merge(df, df0[['link', 'score', 'title']],
-                      on='link', how='outer').dropna()
-        df.score = map(lambda x: float(x), df.score)
-        df = df.sort_values(by='score', ascending=False)
-        df['room'] = map(get_room, df.place)
-        df['type'] = map(get_type_pres, df.place)
-        return df
+        nb_res = len(res)
+        if nb_res == 0:
+            df = ""
+        else:
+            df = pd.DataFrame([[row[f] for f in res[0].keys()]
+                               for row in res], columns=res[0].keys())
+            df = df.rename(columns={'linkp': 'link'})
+            df = pd.merge(df, df0[['link', 'score', 'title']],
+                          on='link', how='outer').dropna()
+            df.score = map(lambda x: float(x), df.score)
+            df = df.sort_values(by='score', ascending=False)
+            df['room'] = map(get_room, df.place)
+            df['type'] = map(get_type_pres, df.place)
+            df['sess_time'] = map(get_sess_time, df.time)
+        return nb_res, df

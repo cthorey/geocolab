@@ -99,3 +99,11 @@ def get_room(x):
 def get_day(x):
     day = x.split(',')[0].strip()
     return day
+
+
+def get_sess_time(t):
+    time = int(t.split('-')[0].split(':')[0])
+    if time >= 13:
+        return 'afternoon'
+    else:
+        return 'morning'

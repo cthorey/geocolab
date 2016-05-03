@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% from 'base_query.html' import searchby as searchb %}
+{% from 'base_schedule.html' import displaysession as dsession %}
+{% block content %}
+
+    <!-- Get the query and greatings  -->
+    {{ searchb(searchby,search,query) }}
+
+    <!-- Show the journey -->
+    <div class="row">
+        <div class="container" id="whichday">
+            <p class="lead"> Day of the week<p>
+                <button type="button" class="btn btn-lg btn-primary text-capitalize">Monday</button>
+                <button type="button" class="btn btn-lg btn-primary text-capitalize">Tuesday</button>
+                <button type="button" class="btn btn-lg btn-primary text-capitalize">Wednesday</button>
+                <button type="button" class="btn btn-lg btn-primary text-capitalize">Thursday</button>
+                <button type="button" class="btn btn-lg btn-primary text-capitalize">Friday</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container">
+            <p class="lead"> Day of the week<p>
+                <div class="panel-group">
+                    {{  dsession("orals") }}
+                    {{  dsession("posters") }}
+                </div>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,55 @@
+{% macro display_schedule_session(session) %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                <a data-toggle="collapse" href="#{{session}}">
+                    {{ caller() }}  <span class="badge pull-right" id="span-{{session}}">1</span>
+                </a>
+            </h1>              
+        </div>
+        <div id="{{session}}" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="panel-group" id="{{session}}-sessions">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#{{session}}-sessions" href="#{{session}}-morning">
+                                    Morning session - 08:00 - 12:20
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="{{session}}-morning" class="panel-collapse collapse in">
+                            <div class="panel-body">Panel 3.1</div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#{{session}}-sessions" href="#{{session}}-afternoon"> 
+                                    Afternoon session - 13:40 - 18:00
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="{{session}}-afternoon" class="panel-collapse collapse">
+                            <div class="panel-body">Panel 3.2</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro displaysession(session) %}
+    {% call display_schedule_session(session) %}
+        {% if session=="orals" %}
+            Oral presentations
+        {% elif session=="posters" %}
+            Poster presentations
+        {% endif %}
+    {% endcall %}
+{% endmacro %}
+            
+   
+

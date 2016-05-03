@@ -1,0 +1,75 @@
+{% macro query_based(search,query) %}
+    <!-- Get the query and greatings  -->
+    <div class="row">
+        <div class="container">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">
+                        <form role="form"> 
+                            <div class="form-group">
+                                <label class="control-label">
+                                    {{ caller() }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control input-lg"
+                                           type="text"
+                                           placeholder="{{search}}"
+                                           id="search"
+                                           name="search"></input>
+                                </div>
+                                <div class="dropdown col-sm-2">
+                                    <button class="btn btn-lg btn-info dropdown-toggle"
+                                            type="button"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="true">
+                                        <strong>More ?</strong>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" id="dropdown-nb-abstracts" aria-labelledby="dropdownMenu1">
+                                        <li><a href="#" data-value="25" default>Nb = 25</a></li>
+                                        <li><a href="#" data-value="50">Nb = 50</a></li>
+                                        <li><a href="#" data-value="100">Nb = 100</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                        <div>
+                            <div class="container">
+                                <br>
+                                <br>
+                                <button class ="btn btn-warning btn-lg" data-toggle="collapse" data-target="#toggle_query">Get more info on your query</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="toggle_query" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p class="lead"> {{ query }} </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro searchby(sby,search,query) %}
+    {% call query_based(search,query) %}
+        {% if sby == 'byquery' %}
+            <h2> Query-based recommendation system </h2>
+            <p class="lead"> Type your query here.<br> 
+        {% elif sby == 'bytitle' %}
+            <h2> Title-based recommendation system </h2>
+            <p class="lead"> Type the title of a contribution you wish use for the recommendation system.<br>
+        {% elif sby == 'bylink' %}
+            <h2> Link-based recommendation system </h2>
+            <p class="lead"> Type the link of an abstract your wish to use to base your collaboration recommendation.<br>
+        {% elif sby == 'byauthor' %}
+            <h2> Author-based recommendation system </h2>
+            <p class="lead"> Type the name of a contributors you wish to base his abstract one.<br>
+        {% endif %}
+        Increase Nb if you are not satisfied with the number of returned results.</p>
+    {% endcall %}
+{% endmacro %}
+
