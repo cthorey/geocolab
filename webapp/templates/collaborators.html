@@ -1,7 +1,30 @@
 {% extends "layout.html" %}
 {% from 'base_query.html' import searchby as searchb %}
-{% block content %}
+{% from 'nav-macro.html' import generatenav as gnav %}
 
+<!-- header -->
+{% block header %}
+    <!-- D3 -->
+    <script src="{{url_for('static',filename='bower_components/topojson/topojson.js')}}"></script>
+    <script src="{{url_for('static',filename='bower_components/d3/d3.min.js')}}"></script>
+    <!-- Datamaps -->
+    <script src="{{url_for('static',filename='bower_components/datamaps/dist/datamaps.world.min.js')}}"></script>
+{% endblock %}}
+
+<!-- nav bar -->
+{% block nav %}
+    {{gnav("","active","")}}
+{% endblock %}
+
+
+<!-- JS to load at the starting of the page -->
+{% block early_js %}
+<script src="{{url_for('static',filename='js/collaborator.js')}}"></script>
+<script src="{{url_for('static',filename='js/refreshnb.js')}}"></script>
+{% endblock %}
+
+{% block content %}
+    
     <!-- Get the query and greatings  -->
     {{ searchb(searchby,search,query) }}
 
@@ -33,5 +56,14 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block late_js %}
+    <script text="type/javascript">
+     $(document).ready(function() {
+         refreshTogleNbAbstract()
+         dropdownMenuNav()
+     });
+    </script>
 {% endblock %}
 

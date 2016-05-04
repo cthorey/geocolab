@@ -132,13 +132,13 @@ def _get_schedule_day():
     day = request.args.get('day', 'Monday')
     nb_res, df = RECOM.get_schedule_bday(Qry.get_query(), day)
     if nb_res == 0:
-        posters = ""
-        orals = ""
+        return jsonify({'orals': {'n': 0, 'am': "", 'pm': ""},
+                        'posters': {'n': 0, 'am': "", 'pm': ""}})
     else:
         n_posters, poster_am, poster_pm = get_sess(df, 'poster')
         n_orals, oral_am, oral_pm = get_sess(df, 'oral')
-    return jsonify({'orals': {'n': n_orals, 'am': oral_am, 'pm': oral_pm},
-                    'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
+        return jsonify({'orals': {'n': n_orals, 'am': oral_am, 'pm': oral_pm},
+                        'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
 
 
 @app.route("/query_based_journey", methods=['GET'])
