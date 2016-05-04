@@ -53,8 +53,17 @@
                             <div class="panel-body">Panel 3.2</div>
                         </div>
                     </div>
+                    {% if session == 'posters' %}
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">
+                                    All the poster are hold in the Moscone South - Poster Hall
+                                    <span class="glyphicon glyphicon-pushpin pull-left">  </span>
+                                </h5>
+                            </div>
+                        </div>     
+                    {% endif %}
                 </div>
-
             </div>
         </div>
     </div>
@@ -69,6 +78,6 @@
         {% endif %}
     {% endcall %}
 {% endmacro %}
-            
-   
+
+
 

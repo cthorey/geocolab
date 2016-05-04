@@ -199,7 +199,7 @@ class RecomendationSystem(mydb):
 
         df0 = self.recomendation(query).head(self.n_base_recom)
         links = df0.link.tolist()
-        qry = 'select date,time,place,linkp ' +\
+        qry = 'select date,time,place,linkp,tag ' +\
               'from papers ' +\
               'where date like ?' +\
               ' and linkp in (%s)' % (', '.join(['?'] * len(links)))
