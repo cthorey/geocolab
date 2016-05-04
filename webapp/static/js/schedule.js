@@ -1,3 +1,21 @@
+function initSchedule()
+
+{
+    ajaxScheduleDay("Monday")
+    $("#button-Monday").addClass('active')
+}
+
+function refreshSchedule()
+// Helper to refresh the nb of abstract in the togle
+{
+    $("#whichday .btn").click(function(){
+        $(".day").removeClass('active')
+        var day = $(this).text();
+        $("#button-%s".format(day)).addClass('active')
+        ajaxScheduleDay(day)
+    });
+}
+
 function  ajaxScheduleDay(day)
 {
     var day = day

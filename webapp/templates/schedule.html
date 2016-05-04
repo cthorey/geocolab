@@ -1,6 +1,20 @@
 {% extends "layout.html" %}
 {% from 'base_query.html' import searchby as searchb %}
 {% from 'base_schedule.html' import displaysession as dsession %}
+{% from 'base_schedule.html' import display_buttons as dbuttons %}
+{% from 'nav-macro.html' import generatenav as gnav %}
+
+<!-- nav bar -->
+{% block nav %}
+    {{gnav("","","active")}}
+{% endblock %}
+
+<!-- JS to load at the starting of the page -->
+{% block early_js %}
+<script src="{{url_for('static',filename='js/schedule.js')}}"></script>
+<script src="{{url_for('static',filename='js/refreshnb.js')}}"></script>
+{% endblock %}
+
 {% block content %}
 
     <!-- Get the query and greatings  -->
@@ -9,22 +23,27 @@
     <!-- Show the journey -->
     <div class="row">
         <div class="container" id="whichday">
-            <p class="lead"> Day of the week<p>
-                <button type="button" class="btn btn-lg btn-primary text-capitalize">Monday</button>
-                <button type="button" class="btn btn-lg btn-primary text-capitalize">Tuesday</button>
-                <button type="button" class="btn btn-lg btn-primary text-capitalize">Wednesday</button>
-                <button type="button" class="btn btn-lg btn-primary text-capitalize">Thursday</button>
-                <button type="button" class="btn btn-lg btn-primary text-capitalize">Friday</button>
+            {{ dbuttons() }}  
         </div>
     </div>
     <div class="row">
         <div class="container">
-            <p class="lead"> Day of the week<p>
-                <div class="panel-group">
-                    {{  dsession("orals") }}
-                    {{  dsession("posters") }}
-                </div>
+            <h4 class ="lead"> </h4>
+            <div class="panel-group">
+                {{  dsession("orals") }}
+                {{  dsession("posters") }}
+            </div>
         </div>
     </div>
 {% endblock %}
 
+{% block late_js %}
+    <script text="type/javascript">
+     $(document).ready(function() {
+         refreshTogleNbAbstract()
+         dropdownMenuNav()
+         initSchedule()
+         refreshSchedule()
+     });
+    </script>
+{% endblock %}

@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
-{% block content %}
+{% from 'nav-macro.html' import generatenav as gnav %}
 
+{% block nav %}
+    {{gnav("active","","")}}
+{% endblock %}
+
+{% block content %}
 <!-- jumbotron -->
 <div class="jumbotron">
     <div class="container">
@@ -10,4 +15,11 @@
         <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('query_based') }}"> Try it yourself</a>
     </div>
 </div>
+
+<!-- set page active -->
+<script text="type/javascript">
+ $(document).ready(function() {
+     setActiveNavBar("home")
+ });
+</script>
 {% endblock %}
