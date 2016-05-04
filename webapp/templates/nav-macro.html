@@ -14,19 +14,6 @@
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li class="tab {{home}}" id="home"><a href="{{url_for('home')}}">Home</a></li>
-                    <li class="tab dropdown {{collab}}" id="collab"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Find collaborators <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{url_for('query_based')}}">Query based suggestion</a></li>
-                            <li class="divider"></li>
-                            <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract based suggestion</a>
-		                <ul class="dropdown-menu">
-		                    <li><a href="{{url_for('abstract_based_sbtitle')}}">Title</a></li>
-		                    <li><a href="{{url_for('abstract_based_sbauthor')}}">Authors</a></li>
-		                    <li><a href="{{url_for('abstract_based_sblink')}}">Link</a></li>
-		                </ul>
-		            </li>
-                        </ul>
-                    </li>
                     <li class="tab dropdown {{schedule}}" id="schedule"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Plan your journey <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{url_for('query_based_journey')}}">Query based suggestion</a></li>
@@ -36,6 +23,19 @@
 		                    <li><a href="{{url_for('abstract_based_sbtitle_journey')}}">Title</a></li>
 		                    <li><a href="{{url_for('abstract_based_sbauthor_journey')}}">Authors</a></li>
 		                    <li><a href="{{url_for('abstract_based_sblink_journey')}}">Link</a></li>
+		                </ul>
+		            </li>
+                        </ul>
+                    </li>
+                    <li class="tab dropdown {{collab}}" id="collab"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Find collaborators <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url_for('query_based')}}">Query based suggestion</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract based suggestion</a>
+		                <ul class="dropdown-menu">
+		                    <li><a href="{{url_for('abstract_based_sbtitle')}}">Title</a></li>
+		                    <li><a href="{{url_for('abstract_based_sbauthor')}}">Authors</a></li>
+		                    <li><a href="{{url_for('abstract_based_sblink')}}">Link</a></li>
 		                </ul>
 		            </li>
                         </ul>
