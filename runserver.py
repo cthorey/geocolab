@@ -7,6 +7,8 @@ if __name__ == "__main__":
                         action='store_true', help='run in prod?')
     parser.add_argument('--port', dest='port', type=int,
                         default=5000, help='port to serve on')
+    args = parser.parse_args()
+    print args
     if args.prod:
         # run on Tornado instead, since running raw Flask in prod is not
         # recommended
