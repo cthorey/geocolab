@@ -1,3 +1,20 @@
+selector.empty()
+selector.append('<ul class="list-group">')
+    var orals_arr = $.map(orals,function(obj,idx){return obj}) //Create the array
+    var arr = orals_arr.sort(function(a, b) {
+    return parseTime(a.time.split('-')[0]) - parseTime(b.time.split('-')[0]);});
+    // Next fill in
+    arr.forEach(function(oral) {
+    selector.append(displayOral(oral));
+    });
+    selector.append('</ul">')
+
+// displayOrals('am',result.orals.am)
+// displayOrals('pm',result.orals.pm)
+// displayPosters('am',result.posters.am)
+// displayPosters('pm',result.posters.pm)
+
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">

@@ -6,47 +6,74 @@ function  ajaxScheduleDay(day)
         url: $SCRIPT_ROOT + "/query_based_journey/_get_schedule_day",
         data: {'day': day },
         success: function(result) {
-            refreshSpan(result.orals.n,result.posters.n)
-            displayOrals('am',result.orals.am)
-            displayOrals('pm',result.orals.pm)
-            displayPosters('am',result.posters.am)
-            displayPosters('pm',result.posters.pm)
+            $.each(result,function(sess,obj) {refreshSpan(sess,obj)})
+                $.each(result,function(sess,obj) {displaySessions(sess,obj)})
         }
     });     
 }
 
-function refreshSpan(orals,posters)
+function refreshSpan(session,obj)
 {
-    $('#span-oral').text(Object.keys(orals).length)
-    $('#span-poster').text(Object.keys(posters).length)
+    bselector = '#span-%s'.format(session)
+    $(bselector).text(obj.n)
+    $(bselector+'-am').text(Object.keys(obj.am).length)
+    $(bselector+'-pm').text(Object.keys(obj.pm).length)
 }
 
-
-function displayOrals(timeframe,orals)
+function displaySessions(sess,obj)
 {
-    // oral = {'item0':{'score':0.3,'title':'dezze','room':'dezde'}}
-    var selector = $('#orals-%s'.format(timeframe))
-    selector.empty()
-    selector.append('<ul class="list-group">')
-    var orals_arr = $.map(orals,function(obj,idx){return obj}) //Create the array
-    var arr = orals_arr.sort(function(a, b) {
-        return parseTime(a.time.split('-')[0]) - parseTime(b.time.split('-')[0]);});
-    // Next fill in
-    arr.forEach(function(oral) {
-        selector.append(displayOral(oral));
-    });
-    selector.append('</ul">')
+    ["am","pm"].forEach(function (time){ displaySession(sess,obj,time)})
 }
 
-function displayPosters(timeframe,posters)
+function displaySession(sess,obj,time)
 {
-    var selector = $('#posters-%s'.format(timeframe))
+    var n = Object.keys(obj[time]).length
+    var selector = $('#%s-%s'.format(sess,time))
+    if (n == 0)
+    {
+        var content = displayEmpty(selector)
+    }
+    else
+    {
+        var content = get_content(sess,obj[time])
+    }
+    fillinlist(selector,content)   
+}
+
+function get_content(sess, objs)
+{
+    if (sess=='orals')
+    {
+        var content = $.map(objs,function(obj,idx){return obj}); //Create the array
+        var content = content.sort(function(a, b) {
+            return parseTime(a.time.split('-')[0]) - parseTime(b.time.split('-')[0]);});
+        var content = $.map(content,function(obj) {return displayOral(obj)})
+    }
+    else
+    {
+        var content = $.map(objs,function(obj,idx) {return displayPoster(obj)})
+    }
+    return content
+}
+
+function fillinlist(selector,content)
+{
     selector.empty()
     selector.append('<ul class="list-group">')
-    var posters_html = $.map(posters,function(obj,idx) {return displayPoster(obj)})
-    selector.append(posters_html)
+    selector.append(content)
     selector.append('</ul">')    
 }
+
+function displayEmpty(selector,obj)
+{
+    var message = 'Seems like a perfect moment for sight-seeing' 
+    var a = '<li class="list-group-item list-group-item-warning">'+
+        '<h4 class="list-group-item-heading">Nothing for you here</h4>'+
+        '<p class="list-group-item-text"> %s</p>'+
+        '</li>'
+    return a.format(message)   
+}
+
 
 function displayOral(oral)
 /*
