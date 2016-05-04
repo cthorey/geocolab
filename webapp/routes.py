@@ -106,16 +106,23 @@ def abstract_based_sbauthor():
 
 
 def get_sess(df, type_sess):
-    n = len(df.groupby(['type']).groups[type_sess])
-    dfg = df.groupby(['type', 'sess_time'])
+    am = ""
+    pm = ""
     try:
-        am = dfg.get_group((type_sess, 'morning')).to_dict('index')
+        n = len(df.groupby(['type']).groups[type_sess])
     except:
-        am = ""
-    try:
-        pm = dfg.get_group((type_sess, 'afternoon')).to_dict('index')
-    except:
-        pm = ""
+        n = 0
+
+    if n != 0:
+        dfg = df.groupby(['type', 'sess_time'])
+        try:
+            am = dfg.get_group((type_sess, 'morning')).to_dict('index')
+        except:
+            am = ""
+        try:
+            pm = dfg.get_group((type_sess, 'afternoon')).to_dict('index')
+        except:
+            pm = ""
 
     return n, am, pm
 
@@ -128,8 +135,8 @@ def _get_schedule_day():
         posters = ""
         orals = ""
     else:
-        n_orals, poster_am, poster_pm = get_sess(df, 'poster')
-        n_posters, oral_am, oral_pm = get_sess(df, 'oral')
+        n_posters, poster_am, poster_pm = get_sess(df, 'poster')
+        n_orals, oral_am, oral_pm = get_sess(df, 'oral')
     return jsonify({'orals': {'n': n_orals, 'am': oral_am, 'pm': oral_pm},
                     'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
 
