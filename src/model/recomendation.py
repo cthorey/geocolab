@@ -86,6 +86,12 @@ class Query(mydb):
         else:
             return ''
 
+    def is_query(self):
+        if self.query == "":
+            return False
+        else:
+            return True
+
     def set_query(self, search, searchby):
         self.query = getattr(self, searchby + '2query')(search)
         self.sby = 'by' + searchby
@@ -99,7 +105,7 @@ class Query(mydb):
 
 class RecomendationSystem(mydb):
 
-    def __init__(self, name_model, min_score=0.25):
+    def __init__(self, name_model, min_score=0.3):
         self.min_score = min_score
         self.name = os.path.join(ROOT, 'models', name_model, name_model)
         self.db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
@@ -214,6 +220,10 @@ class RecomendationSystem(mydb):
         fills.update({'defaultFill': 'grey'})
         nb_collab = len(df)
         return nb_collab, data, fills
+
+    def get_number_results(self, query):
+        df = self.recomendation(query).head(self.n_base_recom)
+        return len(df)
 
     def get_schedule_bday(self, query, day):
 

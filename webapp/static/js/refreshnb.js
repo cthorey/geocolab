@@ -1,3 +1,16 @@
+
+function changeNb(nb)
+{
+    $.post({
+        url: $SCRIPT_ROOT + "/_change_nb",
+        dataType:"json",
+        data: {'nb' : nb},
+        success : function (result){
+            console.log(result);
+        }
+    })
+}
+
 /*********************************************************************
 **********************************************************************
 Refresher of the select menu
@@ -85,7 +98,7 @@ function refreshThumbnail()
     }
 }
 
-function refreshMessage(nbcollabs)
+function refreshMessage2(nbcollabs)
 {
     $('#nb-collab').empty()
     if (parseInt(nbcollabs) == 0) {

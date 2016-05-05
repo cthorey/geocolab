@@ -1,15 +1,67 @@
-function refreshSchedule()
+/*********************************************************************
+**********************************************************************
+Events
+**********************************************************************
+*********************************************************************/
+
+function initMessageSchedule()
+{
+    displayBlockMessage()
+}
+
+/**********************************************************************
+Refresh on click on day */
+
+function onClickDay()
 // Helper to refresh the nb of abstract in the togle
 {
     $("#whichday .btn").click(function(){
         $(".day").removeClass('active')
         var day = $(this).text();
         $("#button-%s".format(day)).addClass('active')
-        ajaxScheduleDay(day)
+        displayBlockApp(day)
     });
 }
 
-function  ajaxScheduleDay(day)
+/**********************************************************************
+Refresh on click on changing Nb */
+
+var translation = {'Use only 25 first recommendations':25,
+                   'Use 50 first recommendations':50,
+                   'Use 100 first recommendations':100}
+    
+function onSelectNb()
+{
+    $("#select-nb").on('changed.bs.select',function()
+                       {
+                           var nb = $(this).val();
+                           console.log(translation[nb.trim()])
+                           changeNb(translation[nb.trim()]);
+                           displayBlockMessage()
+                           day = $(".day.active").text()
+                           displayBlockApp(day)
+                       })
+}
+
+/*********************************************************************
+**********************************************************************
+Block display
+**********************************************************************
+*********************************************************************/
+
+function displayBlockMessage()
+{
+    $.ajax({
+        dataType:"json",
+        url: $SCRIPT_ROOT + "/query_based_journey/_get_nb_results",
+        success: function(result)
+        {
+            refreshMessage(result.n,result.is_qry)
+        }
+    })
+}
+
+function displayBlockApp(day)
 {
     var day = day
     $.ajax({
@@ -17,55 +69,63 @@ function  ajaxScheduleDay(day)
         url: $SCRIPT_ROOT + "/query_based_journey/_get_schedule_day",
         data: {'day': day },
         success: function(result) {
-            displayScheduleMessage(result.ntotal)
-            displaySchedule(result)
+            $.each(result,function(sess,obj) {
+                displaySpan(sess,obj);
+                displaySessions(sess,obj);
+            })
         }
     });     
 }
 
-function displaySchedule(result)
-{
-    ["orals","posters"].forEach(function (sess) {
-        refreshSpan(sess,result[sess]);
-        displaySessions(sess,result[sess]);
-    })
-}
+/*********************************************************************
+**********************************************************************
+Helpers
+**********************************************************************
+*********************************************************************/
 
-function refreshScheduleMessage(nbcollabs)
+/*********************************************************************
+Message */
+
+function refreshMessage(nb,is_qry)
 {
-    $('#nb-collab').empty()
-    if (parseInt(nbcollabs) == 0) {
-        $('#nb-collab').append('<h2> Sorry:</h2>')
-        var message= '<p class="lead"> Sorry, we did not find any collaborators for you based on this query. Try to be more specific.  </p>'
-        $('#nb-collab').append(message)
-    } else
+    var selector = $('#messageSchedule')
+    selector.empty()
+    if (!(is_qry))
     {
-        $('#nb-collab').append('<h2> Congratulation:</h2>')
-        var message= '<p class="lead">Our recommendation system detect at least <mark>'+
-            nbcollabs +' potential collaborators</mark> accross the world </p>'
-        $('#nb-collab').append(message)
-        $('#nb-collab').append('<p class="lead"> Click on a specific country to get more details. </p>')
+        var message = 'Type something in the place above'
+        var content = '<div class="alert alert-info">'+
+            '<strong> Info: </strong> %s'+
+            '</div>'
+        selector.append(content.format(message))
     }
-}
-
-function displayScheduleMessage(n)
-{
-    if (n==0)
+    else if (nb == 0)
     {
-        selector = $("#messageSchedule")
-        selector.empty()
-        message = '<p class="lead"> Sorry we did not find any contribution for you to see during the conference. </p>'
-        selector.append(message)
+        var message = 'we did not find any contribution that'+
+            'could potentially match your request. Give us'+
+            ' more clues about what your are looking for'
+        var content = '<div class="alert alert-warning">'+
+            '<strong> Sorry, </strong> %s'+
+            '</div>'
+        selector.append(content.format(message))
     }
     else
     {
-        selector = $("#messageSchedule")
-        selector.empty()
-        message = '<p class="lead"> We found %s contribution that might be of interest during AGU. </p>'
-        selector.append(message.format(n))
+        var message = 'We select %s contributions that '+
+            'could interest you during the week. '+
+            'Click on each day to get the details.'
+        var message = message.format(nb)
+        var content = '<div class="alert alert-success">'+
+            '<strong> Looks like a busy AGU for you. </strong> %s'+
+            '</div>'
+        selector.append(content.format(message))
     }
+  
 }
-function refreshSpan(session,obj)
+
+/*********************************************************************
+App */
+
+function displaySpan(session,obj)
 {
     bselector = '#span-%s'.format(session)
     $(bselector).text(obj.n)

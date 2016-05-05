@@ -34,12 +34,11 @@ def _refresh_nbcollab():
     return jsonify({'data': data, 'colors': colors, 'query': Qry.get_query(), 'nbcollabs': nbcollabs})
 
 
-@app.route("/query_based", methods=['GET'])
-def query_based():
+@app.route("/query_based_<searchby>", methods=['GET'])
+def query_based(searchby):
     # get the search request
-    search = request.args.get(
-        'search', 'Dynamics of magmatic intrusions: laccoliths')
-    Qry.query2query(search)
+    search = request.args.get('search', "")
+    Qry.set_query(search, searchby.lower())
     nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
     return render_template('collaborators.html',
                            data=json.dumps(data),
@@ -49,56 +48,6 @@ def query_based():
                            query=Qry.get_query(),
                            searchby=Qry.get_sby())
 
-
-@app.route("/abstract_based_sblink", methods=['GET'])
-def abstract_based_sblink():
-    # get the search request
-    link = request.args.get(
-        'search', 'https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/67077')
-    # Look if the abstract exist
-    Qry.link2query(link)
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
-    return render_template('collaborators.html',
-                           data=json.dumps(data),
-                           colors=json.dumps(colors),
-                           nbcollabs=nbcollabs,
-                           search=link,
-                           query=Qry.get_query(),
-                           searchby=Qry.get_sby())
-
-
-@app.route("/abstract_based_sbtitle", methods=['GET'])
-def abstract_based_sbtitle():
-    # get the search request
-    title = request.args.get(
-        'search', '')
-    # Look if the abstract exist
-    Qry.title2query(title)
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
-    return render_template('collaborators.html',
-                           data=json.dumps(data),
-                           colors=json.dumps(colors),
-                           nbcollabs=nbcollabs,
-                           search=title,
-                           query=Qry.get_query(),
-                           searchby=Qry.get_sby())
-
-
-@app.route("/abstract_based_sbauthor", methods=['GET'])
-def abstract_based_sbauthor():
-    # get the search request
-    author = request.args.get(
-        'search', 'Clement Thorey')
-    # Look if the abstract exist
-    Qry.author2query(author)
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
-    return render_template('collaborators.html',
-                           data=json.dumps(data),
-                           colors=json.dumps(colors),
-                           nbcollabs=nbcollabs,
-                           search=author,
-                           query=Qry.get_query(),
-                           searchby=Qry.get_sby())
 
 ####################################################
 # Plan your journey
@@ -127,20 +76,31 @@ def get_sess(df, type_sess):
     return n, am, pm
 
 
+@app.route("/_change_nb", methods=['POST'])
+def _change_nb():
+    nb = request.form.get('nb', '')
+    RECOM.n_base_recom = int(nb)
+    return 'success'
+
+
+@app.route("/query_based_journey/_get_nb_results", methods=['GET'])
+def _get_nb_results():
+    n = RECOM.get_number_results(Qry.get_query())
+    return jsonify({'n': n, 'is_qry': Qry.is_query()})
+
+
 @app.route("/query_based_journey/_get_schedule_day", methods=['GET'])
 def _get_schedule_day():
     day = request.args.get('day', 'Monday')
     nb_res, df = RECOM.get_schedule_bday(Qry.get_query(), day)
     if nb_res == 0:
         return jsonify({
-            'ntotal': nb_res,
             'orals': {'n': 0, 'am': "", 'pm': ""},
             'posters': {'n': 0, 'am': "", 'pm': ""}})
     else:
         n_posters, poster_am, poster_pm = get_sess(df, 'poster')
         n_orals, oral_am, oral_pm = get_sess(df, 'oral')
         return jsonify({
-            'ntotal': nb_res,
             'orals': {'n': n_orals, 'am': oral_am, 'pm': oral_pm},
             'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
 
@@ -148,16 +108,14 @@ def _get_schedule_day():
 @app.route("/query_based_journey_<searchby>", methods=['GET'])
 def query_based_journey(searchby):
     # get the search request')
-    default_search = False
+    RECOM.nb_collab = 25
     search = request.args.get('search', "")
     Qry.set_query(search, searchby.lower())
     df = RECOM.recomendation(Qry.get_query())
-    if search == "":
-        default_search = True
+    if not Qry.is_query():
         search = Qry.get_defaut_message(searchby)
     return render_template('schedule.html',
                            nb=len(df),
-                           default_search=default_search,
                            search=search,
                            query=Qry.get_query(),
                            searchby=Qry.get_sby())

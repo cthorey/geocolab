@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "baseapp.html" %}
 {% from 'query-macro.html' import searchby as searchb %}
 {% from 'nav-macro.html' import generatenav as gnav %}
 
@@ -23,12 +23,13 @@
 <script src="{{url_for('static',filename='js/refreshnb.js')}}"></script>
 {% endblock %}
 
-{% block content %}
-    
-    <!-- Get the query and greatings  -->
+<!-- Block with the query -->
+{% block query %}
     {{ searchb(searchby,search,query) }}
+{% endblock %}
 
-    <!-- Show a message for how much people found  -->
+<!-- Block with the message (success/nothing founds) -->
+{% block message %}
     <div class="row">
         <div class="col-md-12" id="nbcollab">
             <div id="nb-collab">
@@ -38,7 +39,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
+{% block app %}
     <!-- Display the map  -->
     <div class="row">
         <div class="col-md-12">
