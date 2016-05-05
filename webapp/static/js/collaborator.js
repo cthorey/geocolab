@@ -11,6 +11,7 @@ for (var i = 0, n = COUNTRIES.length; i < n; i++) {
     dict_code_country[COUNTRIES[i].properties.name]=COUNTRIES[i].id;
 }
 
+
 /*********************************************************************
 **********************************************************************
 Events
@@ -18,10 +19,78 @@ Events
 *********************************************************************/
 
 /*********************************************************************
+Init message */
+
+function initMessageCollab()
+{
+    displayBlockMessage()
+}
+
+
+/*********************************************************************
+Resize map automatically*/
+
+function resizemap(map)
+{
+    window.addEventListener('resize', function() {
+        map.resize();
+    });
+}
+
+/*********************************************************************
+OnClickCountry event*/
+function onClickCountry()
+{
+    map.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+        displayBlockApp(geography.properties.name);
+    })
+}
+/**********************************************************************
+Refresh on click on changing Nb */
+
+var translation = {'Use only 25 first recommendations':25,
+                   'Use 50 first recommendations':50,
+                   'Use 100 first recommendations':100}
+    
+function onSelectNb()
+{
+    $("#select-nb").on('changed.bs.select',function()
+                       {
+                           var nb = $(this).val();
+                           changeNb(translation[nb.trim()]);
+                           displayBlockMessage()
+                       })
+}
+
+/*********************************************************************
 **********************************************************************
 Block display
 **********************************************************************
 *********************************************************************/
+
+function displayBlockMessage()
+{
+    $.ajax({
+        dataType:"json",
+        url: $SCRIPT_ROOT + "/query_based/_get_nb_collabs",
+        success: function(result)
+        {
+            refreshMessageCollab(result.n,result.is_qry)
+        }
+    })
+}
+
+function displayBlockApp(country)
+{
+    $.ajax({
+        dataType:"json",
+        url: $SCRIPT_ROOT + "/query_based/_refresh_collab",
+        data: {'country': dict_code_country[country]},
+        success: function(result) {
+            displayThumbnails(result,country)
+        }
+    })
+}
 
 /*********************************************************************
 **********************************************************************
@@ -30,10 +99,47 @@ Helpers
 *********************************************************************/
 
 /*********************************************************************
-**********************************************************************
-DISPLAY THE MAP OF COLLABORATORS
-**********************************************************************
-*********************************************************************/
+Message */
+
+function refreshMessageCollab(nb,is_qry)
+{
+    var selector = $('#messageCollab')
+    selector.empty()
+    if (!(is_qry))
+    {
+        var message = 'Type something in the place above'
+        var content = '<div class="alert alert-info">'+
+            '<strong> Info: </strong> %s'+
+            '</div>'
+        selector.append(content.format(message))
+    }
+    else if (nb == 0)
+    {
+        var message = 'we did not find any potential contributors that'+
+            'could potentially match your request. Give us'+
+            ' more clues about whom your are looking for'
+        var content = '<div class="alert alert-warning">'+
+            '<strong> Sorry, </strong> %s'+
+            '</div>'
+        selector.append(content.format(message))
+    }
+    else
+    {
+        var message = 'we found %s collegues which are just waiting '+
+            'for your call to work together. '
+            'Click on each country to get the details.'
+        var message = message.format(nb)
+        var content = '<div class="alert alert-success">'+
+            '<strong> Congratulations, </strong> %s'+
+            '</div>'
+        selector.append(content.format(message))
+    }
+  
+}
+
+
+/*********************************************************************
+App */
 
 function displayMapCollab(data,fills)
 /**
@@ -49,10 +155,6 @@ function displayMapCollab(data,fills)
     var map = new Datamap({
         scope : 'world',
         element: document.getElementById('map-container-collab'),
-        done: function(datamap) {
-            datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-                ajaxCallCollab(geography.properties.name);
-            })},
         projection: 'mercator',
         fills: fills,
         data : data,
@@ -66,49 +168,21 @@ function displayMapCollab(data,fills)
         },
         responsive: true,
     }
-                         );
-    // Pure JavaScript
-    window.addEventListener('resize', function() {
-        map.resize();
-    });
-
+                         )
+    return map
 }
 
-/*********************************************************************
-**********************************************************************
-AJAX CALL
-The function below handle the thunmbnail stuff
-when clicking on a specific country on the map
-**********************************************************************
-*********************************************************************/
 
-function  ajaxCallCollab(country)
-/**
- * @summary Ajax call to get the recomendation for a specific country.
- *
- * If the call return nothing, handle by DisplayNullColab
- * Else, return a thumbnail of the different potential collaborators
- * 
- * @param str $country coutry clicked.
- **/
+function displayThumbnails(result,country)
 {
-    $.ajax({
-        dataType:"json",
-        url: $SCRIPT_ROOT + "/query_based/_refresh_collab",
-        data: {'country': dict_code_country[country]},
-        success: function(result) {
-            if (jQuery.isEmptyObject(result))
-            {
-                DisplayNullCollab(country)
-            }
-            else
-            {
-                DisplayCollabThumbmail(result,country);
-            }
-           
-        }
-            
-    });     
+    if ($.isEmptyObject(result))
+    {
+        DisplayNullColab(country)
+    }
+    else
+    {
+        DisplayCollabThumbmail(result,country)
+    }
 }
 
 function CollabDisplay(author)

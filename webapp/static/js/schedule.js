@@ -35,7 +35,6 @@ function onSelectNb()
     $("#select-nb").on('changed.bs.select',function()
                        {
                            var nb = $(this).val();
-                           console.log(translation[nb.trim()])
                            changeNb(translation[nb.trim()]);
                            displayBlockMessage()
                            day = $(".day.active").text()
@@ -118,8 +117,7 @@ function refreshMessage(nb,is_qry)
             '<strong> Looks like a busy AGU for you. </strong> %s'+
             '</div>'
         selector.append(content.format(message))
-    }
-  
+    }  
 }
 
 /*********************************************************************

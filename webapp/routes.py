@@ -26,6 +26,12 @@ def _refresh_collab():
     return jsonify(collabs[collabs.country == country].to_dict('index'))
 
 
+@app.route("/query_based/_get_nb_collabs", methods=['GET'])
+def _get_nb_collabs():
+    n = RECOM.get_nb_collaborators(Qry.get_query())
+    return jsonify({'n': n, 'is_qry': Qry.is_query()})
+
+
 @app.route("/query_based/_refresh_nbcollab", methods=['GET'])
 def _refresh_nbcollab():
     nb = request.args.get('nb', '')
