@@ -1,0 +1,58 @@
+{% macro query_based(search,query) %}
+    <!-- Get the query and greatings  -->
+    <div class="row">
+        <div class="container">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">
+                        <form role="form"> 
+                            <div class="form-group">
+                                <label class="control-label">
+                                    {{ caller() }}
+                                </label>
+                                <input class="form-control input-lg"
+                                       type="text"
+                                       placeholder="{{search}}"
+                                       id="search"
+                                       name="search"></input>
+                            </div>
+                        </form>
+                        <div>
+                            <div class="container">
+                                <br>
+                                <br>
+                                <button class ="btn btn-warning btn-lg" data-toggle="collapse" data-target="#toggle_query">Get more info on your query</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="toggle_query" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p class="lead"> <small>{{ query }}</small> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro searchby(sby,search,query) %}
+    {% call query_based(search,query) %}
+        {% if sby == 'byquery' %}
+            <h2> Query-based recommendation system </h2>
+            <p class="lead"> Type your query here.<br> 
+        {% elif sby == 'bytitle' %}
+                <h2> Title-based recommendation system </h2>
+                <p class="lead"> Type the title of a contribution you wish use for the recommendation system.<br>
+        {% elif sby == 'bylink' %}
+                    <h2> Link-based recommendation system </h2>
+                    <p class="lead"> Type the link of an abstract your wish to use to base your collaboration recommendation.<br>
+        {% elif sby == 'byauthor' %}
+                        <h2> Author-based recommendation system </h2>
+                        <p class="lead"> Type the name of a contributors you wish to base his abstract one.<br>
+        {% endif %}
+        Increase Nb if you are not satisfied with the number of returned results.</p>
+    {% endcall %}
+{% endmacro %}
+

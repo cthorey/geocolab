@@ -1,10 +1,3 @@
-function initSchedule()
-
-{
-    ajaxScheduleDay("Monday")
-    $("#button-Monday").addClass('active')
-}
-
 function refreshSchedule()
 // Helper to refresh the nb of abstract in the togle
 {
@@ -24,12 +17,54 @@ function  ajaxScheduleDay(day)
         url: $SCRIPT_ROOT + "/query_based_journey/_get_schedule_day",
         data: {'day': day },
         success: function(result) {
-            $.each(result,function(sess,obj) {refreshSpan(sess,obj)})
-                $.each(result,function(sess,obj) {displaySessions(sess,obj)})
+            displayScheduleMessage(result.ntotal)
+            displaySchedule(result)
         }
     });     
 }
 
+function displaySchedule(result)
+{
+    ["orals","posters"].forEach(function (sess) {
+        refreshSpan(sess,result[sess]);
+        displaySessions(sess,result[sess]);
+    })
+}
+
+function refreshScheduleMessage(nbcollabs)
+{
+    $('#nb-collab').empty()
+    if (parseInt(nbcollabs) == 0) {
+        $('#nb-collab').append('<h2> Sorry:</h2>')
+        var message= '<p class="lead"> Sorry, we did not find any collaborators for you based on this query. Try to be more specific.  </p>'
+        $('#nb-collab').append(message)
+    } else
+    {
+        $('#nb-collab').append('<h2> Congratulation:</h2>')
+        var message= '<p class="lead">Our recommendation system detect at least <mark>'+
+            nbcollabs +' potential collaborators</mark> accross the world </p>'
+        $('#nb-collab').append(message)
+        $('#nb-collab').append('<p class="lead"> Click on a specific country to get more details. </p>')
+    }
+}
+
+function displayScheduleMessage(n)
+{
+    if (n==0)
+    {
+        selector = $("#messageSchedule")
+        selector.empty()
+        message = '<p class="lead"> Sorry we did not find any contribution for you to see during the conference. </p>'
+        selector.append(message)
+    }
+    else
+    {
+        selector = $("#messageSchedule")
+        selector.empty()
+        message = '<p class="lead"> We found %s contribution that might be of interest during AGU. </p>'
+        selector.append(message.format(n))
+    }
+}
 function refreshSpan(session,obj)
 {
     bselector = '#span-%s'.format(session)

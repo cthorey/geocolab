@@ -40,28 +40,28 @@ class Query(mydb):
         self.query = ""
 
     def query2query(self, search):
-        self.query = search
-        self.sby = 'byquery'
+        query = search
+        return query
 
     def link2query(self, search):
         link = search
         res = self.query_db(
             'select abstract from papers where linkp=?', [link])
         if len(res) == 0:
-            self.query = ''
+            query = ''
         else:
-            self.query = res[0]['abstract']
-        self.sby = 'bylink'
+            query = res[0]['abstract']
+        return query
 
     def title2query(self, search):
         title = search.lower()
         qry = 'select distinct(abstract) from papers where formatTitle=? '
         res = self.query_db(qry, [title])
         if len(res) == 0:
-            self.query = ""
+            query = ""
         else:
-            self.query = res[0]['abstract']
-        self.sby = 'bytitle'
+            query = res[0]['abstract']
+        return query
 
     def author2query(self, search):
         author = search.lower()
@@ -69,10 +69,26 @@ class Query(mydb):
               'where p2a.linkp=papers.linkp and p2a.formatName = ?'
         res = self.query_db(qry, [author])
         if len(res) == 0:
-            self.query = ""
+            query = ""
         else:
-            self.query = res[0]['abstract']
-        self.sby = 'byauthor'
+            query = res[0]['abstract']
+        return query
+
+    def get_defaut_message(self, searchby):
+        if searchby == 'query':
+            return 'Example: Dynamics of magmatic intrusions'
+        elif searchby == 'author':
+            return 'Example: Clement Thorey'
+        elif searchby == 'link':
+            return 'Example: https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/67077'
+        elif searchby == 'title':
+            return 'Floor-Fractured Craters through Machine Learning Methods'
+        else:
+            return ''
+
+    def set_query(self, search, searchby):
+        self.query = getattr(self, searchby + '2query')(search)
+        self.sby = 'by' + searchby
 
     def get_query(self):
         return self.query
@@ -83,7 +99,8 @@ class Query(mydb):
 
 class RecomendationSystem(mydb):
 
-    def __init__(self, name_model):
+    def __init__(self, name_model, min_score=0.25):
+        self.min_score = min_score
         self.name = os.path.join(ROOT, 'models', name_model, name_model)
         self.db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
 
@@ -140,30 +157,33 @@ class RecomendationSystem(mydb):
                                              np.argsort(cosine)[::-1]],
                                          np.array(self.links)[np.argsort(cosine)[::-1]])).T,
                                columns=['score', 'title', 'link'])
-        return results
+        results.score = map(lambda x: float(x), results.score)
+        return results[results.score > self.min_score]
 
-    def get_collaborators(self, query, threeshold_score=0.3):
+    def get_collaborators(self, query):
         ''' Return a list of the potential contributors based
         on the n first abstract proposed by the recommendation
         system '''
 
         df0 = self.recomendation(query).head(self.n_base_recom)
-        links = df0.link.tolist()
-        qry = 'select p2a.name,p2a.inst,auth.country,p.title,p2a.linkp ' +\
-            'from p2a, authors as auth, papers as p ' +\
-            'where auth.name = p2a.name and p2a.linkp=p.linkp ' +\
-            'and p2a.linkp in (%s)' % (', '.join(['?'] * len(links)))
-        res = self.query_db(qry, links)
-        df = pd.DataFrame([[row[f] for f in res[0].keys()]
-                           for row in res], columns=res[0].keys())
-        df = df.rename(columns={'linkp': 'link'})
-        df = pd.merge(df, df0[['link', 'score']],
-                      on='link', how='outer')
-        df.score = map(lambda x: float(x), df.score)
-        df.index = df.name.tolist()
-        df = df.sort_values(
-            'score', ascending=False).drop_duplicates(subset=['name'])
-        return df[df.score > threeshold_score]
+        df = pd.DataFrame()
+        if len(df0) != 0:
+            links = df0.link.tolist()
+            qry = 'select p2a.name,p2a.inst,auth.country,p.title,p2a.linkp ' +\
+                  'from p2a, authors as auth, papers as p ' +\
+                  'where auth.name = p2a.name and p2a.linkp=p.linkp ' +\
+                  'and p2a.linkp in (%s)' % (', '.join(['?'] * len(links)))
+            res = self.query_db(qry, links)
+            df = pd.DataFrame([[row[f] for f in res[0].keys()]
+                               for row in res], columns=res[0].keys())
+            df = df.rename(columns={'linkp': 'link'})
+            df = pd.merge(df, df0[['link', 'score']],
+                          on='link', how='outer')
+            df.score = map(lambda x: float(x), df.score)
+            df.index = df.name.tolist()
+            df = df.sort_values(
+                'score', ascending=False).drop_duplicates(subset=['name'])
+        return df
 
     def get_map_specification(self, query):
         df = self.get_collaborators(query)
@@ -198,24 +218,25 @@ class RecomendationSystem(mydb):
     def get_schedule_bday(self, query, day):
 
         df0 = self.recomendation(query).head(self.n_base_recom)
-        links = df0.link.tolist()
-        qry = 'select date,time,place,linkp,tag ' +\
-              'from papers ' +\
-              'where date like ?' +\
-              ' and linkp in (%s)' % (', '.join(['?'] * len(links)))
-        res = self.query_db(qry, [day + '%'] + links)
-        nb_res = len(res)
-        if nb_res == 0:
-            df = ""
-        else:
-            df = pd.DataFrame([[row[f] for f in res[0].keys()]
-                               for row in res], columns=res[0].keys())
-            df = df.rename(columns={'linkp': 'link'})
-            df = pd.merge(df, df0[['link', 'score', 'title']],
-                          on='link', how='outer').dropna()
-            df.score = map(lambda x: float(x), df.score)
-            df = df.sort_values(by='score', ascending=False)
-            df['room'] = map(get_room, df.place)
-            df['type'] = map(get_type_pres, df.place)
-            df['sess_time'] = map(get_sess_time, df.time)
+        df = ""
+        nb_res = 0
+        if len(df0) != 0:
+            links = df0.link.tolist()
+            qry = 'select date,time,place,linkp,tag ' +\
+                  'from papers ' +\
+                  'where date like ?' +\
+                  ' and linkp in (%s)' % (', '.join(['?'] * len(links)))
+            res = self.query_db(qry, [day + '%'] + links)
+            nb_res = len(res)
+            if nb_res != 0:
+                df = pd.DataFrame([[row[f] for f in res[0].keys()]
+                                   for row in res], columns=res[0].keys())
+                df = df.rename(columns={'linkp': 'link'})
+                df = pd.merge(df, df0[['link', 'score', 'title']],
+                              on='link', how='outer').dropna()
+                df.score = map(lambda x: float(x), df.score)
+                df = df.sort_values(by='score', ascending=False)
+                df['room'] = map(get_room, df.place)
+                df['type'] = map(get_type_pres, df.place)
+                df['sess_time'] = map(get_sess_time, df.time)
         return nb_res, df

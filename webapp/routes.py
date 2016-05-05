@@ -132,65 +132,32 @@ def _get_schedule_day():
     day = request.args.get('day', 'Monday')
     nb_res, df = RECOM.get_schedule_bday(Qry.get_query(), day)
     if nb_res == 0:
-        return jsonify({'orals': {'n': 0, 'am': "", 'pm': ""},
-                        'posters': {'n': 0, 'am': "", 'pm': ""}})
+        return jsonify({
+            'ntotal': nb_res,
+            'orals': {'n': 0, 'am': "", 'pm': ""},
+            'posters': {'n': 0, 'am': "", 'pm': ""}})
     else:
         n_posters, poster_am, poster_pm = get_sess(df, 'poster')
         n_orals, oral_am, oral_pm = get_sess(df, 'oral')
-        return jsonify({'orals': {'n': n_orals, 'am': oral_am, 'pm': oral_pm},
-                        'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
+        return jsonify({
+            'ntotal': nb_res,
+            'orals': {'n': n_orals, 'am': oral_am, 'pm': oral_pm},
+            'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
 
 
-@app.route("/query_based_journey", methods=['GET'])
-def query_based_journey():
-    # get the search request
-    search = request.args.get(
-        'search', 'Dynamics of magmatic intrusions: laccoliths')
-    Qry.query2query(search)
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
+@app.route("/query_based_journey_<searchby>", methods=['GET'])
+def query_based_journey(searchby):
+    # get the search request')
+    default_search = False
+    search = request.args.get('search', "")
+    Qry.set_query(search, searchby.lower())
+    df = RECOM.recomendation(Qry.get_query())
+    if search == "":
+        default_search = True
+        search = Qry.get_defaut_message(searchby)
     return render_template('schedule.html',
+                           nb=len(df),
+                           default_search=default_search,
                            search=search,
-                           query=Qry.get_query(),
-                           searchby=Qry.get_sby())
-
-
-@app.route("/abstract_based_sblink_journey", methods=['GET'])
-def abstract_based_sblink_journey():
-    # get the search request
-    link = request.args.get(
-        'search', 'https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/67077')
-    # Look if the abstract exist
-    Qry.link2query(link)
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
-    return render_template('schedule.html',
-                           search=link,
-                           query=Qry.get_query(),
-                           searchby=Qry.get_sby())
-
-
-@app.route("/abstract_based_sbtitle_journey", methods=['GET'])
-def abstract_based_sbtitle_journey():
-    # get the search request
-    title = request.args.get(
-        'search', '')
-    # Look if the abstract exist
-    Qry.title2query(title)
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
-    return render_template('schedule.html',
-                           search=title,
-                           query=Qry.get_query(),
-                           searchby=Qry.get_sby())
-
-
-@app.route("/abstract_based_sbauthor_journey", methods=['GET'])
-def abstract_based_sbauthor_journey():
-    # get the search request
-    author = request.args.get(
-        'search', 'Clement Thorey')
-    # Look if the abstract exist
-    Qry.author2query(author)
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
-    return render_template('schedule.html',
-                           search=author,
                            query=Qry.get_query(),
                            searchby=Qry.get_sby())

@@ -1,37 +1,18 @@
 {% extends "layout.html" %}
-{% from 'base_query.html' import searchby as searchb %}
+
 {% block content %}
+
+    <!-- Block with the query -->
+    {%block query %}
+    {%endblock%}
+
+    <!-- Block with the massage (success/nothing founds) -->    
+    {%block message%}a
+    {%endblock%}
+
+    <!-- Block with the app itself collab/schedule -->    
+    {%block app%}
+    {%endblock%}
     
-    <!-- Get the query and greatings  -->
-    {{ searchb(searchby,search,query) }}
-
-    <!-- Show a message for how much people found  -->
-    <div class="row">
-        <div class="col-md-12" id="nbcollab">
-            <div id="nb-collab">
-                <script type=text/javascript>
-                 refreshMessage({{nbcollabs}})
-                </script>                
-            </div>
-        </div>
-    </div>
-
-    <!-- Display the map  -->
-    <div class="row">
-        <div class="col-md-12">
-            <div id="map-container-collab" style="position: relative; height: 100%; width: 100%;">
-                <script type=text/javascript>
-                 displayMapCollab({{data|safe}},{{colors|safe}})
-                </script>
-            </div>
-        </div>
-    </div>
-
-    <!-- Display the thumbnail  -->
-    <div class="row-fluid">
-        <div class="container" id="thumbmail-collab">
-        </div>
-    </div>
-
 {% endblock %}
 

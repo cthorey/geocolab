@@ -1,5 +1,25 @@
 /*********************************************************************
 **********************************************************************
+Refresher of the select menu
+**********************************************************************
+*********************************************************************/
+
+var translation = {'Use only 25 first recommendations':25,
+                   'Use 50 first recommendations':50,
+                   'Use 100 first recommendations':100}
+    
+function refreshTogleNbAbstract()
+// Helper to refresh the nb of abstract in the togle
+{
+    $("#select-nb").on('changed.bs.select',function()
+                       {
+                           var nb = $(this).val();
+                           ajaxCallNbAbstrats(translation[nb.trim()]);
+                       })
+}
+
+/*********************************************************************
+**********************************************************************
 AJAX CALL
 Refresh everything given a different number of abstract
 the recommendation should be based on 
