@@ -31,12 +31,7 @@
 <!-- Block with the message (success/nothing founds) -->
 {% block message %}
     <div class="row">
-        <div class="col-md-12" id="nbcollab">
-            <div id="nb-collab">
-                <script type=text/javascript>
-                 refreshMessage({{nbcollabs}})
-                </script>                
-            </div>
+        <div class="container" id="messageCollab">
         </div>
     </div>
 {% endblock %}
@@ -46,9 +41,6 @@
     <div class="row">
         <div class="col-md-12">
             <div id="map-container-collab" style="position: relative; height: 100%; width: 100%;">
-                <script type=text/javascript>
-                 displayMapCollab({{data|safe}},{{colors|safe}})
-                </script>
             </div>
         </div>
     </div>
@@ -64,7 +56,11 @@
 {% block late_js %}
     <script text="type/javascript">
      $(document).ready(function() {
-         refreshTogleNbAbstract()
+         initMessageCollab()
+         map = displayMapCollab({{data|safe}},{{colors|safe}})
+         resizemap(map)
+         onClickCountry(map)
+         onSelectNb()
          dropdownMenuNav()
      });
     </script>

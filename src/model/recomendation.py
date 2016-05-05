@@ -191,6 +191,10 @@ class RecomendationSystem(mydb):
                 'score', ascending=False).drop_duplicates(subset=['name'])
         return df
 
+    def get_nb_collaborators(self, query):
+        df = self.get_collaborators(query)
+        return len(df)
+
     def get_map_specification(self, query):
         df = self.get_collaborators(query)
         if len(df) == 0:
