@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "baseapp.html" %}
 {% from 'query-macro.html' import searchby as searchb %}
 {% from 'schedule-macro.html' import displaysession as dsession %}
 {% from 'schedule-macro.html' import display_buttons as dbuttons %}
@@ -15,12 +15,37 @@
 <script src="{{url_for('static',filename='js/refreshnb.js')}}"></script>
 {% endblock %}
 
-{% block content %}
-
-    <!-- Get the query and greatings  -->
+<!-- Block with the query -->
+{% block query %}
     {{ searchb(searchby,search,query) }}
+{% endblock %}
 
-    <!-- Show the journe -->
+<!-- Block with the message (success/nothing founds) -->
+{% block message %}
+    <div class="row">
+        <div class="container">
+            {% if default_search %}
+                <div class="alert alert-info" id="messageSchedule">
+                    <strong> Info: </strong> Give me something
+                </div>
+            {% else %}
+                {% if nb ==0 %}
+                    <div class="alert alert-warning" id="messageSchedule">
+                        <strong> Info: </strong> We found nothing
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success" id="messageSchedule">
+                        <strong> Info: </strong> We found {{nb}} contributions of interest. Click on each day to get detaileds
+                    </div>
+                {% endif %}
+            {% endif  %}
+        </div>
+    </div>
+{% endblock %}
+    
+<!-- Block with the app itself schedule -->
+
+{%block app%}
     <div class="row">
         <div class="container" id="whichday">
             {{ dbuttons() }}  
@@ -37,13 +62,14 @@
     </div>
 {% endblock %}
 
+<!-- late ls  -->
 {% block late_js %}
     <script text="type/javascript">
      $(document).ready(function() {
          refreshTogleNbAbstract()
          dropdownMenuNav()
-         initSchedule()
          refreshSchedule()
      });
     </script>
 {% endblock %}
+

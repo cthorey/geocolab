@@ -24,6 +24,7 @@
     "datamaps": "^0.5.1",
     "d3": "^3.5.16",
     "bootstrap": "^3.3.6",
-    "string-format": "^1.0.2"
+    "string-format": "^1.0.2",
+    "bootstrap-select": "^1.10.0"
   }
 }

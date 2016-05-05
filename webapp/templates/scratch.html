@@ -1,3 +1,23 @@
+<div class="dropdown pull-right">
+    <button class="btn btn-info dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="true">
+        <strong>More ?</strong>
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" id="dropdown-nb-abstracts" aria-labelledby="dropdownMenu1">
+        <li><a href="#" data-value="25" default>Nb = 25</a></li>
+        <li><a href="#" data-value="50">Nb = 50</a></li>
+        <li><a href="#" data-value="100">Nb = 100</a></li>
+    </ul>
+</div>
+
+
+$.each(result,function(sess,obj) {refreshSpan(sess,obj)})
+$.each(result,function(sess,obj) {displaySessions(sess,obj)})
+
 selector.empty()
 selector.append('<ul class="list-group">')
     var orals_arr = $.map(orals,function(obj,idx){return obj}) //Create the array
