@@ -12,13 +12,13 @@ body {
 -------------------------------------------------- */
 
 /* Special class on .container surrounding .navbar, used for positioning it into place. */
-/* .navbar-wrapper { */
-/*     position: absolute; */
-/*     top: 0; */
-/*     right: 0; */
-/*     left: 0; */
-/*     z-index: 20; */
-/* } */
+.navbar-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+}
 
 /* Flip around the padding for proper display in narrow viewports */
 .navbar-wrapper > .container {
@@ -39,8 +39,8 @@ body {
 
 /* Carousel base class */
 .carousel {
-  height: 800px;
-  margin-bottom: 0px;
+  height: 500px;
+  margin-bottom: 60px;
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
@@ -49,15 +49,47 @@ body {
 
 /* Declare heights because of positioning of img element */
 .carousel .item {
-  height: 800px;
-  background-color: #FFF;
+  height: 500px;
+  background-color: #777;
 }
-.carousel-inner > .item > d3chart {
+.carousel-inner > .item > img {
   position: absolute;
   top: 0;
   left: 0;
   min-width: 100%;
   height: 500px;
+}
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.marketing .col-lg-4 p {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
 }
 
 
@@ -89,53 +121,15 @@ body {
     font-size: 21px;
     line-height: 1.4;
   }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
 }
 
-
-/* Nabar CSS
--------------------------------------------------- */
-
-.marginBottom-0 {margin-bottom:0;}
-
-.dropdown-submenu{position:relative;}
-.dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
-.dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
-.dropdown-submenu:hover>a:after{border-left-color:#555;}
-.dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
-
-.btn-xl {
-    padding: 18px 28px;
-    font-size: 22px;
-    border-radius: 8px;
+@media (min-width: 992px) {
+  .featurette-heading {
+    margin-top: 120px;
+  }
 }
 
-h1.panel-title {
-    font-size: 36px;
-}
-h2.panel-title {
-    font-size: 30px;
-}
-h3.panel-title {
-    font-size: 24px;
-}
-h4.panel-title {
-    font-size: 18px
-}
-h5.panel-title {
-    font-size: 14px
-}
-h6.panel-title {
-    font-size: 10px;
-} 
-
-.fixed-panel {
-  max-height: 10;
-  overflow-y: scroll;
-}
-
-.chart-container {
-  width:100%;
-  height:60%;
-  viewBox:0 0 400 400;
-  preserveAspectRation:xMinYMin;
-}
