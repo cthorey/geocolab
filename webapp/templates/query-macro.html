@@ -11,14 +11,16 @@
                         </label>
                         <form role="form">
                             <div class="form-group">
-                                <input class="form-control"
-                                       type="text"
-                                       placeholder="{{search}}"
-                                       id="search"
-                                       name="search"></input>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-default"> submit </button>
+                                <div class="input-group">
+                                    <input class="form-control"
+                                           type="text"
+                                           placeholder="{{search}}"
+                                           id="search"
+                                           name="search"></input>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-defaut" type="submit">Go!</button>
+                                    </span>
+                                </div>
                             </div>
                         </form>
                         <button class ="btn btn-warning col-xs-8" data-toggle="collapse" data-target="#toggle_query">Get more info on your query</button>
@@ -42,17 +44,21 @@
 {% macro searchby(sby,search,query) %}
     {% call query_based(search,query) %}
         {% if sby == 'byquery' %}
-            <h3> Query-based recommendation system </h3>
-            <p> Type your query here.</p>
+            <h3> <strong> Query-based</strong> recommendation system. </h3>
+            <p> We use your raw query to identify a set of simular contributions to AGU.<br>
+                Type it here.</p>
         {% elif sby == 'bytitle' %}
-            <h3> Title-based recommendation system </h3>
-            <p> Type the title of a contribution you wish use for the recommendation system.</p>
+            <h3> <strong> Abstract-based</strong> recommendation system. </h3>
+            <p> We use an abstract to identify a set of similar contributions to AGU. <br>
+                Type the title of the abstract your want to use for your recomendation. </p>
         {% elif sby == 'bylink' %}
-            <h3> Link-based recommendation system </h3>
-            <p> Type the link of an abstract your wish to use to base your collaboration recommendation.</p>
+            <h3> <strong> Abstract-based</strong> recommendation system. </h3>
+            <p> We use an abstract to identify a set of similar contributions to AGU. <br>
+                Type the link of the abstract your want to use for your recomendation. </p>
         {% elif sby == 'byauthor' %}
-            <h3> Author-based recommendation system </h3>
-            <p> Type the name of a contributors you wish to base his abstract one.</p>
+            <h3> <strong> Abstract-based</strong> recommendation system. </h3>
+            <p> We use an abstract to identify a set of similar contributions to AGU. <br>
+                Type the name of one author of the abstract your want to use for your recomendation. </p>
         {% endif %}
     {% endcall %}
 {% endmacro %}

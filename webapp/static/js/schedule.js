@@ -91,7 +91,7 @@ function refreshMessage(nb,is_qry)
     selector.empty()
     if (!(is_qry))
     {
-        var message = 'Type something in the place above'
+        var message = 'Type something in the search panel above to help us identify what you are looking for.'
         var content = '<div class="alert alert-info">'+
             '<strong> Info: </strong> %s'+
             '</div>'
@@ -99,9 +99,9 @@ function refreshMessage(nb,is_qry)
     }
     else if (nb == 0)
     {
-        var message = 'we did not find any contribution that'+
-            'could potentially match your request. Give us'+
-            ' more clues about what your are looking for'
+        var message = 'we did not find any contributions that'+
+            ' could potentially match your request. Try with a different request. '+
+            ' different request.'
         var content = '<div class="alert alert-warning">'+
             '<strong> Sorry, </strong> %s'+
             '</div>'
