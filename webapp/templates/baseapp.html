@@ -1,21 +1,21 @@
 {% extends "layout.html" %}
 
 {% block content %}
+    <div class="container">
+        <!-- Block with the query -->
+        {%block query %}
+        {%endblock%}
+        
+        <!-- Block with the massage (success/nothing founds) -->    
+        {%block message%}a
+        {%endblock%}
+        
+        <!-- Block with the app itself collab/schedule -->    
+        {%block app%}
+        {%endblock%}
 
-    <!-- Block with the query -->
-    {%block query %}
-    {%endblock%}
-
-    <!-- Block with the massage (success/nothing founds) -->    
-    {%block message%}a
-    {%endblock%}
-
-    <!-- Block with the app itself collab/schedule -->    
-    {%block app%}
-    {%endblock%}
-
-    {%block loader%}
-    {% endblock %}
-    
+        {%block loader%}
+        {% endblock %}
+    </div>
 {% endblock %}
 
