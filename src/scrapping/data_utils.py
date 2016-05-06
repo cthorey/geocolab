@@ -83,7 +83,7 @@ class Contributor(object):
         ad = self.address.lower()
         try:
             self.country = country[
-                map(lambda x: x in str(ad), country).index(True)]
+                map(lambda x: x in ad, country).index(True)]
         except:
             if 'taiwan' in ad:
                 self.country = 'taiwan, province of china'
