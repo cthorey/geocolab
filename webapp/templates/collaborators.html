@@ -39,14 +39,14 @@
 {% block app %}
     <!-- Display the map  -->
     <div class="row">
-        <div class="col-md-12">
+        <div class="container">
             <div id="map-container-collab" style="position: relative; height: 100%; width: 100%;">
             </div>
         </div>
     </div>
 
     <!-- Display the thumbnail  -->
-    <div class="row-fluid">
+    <div class="row">
         <div class="container" id="thumbmail-collab">
         </div>
     </div>
@@ -57,9 +57,7 @@
     <script text="type/javascript">
      $(document).ready(function() {
          initMessageCollab()
-         map = displayMapCollab({{data|safe}},{{colors|safe}})
-         resizemap(map)
-         onClickCountry(map)
+         displayMap({{data|safe}},{{colors|safe}})
          onSelectNb()
          dropdownMenuNav()
      });

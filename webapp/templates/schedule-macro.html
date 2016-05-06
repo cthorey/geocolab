@@ -1,6 +1,9 @@
 {% macro display_buttons() %}
     <div class="btn-group btn-group-justified" role="group" aria-label="...">
-        {% for day in ["Monday","Tuesday","Wednesday","Thursday","Friday"] %}
+        <div class="btn-group" role="group" id="button-week">
+            <button type="button" id="button-Monday" class="btn btn-primary text-capitalize day active">Monday</button>
+        </div>
+        {% for day in ["Tuesday","Wednesday","Thursday","Friday"] %}
             <div class="btn-group" role="group" id="button-week">
                 <button type="button" id="button-{{day}}" class="btn btn-primary text-capitalize day">{{day}}</button>
             </div>

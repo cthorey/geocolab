@@ -26,25 +26,6 @@ function initMessageCollab()
     displayBlockMessage()
 }
 
-
-/*********************************************************************
-Resize map automatically*/
-
-function resizemap(map)
-{
-    window.addEventListener('resize', function() {
-        map.resize();
-    });
-}
-
-/*********************************************************************
-OnClickCountry event*/
-function onClickCountry()
-{
-    map.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-        displayBlockApp(geography.properties.name);
-    })
-}
 /**********************************************************************
 Refresh on click on changing Nb */
 
@@ -59,6 +40,7 @@ function onSelectNb()
                            var nb = $(this).val();
                            changeNb(translation[nb.trim()]);
                            displayBlockMessage()
+                           refreshMap()
                        })
 }
 
@@ -80,17 +62,30 @@ function displayBlockMessage()
     })
 }
 
-function displayBlockApp(country)
+function displayBlockThumbnails(country)
 {
     $.ajax({
         dataType:"json",
-        url: $SCRIPT_ROOT + "/query_based/_refresh_collab",
+        url: $SCRIPT_ROOT + "/query_based/_get_thumbnails",
         data: {'country': dict_code_country[country]},
         success: function(result) {
             displayThumbnails(result,country)
         }
     })
 }
+
+function refreshMap()
+{
+    $.ajax({
+        dataType:"json",
+        url: $SCRIPT_ROOT + "/query_based/_get_map_spec",
+        success: function(result) {
+            displayMap(result.data,result.colors)
+        }  
+    })
+    
+}
+
 
 /*********************************************************************
 **********************************************************************
@@ -107,7 +102,7 @@ function refreshMessageCollab(nb,is_qry)
     selector.empty()
     if (!(is_qry))
     {
-        var message = 'Type something in the place above'
+        var message = 'Type something in the search panel above to help us identify what you are looking for.'
         var content = '<div class="alert alert-info">'+
             '<strong> Info: </strong> %s'+
             '</div>'
@@ -115,9 +110,8 @@ function refreshMessageCollab(nb,is_qry)
     }
     else if (nb == 0)
     {
-        var message = 'we did not find any potential contributors that'+
-            'could potentially match your request. Give us'+
-            ' more clues about whom your are looking for'
+        var message = 'we did not find any contributors that'+
+            ' could potentially match your request. Try with a different request.'
         var content = '<div class="alert alert-warning">'+
             '<strong> Sorry, </strong> %s'+
             '</div>'
@@ -125,8 +119,7 @@ function refreshMessageCollab(nb,is_qry)
     }
     else
     {
-        var message = 'we found %s collegues which are just waiting '+
-            'for your call to work together. '
+        var message = 'we found %s researchers across the world for you to work with. '+
             'Click on each country to get the details.'
         var message = message.format(nb)
         var content = '<div class="alert alert-success">'+
@@ -141,7 +134,7 @@ function refreshMessageCollab(nb,is_qry)
 /*********************************************************************
 App */
 
-function displayMapCollab(data,fills)
+function displayMap(data,fills)
 /**
  * @summary Diplay the map of collaborators.
  *
@@ -152,12 +145,17 @@ function displayMapCollab(data,fills)
  * @param array $fills classic input for datamap.
  */
 {
+    $('#map-container-collab').empty()
     var map = new Datamap({
         scope : 'world',
         element: document.getElementById('map-container-collab'),
         projection: 'mercator',
         fills: fills,
         data : data,
+        done: function(datamap) {
+            datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+                displayBlockThumbnails(geography.properties.name);
+            })},
         geographyConfig: {
             popupTemplate: function(geography, data) {
                 return ['<div class="hoverinfo">' + geography.properties.name,
@@ -169,19 +167,26 @@ function displayMapCollab(data,fills)
         responsive: true,
     }
                          )
-    return map
+    // Pure JavaScript
+    window.addEventListener('resize', function() {
+        map.resize();})
 }
 
 
 function displayThumbnails(result,country)
 {
-    if ($.isEmptyObject(result))
+    console.log(result.is_qry)
+    if (!(result.is_qry))
     {
-        DisplayNullColab(country)
+        $("#thumbmail-collab").empty()
+    }
+    else if ($.isEmptyObject(result.result))
+    {
+        DisplayNullCollab(country)
     }
     else
     {
-        DisplayCollabThumbmail(result,country)
+        DisplayCollabThumbmail(result.result,country)
     }
 }
 
@@ -207,6 +212,8 @@ function CollabDisplay(author)
     return div
 }
 
+
+
 function DisplayCollabThumbmail(result,country)
 /**
  * @summary Organize and display all the thumbnail for a specific country.
@@ -220,11 +227,21 @@ function DisplayCollabThumbmail(result,country)
     // // empty the element
     $("#thumbmail-collab").empty();
         // // Sucess of the request
-    var div = '<div class="alert alert-success">'+
+    var div = '<div class="alert alert-info">'+
         '<strong> %s :</strong> '+
-        'We found at least %s collaborators which are waiting for your call there.'+
+        '%s waiting for your call there.'+
         '</div>';
-    $("#thumbmail-collab").append(div.format(country,Object.keys(result).length));
+    var n = Object.keys(result).length
+    if (n ==1)
+    {
+        var mess = '%s collaborator is '.format(n)
+    }
+    else
+    {
+        var mess = '%s collaborators are '.format(n)
+    }
+    var div = div.format(country,mess)
+    $("#thumbmail-collab").append(div);
     // Fill in the thumbnails
     // First sort the results
     var arr = $.map(result,function(obj,idx){return obj}) //Create the array
@@ -253,7 +270,7 @@ function DisplayNullCollab(country)
     $("#thumbmail-collab").empty();
     var div = '<div class="alert alert-info">'+
         '<strong> %s :</strong> '+
-        'We did not find any collaborators for you in this country. Try to increase Nb if you really need to work with someone there.'
+        'Nobody for you in this country.'
         '</div>';
     $("#thumbmail-collab").append(div.format(country));
 }

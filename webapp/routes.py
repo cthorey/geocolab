@@ -18,12 +18,16 @@ def home():
 ####################################################
 
 
-@app.route("/query_based/_refresh_collab", methods=['GET'])
-def _refresh_collab():
+@app.route("/query_based/_get_thumbnails", methods=['GET'])
+def _get_thumbnails():
     iso3 = request.args.get('country', '')
     collabs = RECOM.get_collaborators(Qry.get_query())
     country = RECOM.iso3_to_country(iso3)
-    return jsonify(collabs[collabs.country == country].to_dict('index'))
+    if len(collabs) == 0:
+        result = {}
+    else:
+        result = collabs[collabs.country == country].to_dict('index')
+    return jsonify({'result': result, 'is_qry': Qry.is_query()})
 
 
 @app.route("/query_based/_get_nb_collabs", methods=['GET'])
@@ -32,24 +36,24 @@ def _get_nb_collabs():
     return jsonify({'n': n, 'is_qry': Qry.is_query()})
 
 
-@app.route("/query_based/_refresh_nbcollab", methods=['GET'])
-def _refresh_nbcollab():
-    nb = request.args.get('nb', '')
-    RECOM.n_base_recom = int(nb)
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
-    return jsonify({'data': data, 'colors': colors, 'query': Qry.get_query(), 'nbcollabs': nbcollabs})
+@app.route("/query_based/_get_map_spec", methods=['GET'])
+def _get_map_spec():
+    _, data, colors = RECOM.get_map_specification(Qry.get_query())
+    return jsonify({'data': data, 'colors': colors})
 
 
 @app.route("/query_based_<searchby>", methods=['GET'])
 def query_based(searchby):
     # get the search request
+    RECOM.nb_collab = 25
     search = request.args.get('search', "")
     Qry.set_query(search, searchby.lower())
-    nbcollabs, data, colors = RECOM.get_map_specification(Qry.get_query())
+    n, data, colors = RECOM.get_map_specification(Qry.get_query())
+    if not Qry.is_query() or n == 0:
+        search = Qry.get_defaut_message(searchby)
     return render_template('collaborators.html',
                            data=json.dumps(data),
                            colors=json.dumps(colors),
-                           nbcollabs=nbcollabs,
                            search=search,
                            query=Qry.get_query(),
                            searchby=Qry.get_sby())
@@ -118,7 +122,7 @@ def query_based_journey(searchby):
     search = request.args.get('search', "")
     Qry.set_query(search, searchby.lower())
     df = RECOM.recomendation(Qry.get_query())
-    if not Qry.is_query():
+    if not Qry.is_query() or len(df) == 0:
         search = Qry.get_defaut_message(searchby)
     return render_template('schedule.html',
                            nb=len(df),

@@ -16,26 +16,26 @@
                     <li class="tab {{home}}" id="home"><a href="{{url_for('home')}}">Home</a></li>
                     <li class="tab dropdown {{schedule}}" id="schedule"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Plan your journey <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{url_for('query_based_journey',searchby='query')}}">Query based suggestion</a></li>
+                            <li><a href="{{url_for('query_based_journey',searchby='query')}}">Query-based recommendation</a></li>
                             <li class="divider"></li>
-                            <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract based suggestion</a>
+                            <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract-based recommendation</a>
 		                <ul class="dropdown-menu">
-		                    <li><a href="{{url_for('query_based_journey',searchby='title')}}">Title</a></li>
-		                    <li><a href="{{url_for('query_based_journey',searchby='author')}}">Authors</a></li>
-		                    <li><a href="{{url_for('query_based_journey',searchby='link')}}">Link</a></li>
+		                    <li><a href="{{url_for('query_based_journey',searchby='title')}}">Identify by title</a></li>
+		                    <li><a href="{{url_for('query_based_journey',searchby='author')}}">Identify by authors</a></li>
+		                    <li><a href="{{url_for('query_based_journey',searchby='link')}}">Identify by link</a></li>
 		                </ul>
 		            </li>
                         </ul>
                     </li>
                     <li class="tab dropdown {{collab}}" id="collab"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Find collaborators <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{url_for('query_based',searchby='query')}}">Query based suggestion</a></li>
+                            <li><a href="{{url_for('query_based',searchby='query')}}">Query-based recommendation</a></li>
                             <li class="divider"></li>
-                            <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract based suggestion</a>
+                            <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Abstract-based recommendation</a>
 		                <ul class="dropdown-menu">
-		                    <li><a href="{{url_for('query_based',searchby='title')}}">Title</a></li>
-		                    <li><a href="{{url_for('query_based',searchby='author')}}">Authors</a></li>
-		                    <li><a href="{{url_for('query_based',searchby='link')}}">Link</a></li>
+		                    <li><a href="{{url_for('query_based',searchby='title')}}">Identify by title</a></li>
+		                    <li><a href="{{url_for('query_based',searchby='author')}}">Identify by authors</a></li>
+		                    <li><a href="{{url_for('query_based',searchby='link')}}">Identify by link</a></li>
 		                </ul>
 		            </li>
                         </ul>

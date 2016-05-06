@@ -38,13 +38,14 @@ class Query(mydb):
 
     def __init__(self):
         self.query = ""
+        self.search = ""
 
-    def query2query(self, search):
-        query = search
+    def query2query(self):
+        query = self.search
         return query
 
-    def link2query(self, search):
-        link = search
+    def link2query(self):
+        link = self.search
         res = self.query_db(
             'select abstract from papers where linkp=?', [link])
         if len(res) == 0:
@@ -53,8 +54,8 @@ class Query(mydb):
             query = res[0]['abstract']
         return query
 
-    def title2query(self, search):
-        title = search.lower()
+    def title2query(self):
+        title = self.search.lower()
         qry = 'select distinct(abstract) from papers where formatTitle=? '
         res = self.query_db(qry, [title])
         if len(res) == 0:
@@ -63,8 +64,8 @@ class Query(mydb):
             query = res[0]['abstract']
         return query
 
-    def author2query(self, search):
-        author = search.lower()
+    def author2query(self):
+        author = self.search.lower()
         qry = 'select distinct(abstract) from papers,p2a ' +\
               'where p2a.linkp=papers.linkp and p2a.formatName = ?'
         res = self.query_db(qry, [author])
@@ -76,24 +77,25 @@ class Query(mydb):
 
     def get_defaut_message(self, searchby):
         if searchby == 'query':
-            return 'Example: Dynamics of magmatic intrusions'
+            return 'Query example: Dynamics of magmatic intrusions'
         elif searchby == 'author':
-            return 'Example: Clement Thorey'
+            return 'Author example: Clement Thorey'
         elif searchby == 'link':
-            return 'Example: https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/67077'
+            return 'Link example: https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/67077'
         elif searchby == 'title':
-            return 'Floor-Fractured Craters through Machine Learning Methods'
+            return 'Title example: Floor-Fractured Craters through Machine Learning Methods'
         else:
             return ''
 
     def is_query(self):
-        if self.query == "":
+        if self.search == "":
             return False
         else:
             return True
 
     def set_query(self, search, searchby):
-        self.query = getattr(self, searchby + '2query')(search)
+        self.search = search
+        self.query = getattr(self, searchby + '2query')()
         self.sby = 'by' + searchby
 
     def get_query(self):
@@ -222,8 +224,7 @@ class RecomendationSystem(mydb):
                     fills[country] = str(colorscale[n]).upper()
 
         fills.update({'defaultFill': 'grey'})
-        nb_collab = len(df)
-        return nb_collab, data, fills
+        return len(df), data, fills
 
     def get_number_results(self, query):
         df = self.recomendation(query).head(self.n_base_recom)
