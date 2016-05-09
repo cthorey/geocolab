@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block early_js %}
-    <script src="{{url_for('static',filename='bower_components/d3pie/d3pie/d3pie.min.js')}}"></script>
     <script src="{{url_for('static',filename='js/home.js')}}"></script>
 {% endblock %}
 
@@ -19,47 +18,47 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container">
+        <!-- Slide 1 -->
+        <div class="jumbotron">
+            <h2 class="text-center"> Welcome to geocolab</h2>
+        </div>
+        
+        <!-- Slide 2 -->
 
-    <div class="jumbotron">
-        <div class ="container ">
-            <h1 class="centered"> Welcome</h1>
+        <div class="container">
+            <div class="row featuret">
+                <h2 class="lead text-center">Ever been lost in the scientific program ? <span class="text-muted">Not anymore.</span></h2>
+                <p class="lead text-center"> Based on all AGU contributions and state-of-the-art machine learning techniques, we design a recomendation
+                    engine able to extract relevant absracts throughout the 25000's submited to AGU. Your search will no more be
+                    limited to a few sessions. 
+                </p>
+                <button type="button" class="btn btn-primary btn-lg center-block">  <a href="{{url_for('query_based_journey',searchby='query')}}"> Try it out</a></button>
+            </div>
+        </div>
+        
+        <hr class="featurette-divider">
+        <!-- Slide  -->
+
+        <div class="container">
+            <div class="container">
+                <h2 class="lead text-center"> Tired of working alone ? <span class="text-muted"> Not anymore.</span> </h2>
+                <p class="lead text-center">Based on our design recomendation system, we design an collaborators-app
+                    which make easy the process of finding poeple working on similar topics.</p>
+            </div>
+            <button type="button" class="btn btn-primary btn-lg center-block" > <a href="{{url_for('query_based',searchby='query')}}">Try it out</a></button>
+        </div>
         </div>
     </div>
-    
-    <!-- Carousel
-         ================================================== -->
-    <div class ="container">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-            </ol>
-            <div class="carousel-inner" role="listbox">
-                <div class="item active">
-                    <div class="chart-container" id="chart1">
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="chart-container" id="chart2">
-                    </div>
-                </div>
-            </div>
-            <a class="left carousel-control" href="index.html#myCarousel" role="button" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control" href="index.html#myCarousel" role="button" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div><!-- /.carousel -->
-    </div>
+
+
 {% endblock %}
 
 {% block late_js %}
     <script text="type/javascript">
-     displayHomeMap()
-     displayHomePie()
+     $(document).ready(function() {
+         
+         });
     </script>
+
 {% endblock %}

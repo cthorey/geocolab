@@ -1,82 +1,13 @@
-/* GLOBAL STYLES
--------------------------------------------------- */
-/* Padding below the footer and lighter body text */
-
-body {
-  padding-bottom: 40px;
-  color: #5a5a5a;
+.featuret {
+  display: inline-block;
+  float: none;
 }
 
-
-/* CUSTOMIZE THE NAVBAR
--------------------------------------------------- */
-
-/* Flip around the padding for proper display in narrow viewports */
-.navbar-wrapper > .container {
-  padding-right: 0;
-  padding-left: 0;
-}
-.navbar-wrapper .navbar {
-  padding-right: 15px;
-  padding-left: 15px;
-}
-.navbar-wrapper .navbar .container {
-  width: auto;
+ .featuret >.col-sm-4  {
+  vertical-align: middle;
 }
 
-
-
-/* CUSTOMIZE THE CAROUSEL
--------------------------------------------------- */
-
-.chart-container {
-  width:100%;
-  height:50%;
-  viewBox:0 0 400 400;
-  preserveAspectRation:xMinYMin;
 }
-
-.content-container {
-    width:100%;
-    height:50%;
-}
-
-/* Carousel base class */
-
-.carousel-control
-{ width : 8%}
-
-/* Declare heights because of positioning of img element */
-.carousel .item {
-  height: 100%;
-  background-color: #FFF;
-}
-
-
-/* RESPONSIVE CSS
--------------------------------------------------- */
-
-@media (min-width: 768px) {
-  /* Navbar positioning foo */
-  .navbar-wrapper {
-    margin-top: 20px;
-  }
-  .navbar-wrapper .container {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-  .navbar-wrapper .navbar {
-    padding-right: 0;
-    padding-left: 0;
-  }
-
-  /* The navbar becomes detached from the top, so we round the corners */
-  .navbar-wrapper .navbar {
-    border-radius: 4px;
-  }
-}
-
-
 /* Nabar CSS
 -------------------------------------------------- */
 
@@ -116,4 +47,12 @@ h6.panel-title {
 .fixed-panel {
   max-height: 10;
   overflow-y: scroll;
+}
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
 }
