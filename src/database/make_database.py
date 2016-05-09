@@ -75,6 +75,12 @@ if __name__ == "__main__":
     conn.executescript(qry)
     conn.commit()
 
+    # Create table homemap
+    pprogress('Create homemap table')
+    qry = open('create_homemap.sql', 'r').read()
+    conn.executescript(qry)
+    conn.commit()
+
     # Close everything
     pprogress('Successs')
     c.close()

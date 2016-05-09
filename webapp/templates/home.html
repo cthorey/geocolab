@@ -11,6 +11,7 @@
 
 {% block early_js %}
     <script src="{{url_for('static',filename='bower_components/d3pie/d3pie/d3pie.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/home.js')}}"></script>
 {% endblock %}
 
 {% block nav %}
@@ -18,6 +19,13 @@
 {% endblock %}
 
 {% block content %}
+
+    <div class="jumbotron">
+        <div class ="container ">
+            <h1 class="centered"> Welcome</h1>
+        </div>
+    </div>
+    
     <!-- Carousel
          ================================================== -->
     <div class ="container">
@@ -26,40 +34,14 @@
             <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
             </ol>
             <div class="carousel-inner" role="listbox">
                 <div class="item active">
                     <div class="chart-container" id="chart1">
                     </div>
-                    <div class="container">
-                        <div class="carousel-caption">
-                            <h1>Example headline.</h1>
-                            <p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
-                            <p><a class="btn btn-lg btn-primary" href="index.html#" role="button">Sign up today</a></p>
-                        </div>
-                    </div>
                 </div>
                 <div class="item">
                     <div class="chart-container" id="chart2">
-                    </div>
-                    <div class="container">
-                        <div class="carousel-caption">
-                            <h1>Another example headline.</h1>
-                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                            <p><a class="btn btn-lg btn-primary" href="index.html#" role="button">Learn more</a></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="chart-container" id="chart3">
-                    </div>
-                    <div class="container">
-                        <div class="carousel-caption">
-                            <h1>One more for good measure.</h1>
-                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                            <p><a class="btn btn-lg btn-primary" href="index.html#" role="button">Browse gallery</a></p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -77,106 +59,7 @@
 
 {% block late_js %}
     <script text="type/javascript">
-     var map = new Datamap({
-         element: document.getElementById("chart1"),
-         projection: 'mercator',
-         fills: {
-             defaultFill: "#ABDDA4",
-             authorHasTraveledTo: "#fa0fa0"
-         },
-         data: {
-             USA: { fillKey: "authorHasTraveledTo" },
-             JPN: { fillKey: "authorHasTraveledTo" },
-             ITA: { fillKey: "authorHasTraveledTo" },
-             CRI: { fillKey: "authorHasTraveledTo" },
-             KOR: { fillKey: "authorHasTraveledTo" },
-             DEU: { fillKey: "authorHasTraveledTo" },
-         }
-     });
-
-     var pie = new d3pie('chart2', {
-	 data: {
-	     content: [
-		 { label: "JavaScript", value: 264131 },
-		 { label: "Ruby", value: 218812 },
-		 { label: "Java", value: 157618},
-                 { label: "Python", value: 100000},
-                 { label: "C", value: 10000},
-	     ]
-	 }
-     });
-
-
-     var $container = $('.chart-container'),
-         width = $container.width(),
-         height = $container.height()
-
-     window.addEventListener('resize', function() {
-         map.resize();})
-     
-
-
-     $(function(){
-         var $container = $('.chart-container'),
-             τ = 2 * Math.PI,
-             width = $container.width(),
-             height = $container.height(),
-             outerRadius = Math.min(width,height)/2,
-             innerRadius = (outerRadius/5)*4,
-             fontSize = (Math.min(width,height)/4);
-         
-         var arc = d3.svg.arc()
-                     .innerRadius(innerRadius)
-                     .outerRadius(outerRadius)
-                     .startAngle(0);
-
-         var svg = d3.select('.chart-container#chart3').append("svg")
-                     .attr("width", '100%')
-                     .attr("height", '100%')
-                     .attr('viewBox','0 0 '+Math.min(width,height) +' '+Math.min(width,height) )
-                     .attr('preserveAspectRatio','xMinYMin')
-                     .append("g")
-                     .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")");
-
-         var text = svg.append("text")
-                       .text('0%')
-                       .attr("text-anchor", "middle")
-                       .style("font-size",fontSize+'px')
-                       .attr("dy",fontSize/3)
-                       .attr("dx",2);
-         
-         var background = svg.append("path")
-                             .datum({endAngle: τ})
-                             .style("fill", "#7cc35f")
-                             .attr("d", arc);
-
-         var foreground = svg.append("path")
-                             .datum({endAngle: 0 * τ})
-                             .style("fill", "#57893e")
-                             .attr("d", arc);
-
-         setInterval(function() {
-             foreground.transition()
-                       .duration(750)
-                       .call(arcTween, Math.random() * τ);
-         }, 1500);
-
-         function arcTween(transition, newAngle) {
-
-             transition.attrTween("d", function(d) {
-                 
-                 var interpolate = d3.interpolate(d.endAngle, newAngle);
-                 
-                 return function(t) {
-                     
-                     d.endAngle = interpolate(t);
-                     
-                     text.text(Math.round((d.endAngle/τ)*100)+'%');
-                     
-                     return arc(d);
-                 };
-             });
-         }
-     });
+     displayHomeMap()
+     displayHomePie()
     </script>
 {% endblock %}

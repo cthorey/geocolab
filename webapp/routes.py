@@ -8,6 +8,17 @@ import pandas as pd
 ####################################################
 # Home
 ####################################################
+@app.route('/_get_homemap_spec')
+def _get_homemap_spec():
+    data, fills = RECOM.get_map_spec_home()
+    return jsonify({'data': data, 'fills': fills})
+
+
+@app.route('/_get_homepie_spec')
+def _get_homepie_spec():
+    data = RECOM.get_pie_spec_home()
+    return jsonify({'data': data})
+
 
 @app.route('/')
 def home():
