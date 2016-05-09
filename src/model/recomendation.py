@@ -18,6 +18,22 @@ from sklearn.externals import joblib
 class mydb(object):
 
     db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
+    name_to_iso3 = {
+        elt.name.upper(): elt.alpha3 for elt in pycountry.countries}
+    iso3_to_name = {
+        elt.alpha3: elt.name.upper() for elt in pycountry.countries}
+
+    def _country_to_iso3(self, name):
+        try:
+            return self.name_to_iso3[name.upper()]
+        except:
+            return ''
+
+    def iso3_to_country(self, iso3):
+        try:
+            return self.iso3_to_name[iso3.upper()].lower()
+        except:
+            return ''
 
     def get_db(self):
         db = sqlite3.connect(self.db_path)
@@ -30,6 +46,47 @@ class mydb(object):
         rv = res.fetchall()
         db.close()
         return (rv[0] if rv else None) if one else rv
+
+    def get_pie_spec_home(self):
+
+        qry = 'select section,count(linkp) as n from papers ' +\
+              'group by section ' +\
+              'order by n'
+        res = self.query_db(qry)
+        df = pd.DataFrame([[row[f] for f in res[0].keys()]
+                           for row in res], columns=res[0].keys())
+        data = [{'label': row.section, 'value': row.n}
+                for i, row in df.iterrows()]
+        return data
+
+    def get_map_spec_home(self):
+
+        qry = 'select * from homemap'
+        res = self.query_db(qry)
+        df = pd.DataFrame([[row[f] for f in res[0].keys()]
+                           for row in res], columns=res[0].keys())
+        df['iso3'] = map(lambda x: self._country_to_iso3(x), df.country)
+
+        # Initiate the data and fills
+        data = {str(f): {"ntotal": 0,
+                         "fillKey": str(f)}
+                for f in self.name_to_iso3.values()}
+        fills = {}
+
+        values = list(set(df.ntotal.tolist()))
+        values.sort()
+        colors = sns.color_palette('Reds', len(values))
+        colorscale = dict(
+            zip(values, colors.as_hex()))
+
+        keys = [f for f in df.columns if f not in ['country', 'iso3']]
+        for i, row in df.iterrows():
+            if row.iso3 not in ['']:
+                data[row.iso3].update(row[keys].to_dict())
+                fills[row.iso3] = str(colorscale[row.ntotal]).upper()
+
+        fills.update({'defaultFill': 'grey'})
+        return data, fills
 
 
 class Query(mydb):
@@ -125,23 +182,7 @@ class RecomendationSystem(mydb):
         self.corpus = corpora.MmCorpus(self.name + '_lsi.mm')
         self.index = similarities.MatrixSimilarity.load(
             self.name + '_lsi.index')
-        self.name_to_iso3 = {
-            elt.name.upper(): elt.alpha3 for elt in pycountry.countries}
-        self.iso3_to_name = {
-            elt.alpha3: elt.name.upper() for elt in pycountry.countries}
         self.n_base_recom = 25
-
-    def _country_to_iso3(self, name):
-        try:
-            return self.name_to_iso3[name.upper()]
-        except:
-            return ''
-
-    def iso3_to_country(self, iso3):
-        try:
-            return self.iso3_to_name[iso3.upper()].lower()
-        except:
-            return ''
 
     def transform_query(self, query):
         # Transform the query in lsi space
