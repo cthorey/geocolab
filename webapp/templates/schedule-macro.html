@@ -1,25 +1,26 @@
 {% macro display_buttons() %}
     <div class="btn-group btn-group-justified" role="group" aria-label="...">
         <div class="btn-group" role="group" id="button-week">
-            <button type="button" id="button-Monday" class="btn btn-primary btn-circle text-capitalize day active">Monday</button>
+            <button type="button" id="button-Mon" class="btn btn-success round day active">Mon</button>
         </div>
-        {% for day in ["Tuesday","Wednesday","Thursday","Friday"] %}
+        {% for day in ["Tue","Wed","Thu","Fri"] %}
             <div class="btn-group" role="group" id="button-week">
-                <button type="button" id="button-{{day}}" class="btn btn-primary btn-circle text-capitalize day">{{day}}</button>
+                <button type="button" id="button-{{day}}" class="btn btn-success round day">{{day}}</button>
             </div>
         {% endfor %}
     </div>
+
 {% endmacro %}
 
 
 {% macro display_schedule_session(session) %}
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4 class="panel-title">
+            <h5 class="panel-title">
                 <a data-toggle="collapse" href="#{{session}}">
                     {{ caller() }}  <span class="badge pull-right" id="span-{{session}}">0</span>
                 </a>
-            </h4>              
+            </h5>              
         </div>
         <div id="{{session}}" class="panel-collapse collapse">
             <div class="panel-body">

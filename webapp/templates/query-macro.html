@@ -1,4 +1,4 @@
-{% macro query_based(search,query) %}
+{% macro query_based(search,query,sby) %}
     <!-- Get the query and greatings  -->
     <div class="row">
         <div class="container">
@@ -23,7 +23,13 @@
                                 </div>
                             </div>
                         </form>
-                        <button class ="btn btn-warning col-xs-8" data-toggle="collapse" data-target="#toggle_query">Get more info on your query</button>
+                        <button class ="btn btn-warning col-xs-8" data-toggle="collapse" data-target="#toggle_query">
+                            {% if sby =='byquery' %}
+                                Query
+                            {% else %}
+                                Abstract
+                            {% endif %}
+                        </button>
                         <select class="selectpicker show-menu-arrow col-xs-4" data-style="btn-info" id="select-nb">
                             <option title="Small"> Use only 25 first recommendations </option>
                             <option title="Medium"> Use 50 first recommendations </option>
@@ -33,7 +39,12 @@
                 </div>
                 <div id="toggle_query" class="panel-collapse collapse">
                     <div class="panel-body fixed-panel">
-                        <small class="lead">{{ query }}</small>
+                        {% if sby =='byquery' %}
+                            <p> <strong>The query used for the recomendation is: </strong>
+                        {% else %}
+                                <p> <strong>The abstract used for the recomendation is:</strong> <br>
+                        {% endif %}
+                        <q>{{ query }}</q> </p>
                     </div>
                 </div>
             </div>
@@ -42,7 +53,7 @@
 {% endmacro %}
 
 {% macro searchby(sby,search,query) %}
-    {% call query_based(search,query) %}
+    {% call query_based(search,query,sby) %}
         {% if sby == 'byquery' %}
             <h3> <strong> Query-based</strong> recommendation system. </h3>
             <p> We use your raw query to identify a set of simular contributions to AGU.<br>
