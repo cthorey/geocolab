@@ -58,20 +58,29 @@ Listing of all the important task to do
     Harder than  I though.  Title from the  query to the  db ?  how to
     match both ?
 
-** IN-PROGRESS [#A] Implement an app for plan a journey sort of app
+** DONE [#A] Implement an app for plan a journey sort of app
+   CLOSED: [2016-05-10 Tue 15:17]
 
 ** TODO Rerun the scrapping to get the email adrresses !
-** TODO Input some text, embellish everything and put online !
+** DONE Input some text, embellish everything and put online !
+   CLOSED: [2016-05-10 Tue 15:17]
 
-** TODO Arrange something for query-based recom
+** DONE Arrange something for query-based recom
+   CLOSED: [2016-05-10 Tue 15:17]
    The recom  is based  only on  what is  search by  the user  for the
    moment.
    Implement smth that male the  query more large (like abstract-sized
    stuff) for compleness
 
 
-** WAITING Place the button at the bottom of thumbnail
+** DONE Place the button at the bottom of thumbnail
+   CLOSED: [2016-05-10 Tue 15:18]
    Complicated to so smth responsiv
+
+** TODO Panel scrolle in abstract
+
+** TODO Change info on query depends on what is it
+
 
 
  

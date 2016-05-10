@@ -9,6 +9,10 @@ function initMessageSchedule()
     displayBlockMessage()
 }
 
+function initMonday()
+{
+    displayBlockApp("Mon")
+}
 /**********************************************************************
 Refresh on click on day */
 
@@ -62,7 +66,8 @@ function displayBlockMessage()
 
 function displayBlockApp(day)
 {
-    var day = day
+    var day2day = {"Mon":"Monday","Tue":"Tuesday","Wed":"Wednesday","Thu":"Thursday","Fri":"Friday"}
+    var day = day2day[day]
     $.ajax({
         dataType:"json",
         url: $SCRIPT_ROOT + "/query_based_journey/_get_schedule_day",
@@ -179,7 +184,7 @@ function displayEmpty(selector,obj)
 {
     var message = 'Seems like a perfect moment for sight-seeing' 
     var a = '<li class="list-group-item list-group-item-warning">'+
-        '<h4 class="list-group-item-heading">Nothing for you here</h4>'+
+        '<h5 class="list-group-item-heading">Nothing for you here</h5>'+
         '<p class="list-group-item-text"> %s</p>'+
         '</li>'
     return a.format(message)   
@@ -192,8 +197,8 @@ Given a poster, return the div balise
 */
 {
     var a = '<li class="list-group-item">'+
-        '<h4 class="list-group-item-heading">%s - %s'+
-        ' <a target="_blank" href=%s><span class="glyphicon glyphicon-info-sign pull-right"></span></a></h4>'+
+        '<h5 class="list-group-item-heading">%s - %s'+
+        ' <a target="_blank" href=%s><span class="glyphicon glyphicon-info-sign pull-right"></span></a></h5>'+
         '<p class="list-group-item-text"> %s </p>'+
         '</li>'
     return a.format(oral.time,oral.place,oral.link,oral.title)
@@ -207,8 +212,8 @@ Given a poster, return the div balise
 {
 
     var a = '<li class="list-group-item">'+
-        '<h4 class="list-group-item-heading">Location - %s'+
-        ' <a target="_blank" href=%s><span class="glyphicon glyphicon-info-sign pull-right"></span></a></h4>'+
+        '<h5 class="list-group-item-heading">Location - %s'+
+        ' <a target="_blank" href=%s><span class="glyphicon glyphicon-info-sign pull-right"></span></a></h5>'+
         '<p class="list-group-item-text"> %s </p>'+
         '</li>'
     return a.format(poster.tag,poster.link,poster.title)
