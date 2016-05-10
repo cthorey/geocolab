@@ -22,18 +22,32 @@
         <!-- Slide 1 -->
         <div class="jumbotron">
             <h2 class="text-center"> Welcome to geocolab</h2>
+            <p class="lead text-center"> A attempt to simplify the AGU experience and networking in geoscience.</p>
         </div>
-        
-        <!-- Slide 2 -->
 
         <div class="container">
-            <div class="row featuret">
-                <h2 class="lead text-center">Ever been lost in the scientific program ? <span class="text-muted">Not anymore.</span></h2>
-                <p class="lead text-center"> Based on all AGU contributions and state-of-the-art machine learning techniques, we design a recomendation
-                    engine able to extract relevant absracts throughout the 25000's submited to AGU. Your search will no more be
-                    limited to a few sessions. 
-                </p>
-                <button type="button" class="btn btn-primary btn-lg center-block">  <a href="{{url_for('query_based_journey',searchby='query')}}"> Try it out</a></button>
+            <p class="lead text-center"><q> With nearly 24,000 attendees, AGU Fall Meeting is the largest Earth and space science meeting in the world. </q><br>
+                Based on all AGU contributions and state-of-the-art natural language processing techniques, we design a recomendation engine able to extract
+                relevant absracts throughout the 25000's submited to AGU. 
+            </p>
+        </div>
+        <!-- Slide 2 -->
+
+        <hr class="featurette-divider">
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-8 vcenter">
+                    <h2 class="lead text-center"> Ever been lost in the scientific program ? <span class="text-muted">Not anymore.</span></h2>
+                    <p class="lead text-center"> Based on our recommendation engine, we design an app that allows you too painlessly plan your
+                        AGU. Just give it a query or an abstract as a reference and it will propose you a set of interesting contributions
+                        to fill out your week with great science. </p>
+                </div><!--
+                         --><div class="col-xs-12 col-md-4 vcenter">
+                    <form action="{{url_for('query_based_journey',searchby='query')}}" method="get">
+                        <input type="submit" value="Try it out"  class="btn btn-success btn-circle btn-lg center-block">
+                    </form>
+                         </div>
             </div>
         </div>
         
@@ -41,16 +55,21 @@
         <!-- Slide  -->
 
         <div class="container">
-            <div class="container">
-                <h2 class="lead text-center"> Tired of working alone ? <span class="text-muted"> Not anymore.</span> </h2>
-                <p class="lead text-center">Based on our design recomendation system, we design an collaborators-app
-                    which make easy the process of finding poeple working on similar topics.</p>
+            <div class="row">
+                <div class="col-xs-12 col-md-4 vcenter">
+                    <form action="{{url_for('query_based',searchby='query')}}" method="get">
+                        <input type="submit" value="Try it out"  class="btn btn-circle btn-lg center-block"> 
+                    </form>
+                </div><!--
+                         --><div class="col-xs-12 col-md-8 vcenter">
+                    <h2 class="lead text-center"> Find it hard to create your network ? <span class="text-muted"> Not anymore.</span> </h2>
+                    <p class="lead text-center"> Based on our recomendation engine, we develop an app that makes networking in geoscience easy.
+                        Just give it a query or an abstract as a reference and it will propose you a set of people across the world
+                        that are working on similar topics.</p>
+                         </div>
             </div>
-            <button type="button" class="btn btn-primary btn-lg center-block" > <a href="{{url_for('query_based',searchby='query')}}">Try it out</a></button>
-        </div>
         </div>
     </div>
-
 
 {% endblock %}
 

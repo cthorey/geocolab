@@ -28,21 +28,36 @@
         </script>
         {% block early_js %}
         {% endblock %}
-        
-        <!-- nav bar: http://www.bootply.com/ceoQOzQykG# -->
-        <div class="navbar-wrapper">
-            {% block nav %}
+
+        <div class="wrapper">
+            <!-- nav bar: http://www.bootply.com/ceoQOzQykG# -->
+            <div class="navbar-wrapper">
+                {% block nav %}
+                {% endblock %}
+            </div>
+            
+            <!-- content -->    
+            {% block content %}
             {% endblock %}
+
+            <div class="push"><!--//--></div>            
         </div>
-        
-        <!-- content -->    
-        {% block content %}
-        {% endblock %}
+
+        <!-- footer -->
+        <div class="container">
+            <footer>
+                <div class="container">
+                    <a href="mailto:clement.thorey@gmail.com"><i class="svg-icon email"></i></a>
+                    <a href="https://github.com/cthorey" target="_blank"><i class="svg-icon github"></i></a>
+                    <a href="https://www.twitter.com/cthorey"><i class="svg-icon twitter"></i></a>
+                </div>
+            </footer>
+        </div>
 
         <!-- js late -->
-
         {% block late_js %}
         {% endblock %}
         
     </body>
 </html>
+
