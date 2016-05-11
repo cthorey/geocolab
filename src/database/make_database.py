@@ -1,6 +1,7 @@
 from __init__ import *
 import json
 import codecs
+import tarfile
 import os
 import re
 import time
@@ -12,6 +13,7 @@ import sqlite3
 import argparse
 import pycountry
 from src.scrapping.data_utils import *
+
 #### utils ####
 
 
@@ -26,10 +28,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', required=True, help='Name of the database')
     parser.add_argument('--if_exist', action="store", default='fail')
+    parser.add_argument('--untar', action="store_true")
 
     conf = vars(parser.parse_args())
     pprogress("Name of the database %s.db" % (conf['name']))
 
+    # Untar file
+    if conf['untar']:
+        pprogress('Untar data')
+        p = os.path.join(ROOT, 'data', 'scrapped')
+        tar = tarfile.open(os.path.join(p, '2015.tar.gz'))
+        tar.extractall(path=p)
+        tar.close()
+
+    # Set up path
     db_path = os.path.expanduser(os.path.join(ROOT, 'data', 'database'))
     if not os.path.isdir(db_path):
         if not os.path.isdir(os.path.join(ROOT, 'data')):
