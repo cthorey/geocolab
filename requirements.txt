@@ -3,6 +3,7 @@ bz2file==0.98
 cycler==0.10.0
 Flask==0.10.1
 gensim==0.12.4
+gunicorn==19.4.5
 httpretty==0.8.10
 itsdangerous==0.24
 Jinja2==2.8

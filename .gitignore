@@ -1,6 +1,6 @@
 # webapp module
-node_modules*
-webapp/static/bower_components*
+node_modules/*
+webapp/static/bower_components/*
 *secret_key.txt
 
 # data
