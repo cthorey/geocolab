@@ -87,13 +87,13 @@ if __name__ == "__main__":
 
     # Insert primary keys into all tables
     pprogress('Insert primary keys in all tables')
-    qry = open(os.path.join(__file__, 'insert_primary_keys.sql'), 'r').read()
+    qry = open(os.path.join(ROOT_DIR, 'insert_primary_keys.sql'), 'r').read()
     conn.executescript(qry)
     conn.commit()
 
     # Create table homemap
     pprogress('Create homemap table')
-    qry = open(os.path.join(__file__, 'create_homemap.sql'), 'r').read()
+    qry = open(os.path.join(ROOT_DIR, 'create_homemap.sql'), 'r').read()
     conn.executescript(qry)
     conn.commit()
 
