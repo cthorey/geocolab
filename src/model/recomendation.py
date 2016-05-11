@@ -5,11 +5,7 @@ import time
 from tqdm import *
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import sqlite3
-import plotly
-import plotly.plotly as py
-import plotly.graph_objs as go
 import pycountry
 from helper import *
 from sklearn.externals import joblib
