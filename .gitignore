@@ -1,3 +1,4 @@
+webapp/static/bower_components*
 *secret_key.txt
 data/*
 webapp/static/bower_components/*
