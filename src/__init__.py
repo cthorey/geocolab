@@ -3,4 +3,5 @@ import os
 import sys
 
 # root path
-sys.path.append('../')
+ROOT = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(ROOT)
