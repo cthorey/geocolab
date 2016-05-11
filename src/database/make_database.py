@@ -31,6 +31,10 @@ if __name__ == "__main__":
     pprogress("Name of the database %s.db" % (conf['name']))
 
     db_path = os.path.expanduser(os.path.join(ROOT, 'data', 'database'))
+    if not os.path.isdir(db_path):
+        if not os.path.isdir(os.path.join(ROOT, 'data')):
+            os.mkdir(os.path.join(ROOT, 'data'))
+        os.mkdir(db_path)
     conn = sqlite3.connect(os.path.join(db_path, conf['name'] + '.db'))
     c = conn.cursor()
 

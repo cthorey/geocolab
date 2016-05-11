@@ -1,7 +1,15 @@
+# webapp module
 node_modules*
 webapp/static/bower_components*
 *secret_key.txt
-data/*
+
+# data
+data/database/*
+data/scrapped/2015/*.json
+data/scrapped/2014/*.json
+
+
+
 webapp/static/bower_components/*
 *Similar_Papers*
 # Byte-compiled / optimized / DLL files
