@@ -50,6 +50,20 @@ if __name__ == "__main__":
     conn = sqlite3.connect(os.path.join(db_path, conf['name'] + '.db'))
     c = conn.cursor()
 
+    # Initialize database
+    try:
+        pprogress('Erase and initialize tables')
+        qry = open(os.path.join(ROOT_DIR, 'drop_tables.sql'), 'r').read()
+        conn.executescript(qry)
+        qry = open(os.path.join(ROOT_DIR, 'create_tables.sql'), 'r').read()
+        conn.executescript(qry)
+        conn.commit()
+    except:
+        pprogress('No tables detected. Initialize tables')
+        qry = open(os.path.join(ROOT_DIR, 'create_tables.sql'), 'r').read()
+        conn.executescript(qry)
+        conn.commit()
+
     # Create the table for papers
     pprogress('Construction of the papers table')
     papers = get_all_papers(os.path.join(ROOT, 'data', 'scrapped', '2015'))
@@ -61,7 +75,7 @@ if __name__ == "__main__":
     dfp['formatTitle'] = map(lambda x: x.lower(), dfp.title)
     dfp['id_paper'] = dfp.index
     dfp.to_sql('papers', con=conn, flavor='sqlite',
-               if_exists=conf['if_exist'], index=False)
+               if_exists='append', index=False)
 
     # Create a table for authors
     pprogress('Construction of the authors table')
@@ -73,7 +87,7 @@ if __name__ == "__main__":
                         for author in authors], columns=keys_name)
     dfa['id_author'] = dfa.index
     dfa.to_sql('authors', con=conn, flavor='sqlite',
-               if_exists=conf['if_exist'], index=False)
+               if_exists='append', index=False)
 
     # Create paper2author
     pprogress('Construction of the p2a table')
@@ -83,13 +97,7 @@ if __name__ == "__main__":
         reduce(lambda a, b: a + b, paper2author), columns=['linkp', 'name', 'inst'])
     paper2author['formatName'] = map(lambda x: x.lower(), paper2author.name)
     paper2author.to_sql('p2a', con=conn, flavor='sqlite',
-                        if_exists=conf['if_exist'], index_label='id')
-
-    # Insert primary keys into all tables
-    pprogress('Insert primary keys in all tables')
-    qry = open(os.path.join(ROOT_DIR, 'insert_primary_keys.sql'), 'r').read()
-    conn.executescript(qry)
-    conn.commit()
+                        if_exists='append', index_label='id')
 
     # Create table homemap
     pprogress('Create homemap table')
