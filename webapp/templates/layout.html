@@ -22,7 +22,7 @@
 
     <body>
         <!-- JS to load at the starting of the page -->
-        <script src="{{url_for('static',filename='js/helper-DOM.js')}}"></script>
+        <script src="{{url_for('static',filename='js/helper.js')}}"></script>
         <script type="text/javascript">
          var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         </script>
