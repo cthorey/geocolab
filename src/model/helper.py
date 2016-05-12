@@ -75,37 +75,38 @@ class MyCorpus(Tokenizer):
                 break
 
 
-def init_working_tree():
-    models = os.path.join(ROOT, 'models')
-    if not os.path.isdir(models):
-        os.mkdir(models)
-    data = os.path.join(ROOT, 'data')
-    if not os.path.isdir(data):
-        os.mkdir(data)
-        os.mkdir(os.path.join(data, 'database'))
-    if not os.path.isdir(os.path.join(data, 'database')):
-        os.mkdir(os.path.join(data, 'database'))
+class S3geocolab(object):
 
+    def __init__(self):
+        session = boto3.Session(
+            aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+            aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"])
+        self.bucket = session.resource('s3').Bucket('s3geocolab')
+        self.init_working_tree()
 
-def dowload_db():
-    s3 = boto3.resource('s3')
-    bucket = s3.Bucket('geocolab')
-    name = 'data/database/geocolab.db'
-    bucket.download_file(name, os.path.join(ROOT, name))
+    def init_working_tree(self):
+        models = os.path.join(ROOT, 'models')
+        if not os.path.isdir(models):
+            os.mkdir(models)
+        data = os.path.join(ROOT, 'datca')
+        if not os.path.isdir(data):
+            os.mkdir(data)
+            os.mkdir(os.path.join(data, 'database'))
+        if not os.path.isdir(os.path.join(data, 'database')):
+            os.mkdir(os.path.join(data, 'database'))
 
+    def download_db(self):
+        name = 'data/database/geocolab.db'
+        self.bucket.download_file(name, os.path.join(ROOT, name))
 
-def download_model(name):
-    name = os.path.join('models', name)
-    path_model = os.path.join(ROOT, name)
-    if not os.path.isdir(path_model):
-        os.mkdir(path_model)
+    def download_model(self, name):
+        path_model = os.path.join(ROOT, 'models', name)
+        if not os.path.isdir(path_model):
+            os.mkdir(path_model)
 
-    s3 = boto3.resource('s3')
-    bucket = s3.Bucket('geocolab')
-    for obj in bucket.objects.all():
-        if obj.key.startswith(name):
-            bucket.download_file(obj.key,
-                                 os.path.join(ROOT, obj.key))
+        for obj in self.bucket.objects.all():
+            if obj.key.startswith(name):
+                bucket.download_file(obj.key, os.path.join(ROOT, obj.key))
 
 
 def write_clean_corpus(corpus, path):
