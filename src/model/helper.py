@@ -100,13 +100,14 @@ class S3geocolab(object):
         self.bucket.download_file(name, os.path.join(ROOT, name))
 
     def download_model(self, name):
+        name = os.path.join('models')
         path_model = os.path.join(ROOT, 'models', name)
         if not os.path.isdir(path_model):
             os.mkdir(path_model)
 
         for obj in self.bucket.objects.all():
             if obj.key.startswith(name):
-                bucket.download_file(obj.key, os.path.join(ROOT, obj.key))
+                self.bucket.download_file(obj.key, os.path.join(ROOT, obj.key))
 
 
 def write_clean_corpus(corpus, path):
