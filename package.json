@@ -1,26 +1,28 @@
 {
-  "name": "geocolab",
-  "version": "1.0.0",
-  "description": "Ease collab in geoscience",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cthorey/geocolab.git"
-  },
-  "keywords": [
-    "AGU",
-    "geoscience"
-  ],
-  "author": "clement thorey",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/cthorey/geocolab/issues"
-  },
-  "homepage": "https://github.com/cthorey/geocolab#readme",
-  "devDependencies": {
-    "bower": "^1.7.9"
-  }
+    "name": "geocolab",
+    "version": "1.0.0",
+    "description": "Ease collab in geoscience",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "postinstall": "bower install"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cthorey/geocolab.git"
+    },
+    "keywords": [
+        "AGU",
+        "geoscience"
+    ],
+    "author": "clement thorey",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/cthorey/geocolab/issues"
+    },
+    "homepage": "https://github.com/cthorey/geocolab#readme",
+    "devDependencies": {
+        "bower": "^1.7.9"
+    }
 }
+
