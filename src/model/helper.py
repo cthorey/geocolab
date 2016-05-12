@@ -88,7 +88,7 @@ class S3geocolab(object):
         models = os.path.join(ROOT, 'models')
         if not os.path.isdir(models):
             os.mkdir(models)
-        data = os.path.join(ROOT, 'datca')
+        data = os.path.join(ROOT, 'data')
         if not os.path.isdir(data):
             os.mkdir(data)
             os.mkdir(os.path.join(data, 'database'))
