@@ -105,9 +105,14 @@ class S3geocolab(object):
         if not os.path.isdir(path_model):
             os.mkdir(path_model)
 
+        file_ends = ['.dict', '_tfidf.model',
+                     '_lsi.model', '_lsi.mm', '_lsi.index', '_lsi.index.index.npy',
+                     '_lsi.model.projection']
         for obj in self.bucket.objects.all():
             if obj.key.startswith(name_model):
-                self.bucket.download_file(obj.key, os.path.join(ROOT, obj.key))
+                if any([obj.key.endswith(f) for f in file_ends]):
+                    self.bucket.download_file(
+                        obj.key, os.path.join(ROOT, obj.key))
 
 
 def write_clean_corpus(corpus, path):
