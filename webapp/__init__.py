@@ -13,12 +13,10 @@ else:
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-# Load file from s3 if not exist
-# print('Downaload data')
+# Load the db from s3
 name_model = 'LSA_500'
 s3 = S3geocolab()
 s3.download_db()
-print('End download data')
 
 # Load the model
 RECOM = RecomendationSystem(name_model, prod=True)
