@@ -75,6 +75,18 @@ class MyCorpus(Tokenizer):
                 break
 
 
+def init_working_tree():
+    models = os.path.join(ROOT, 'models')
+    if not os.path.isdir(models):
+        os.mkdir(models)
+    data = os.path.join(ROOT, 'data')
+    if not os.path.isdir(data):
+        os.mkdir(data)
+        os.mkdir(os.path.join(data, 'database'))
+    if not os.path.isdir(os.path.join(data, 'database')):
+        os.mkdir(os.path.join(data, 'database'))
+
+
 def dowload_db():
     s3 = boto3.client('s3')
     name = 'data/database/geocolab.db'

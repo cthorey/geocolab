@@ -15,6 +15,7 @@ app.config.from_object(__name__)
 
 # Load file from s3 if not exist
 name_model = 'LSA_500'
+init_working_tree()
 download_model(name_model)
 dowload_db()
 
