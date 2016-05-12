@@ -12,6 +12,7 @@ from helper import *
 from sklearn.externals import joblib
 from stop_words import get_stop_words
 import Stemmer  # Load an inplementation of the snow-ball stemmer
+import boto3
 
 
 class Tokenizer(object):
@@ -72,6 +73,25 @@ class MyCorpus(Tokenizer):
             print line
             if i > n:
                 break
+
+
+def dowload_db():
+    s3 = boto3.client('s3')
+    name = 'data/database/geocolab.db'
+    s3.download_file('geocolab', name, os.path.join(ROOT, name))
+
+
+def download_model(name):
+    path_model = os.path.join(ROOT, 'models', name)
+    if not os.path.isdir(path_model):
+        os.mkdir(path_model)
+    s3 = boto3.client('s3')
+    list_obj = s3.list_objects(Bucket='geocolab')['Contents']
+    for s3_key in list_obj:
+        s3_object = s3_key['Key']
+        if s3_object.startswith(os.path.join('models', name)):
+            s3.download_file('geocolab', s3_object,
+                             os.path.join(ROOT, s3_object))
 
 
 def write_clean_corpus(corpus, path):
