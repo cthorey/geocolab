@@ -134,7 +134,7 @@ if __name__ == "__main__":
         # index for similarities
         index_tfidf = similarities.MatrixSimilarity(lsi_corpus,
                                                     num_features=num_topics)
-        index_tfidf.save(abstractf + '_lsi.index')
+        index_tfidf.save(abstractf + '_lsi.index', separately=[""])
 
     ##################################################
     # Build the t-sne represenation

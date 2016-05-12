@@ -75,7 +75,6 @@ class mydb(object):
         colors = sns.color_palette('Reds', len(values))
         colorscale = dict(
             zip(values, colors.as_hex()))
-
         keys = [f for f in df.columns if f not in ['country', 'iso3']]
         for i, row in df.iterrows():
             if row.iso3 not in ['']:
@@ -181,9 +180,6 @@ class RecomendationSystem(mydb):
         self.dictionary = corpora.Dictionary.load(self.name + '.dict')
         self.tfidf = models.TfidfModel.load(self.name + '_tfidf.model')
         self.lsi = models.LsiModel.load(self.name + '_lsi.model')
-        # self.corpus = corpora.MmCorpus(self.name + '_lsi.mm')
-        # Store locally
-        self.name = os.path.join(ROOT, 'models', name_model, name_model)
         self.index = similarities.MatrixSimilarity.load(
             self.name + '_lsi.index')
         self.n_base_recom = 25

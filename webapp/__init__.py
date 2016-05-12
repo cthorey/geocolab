@@ -18,7 +18,6 @@ app.config.from_object(__name__)
 name_model = 'LSA_500'
 s3 = S3geocolab()
 s3.download_db()
-s3.download_model(name_model)
 print('End download data')
 
 # Load the model
