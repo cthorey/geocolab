@@ -8,7 +8,6 @@ import unicodedata
 import pandas as pd
 import gensim
 from gensim import corpora, models, similarities
-from helper import *
 from sklearn.externals import joblib
 from stop_words import get_stop_words
 import Stemmer  # Load an inplementation of the snow-ball stemmer
@@ -105,9 +104,7 @@ class S3geocolab(object):
         if not os.path.isdir(path_model):
             os.mkdir(path_model)
 
-        file_ends = ['.dict', '_tfidf.model',
-                     '_lsi.model', '_lsi.mm', '_lsi.index', '_lsi.index.index.npy',
-                     '_lsi.model.projection']
+        file_ends = ['_lsi.index', '_lsi.index.index.npy']
         for obj in self.bucket.objects.all():
             if obj.key.startswith(name_model):
                 if any([obj.key.endswith(f) for f in file_ends]):

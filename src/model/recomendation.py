@@ -161,22 +161,29 @@ class Query(mydb):
 
 class RecomendationSystem(mydb):
 
-    def __init__(self, name_model, min_score=0.3):
+    def __init__(self, name_model, min_score=0.3, prod=False):
         self.min_score = min_score
-        self.name = os.path.join(ROOT, 'models', name_model, name_model)
-        self.db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
 
+        # Db local
+        self.db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
         # Load the titles and abstract + links
         qry = self.query_db('select title,linkp from papers')
         self.titles = [f['title'] for f in qry]
         self.links = [f['linkp'] for f in qry]
 
+        # Models
+        self.name = os.path.join(ROOT, 'models', name_model, name_model)
+        if prod:
+            root = "s3://s3geocolab"
+            self.name = os.path.join(root, 'models', name_model, name_model)
         # Load the necessary models, the lsi corpus and the corresponding index
         self.tokeniser = Tokenizer(False)
         self.dictionary = corpora.Dictionary.load(self.name + '.dict')
         self.tfidf = models.TfidfModel.load(self.name + '_tfidf.model')
         self.lsi = models.LsiModel.load(self.name + '_lsi.model')
-        self.corpus = corpora.MmCorpus(self.name + '_lsi.mm')
+        # self.corpus = corpora.MmCorpus(self.name + '_lsi.mm')
+        # Store locally
+        self.name = os.path.join(ROOT, 'models', name_model, name_model)
         self.index = similarities.MatrixSimilarity.load(
             self.name + '_lsi.index')
         self.n_base_recom = 25
