@@ -40,7 +40,10 @@ if __name__ == "__main__":
     parser.add_argument('--name', required=True, help='Name of the model')
     parser.add_argument('--add_bigram', action='store', default=False)
     parser.add_argument('--ntopics', action="store", default=500)
-    parser.add_argument('--build_tsne', action="store", default=False)
+    parser.add_argument('--tsne', action="store_true")
+    parser.add_argument('--bow', action="store_true")
+    parser.add_argument('--tfidf', action="store_true")
+    parser.add_argument('--lsa', action="store_true")
     conf = vars(parser.parse_args())
 
     name_model = conf['name'] + '_' + str(conf['ntopics'])
@@ -64,74 +67,78 @@ if __name__ == "__main__":
     ##################################################
     # Build Bow_To_Vec_Representation
 
-    print 'Building the bow representation'
-    # First, write the document corpus on a txt file, one document perline.
-    write_clean_corpus(abstracts, abstractf + '_data.txt')
+    if conf['bow']:
+        print 'Building the bow representation'
+        # First, write the document corpus on a txt file, one document perline.
+        write_clean_corpus(abstracts, abstractf + '_data.txt')
 
-    # Initialize the model
-    tokenizer = Tokenizer(conf['add_bigram'])
-    # load the dictionary
-    # Next create the dictionary by iterating of the abstract, one per line in
-    # the txt file
-    dictionary = corpora.Dictionary(tokenizer.tokenize_and_stem(
-        line) for line in open(abstractf + '_data.txt'))
-    dictionary.save(abstractf + '_raw.dict')
-    dictionary.filter_extremes(no_below=5, no_above=0.80, keep_n=200000)
-    dictionary.id2token = {k: v for v, k in dictionary.token2id.iteritems()}
-    dictionary.save(abstractf + '.dict')
-    # Builde corpus
-    bow_corpus = MyCorpus(abstractf, add_bigram=conf['add_bigram'])
-    bow_corpus.load_dict()
-    corpora.MmCorpus.serialize(abstractf + '_bow.mm', bow_corpus)
-    # index for similarities
-    index_bow = similarities.SparseMatrixSimilarity(bow_corpus,
-                                                    num_features=len(dictionary))
-    index_bow.save(abstractf + '_bow.index')
+        # Initialize the model
+        tokenizer = Tokenizer(conf['add_bigram'])
+        # load the dictionary
+        # Next create the dictionary by iterating of the abstract, one per line in
+        # the txt file
+        dictionary = corpora.Dictionary(tokenizer.tokenize_and_stem(
+            line) for line in open(abstractf + '_data.txt'))
+        dictionary.save(abstractf + '_raw.dict')
+        dictionary.filter_extremes(no_below=5, no_above=0.80, keep_n=200000)
+        dictionary.id2token = {k: v for v,
+                               k in dictionary.token2id.iteritems()}
+        dictionary.save(abstractf + '.dict')
+        # Builde corpus
+        bow_corpus = MyCorpus(abstractf, add_bigram=conf['add_bigram'])
+        bow_corpus.load_dict()
+        corpora.MmCorpus.serialize(abstractf + '_bow.mm', bow_corpus)
+        # index for similarities
+        index_bow = similarities.SparseMatrixSimilarity(bow_corpus,
+                                                        num_features=len(dictionary))
+        index_bow.save(abstractf + '_bow.index')
 
     ##################################################
     # Build Tf-idf representation
 
-    print 'Building the tfidf representation'
-    # First load the corpus and the dicitonary
-    bow_corpus = corpora.MmCorpus(abstractf + '_bow.mm')
-    dictionary = corpora.Dictionary.load(abstractf + '.dict')
-    # Initialize the tf-idf model
-    tfidf = models.TfidfModel(bow_corpus)
-    # Compute the tfidf of the corpus itself
-    tfidf_corpus = tfidf[bow_corpus]
-    # Serialize both for reuse
-    tfidf.save(abstractf + '_tfidf.model')
-    corpora.MmCorpus.serialize(abstractf + '_tfidf.mm', tfidf_corpus)
-    # index for similarities
-    index_tfidf = similarities.SparseMatrixSimilarity(tfidf_corpus,
-                                                      num_features=len(dictionary))
-    index_tfidf.save(abstractf + '_tfidf.index')
+    if conf['tfidf']:
+        print 'Building the tfidf representation'
+        # First load the corpus and the dicitonary
+        bow_corpus = corpora.MmCorpus(abstractf + '_bow.mm')
+        dictionary = corpora.Dictionary.load(abstractf + '.dict')
+        # Initialize the tf-idf model
+        tfidf = models.TfidfModel(bow_corpus)
+        # Compute the tfidf of the corpus itself
+        tfidf_corpus = tfidf[bow_corpus]
+        # Serialize both for reuse
+        tfidf.save(abstractf + '_tfidf.model')
+        corpora.MmCorpus.serialize(abstractf + '_tfidf.mm', tfidf_corpus)
+        # index for similarities
+        index_tfidf = similarities.SparseMatrixSimilarity(tfidf_corpus,
+                                                          num_features=len(dictionary))
+        index_tfidf.save(abstractf + '_tfidf.index')
 
     ##################################################
     # Build lsa representation
 
-    num_topics = int(conf['ntopics'])
-    print 'Building the lsi representation'
-    # First load the corpus and the dicitonary
-    tfidf_corpus = corpora.MmCorpus(abstractf + '_tfidf.mm')
-    dictionary = corpora.Dictionary.load(abstractf + '.dict')
-    # dict the LSI model
-    lsi = models.LsiModel(tfidf_corpus, id2word=dictionary,
-                          num_topics=num_topics)
-    # Compute the tfidf of the corpus itself
-    lsi_corpus = lsi[tfidf_corpus]
-    # Serialize both for reuse
-    lsi.save(abstractf + '_lsi.model')
-    corpora.MmCorpus.serialize(abstractf + '_lsi.mm', lsi_corpus)
+    if conf['lsa']:
+        num_topics = int(conf['ntopics'])
+        print 'Building the lsi representation'
+        # First load the corpus and the dicitonary
+        tfidf_corpus = corpora.MmCorpus(abstractf + '_tfidf.mm')
+        dictionary = corpora.Dictionary.load(abstractf + '.dict')
+        # dict the LSI model
+        lsi = models.LsiModel(tfidf_corpus, id2word=dictionary,
+                              num_topics=num_topics)
+        # Compute the tfidf of the corpus itself
+        lsi_corpus = lsi[tfidf_corpus]
+        # Serialize both for reuse
+        lsi.save(abstractf + '_lsi.model')
+        corpora.MmCorpus.serialize(abstractf + '_lsi.mm', lsi_corpus)
 
-    # index for similarities
-    index_tfidf = similarities.MatrixSimilarity(lsi_corpus,
-                                                num_features=num_topics)
-    index_tfidf.save(abstractf + '_lsi.index')
+        # index for similarities
+        index_tfidf = similarities.MatrixSimilarity(lsi_corpus,
+                                                    num_features=num_topics)
+        index_tfidf.save(abstractf + '_lsi.index')
 
     ##################################################
     # Build the t-sne represenation
-    if conf['build_tsne']:
+    if conf['tsne']:
         print 'Building the tsne representation'
         tsne = manifold.TSNE(n_components=2, init='pca',
                              random_state=0)
