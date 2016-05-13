@@ -41,6 +41,7 @@ function onSelectNb()
                            changeNb(translation[nb.trim()]);
                            displayBlockMessage()
                            refreshMap()
+                           refreshThumbnail()
                        })
 }
 
@@ -84,6 +85,13 @@ function refreshMap()
         }  
     })
     
+}
+
+function refreshThumbnail()
+{
+    var country = $('.info-thumbnail strong').text()
+    var country = country.split(':')[0].trim()
+    displayBlockThumbnails(country)    
 }
 
 
@@ -175,7 +183,6 @@ function displayMap(data,fills)
 
 function displayThumbnails(result,country)
 {
-    console.log(result.is_qry)
     if (!(result.is_qry))
     {
         $("#thumbmail-collab").empty()
@@ -227,7 +234,7 @@ function DisplayCollabThumbmail(result,country)
     // // empty the element
     $("#thumbmail-collab").empty();
         // // Sucess of the request
-    var div = '<div class="alert alert-info">'+
+    var div = '<div class="alert alert-info info-thumbnail">'+
         '<strong> %s :</strong> '+
         '%s waiting for your call there.'+
         '</div>';
