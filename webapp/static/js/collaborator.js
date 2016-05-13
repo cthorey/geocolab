@@ -91,6 +91,7 @@ function refreshThumbnail()
 {
     var country = $('.info-thumbnail strong').text()
     var country = country.split(':')[0].trim()
+    console.log(country)
     displayBlockThumbnails(country)    
 }
 
