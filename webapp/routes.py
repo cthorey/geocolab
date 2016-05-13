@@ -31,7 +31,6 @@ def home():
 
 @app.route("/query_based/_get_thumbnails", methods=['GET'])
 def _get_thumbnails():
-    print RECOM.nb_collab
     iso3 = request.args.get('country', '')
     collabs = RECOM.get_collaborators(Qry.get_query())
     country = RECOM.iso3_to_country(iso3)
@@ -44,7 +43,6 @@ def _get_thumbnails():
 
 @app.route("/query_based/_get_nb_collabs", methods=['GET'])
 def _get_nb_collabs():
-    print 'inside get_nb_coolabs', RECOM.nb_collab
     n = RECOM.get_nb_collaborators(Qry.get_query())
     return jsonify({'n': n, 'is_qry': Qry.is_query()})
 
@@ -59,7 +57,6 @@ def _get_map_spec():
 def query_based(searchby):
     # get the search request
     RECOM.n_base_recom = 25
-    print 'inside query_based', RECOM.nb_collab
     search = request.args.get('search', "")
     Qry.set_query(search, searchby.lower())
     n, data, colors = RECOM.get_map_specification(Qry.get_query())

@@ -91,8 +91,11 @@ function refreshThumbnail()
 {
     var country = $('.info-thumbnail strong').text()
     var country = country.split(':')[0].trim()
-    console.log(country)
-    displayBlockThumbnails(country)    
+    if (country != "")
+    {
+        displayBlockThumbnails(country)
+    }
+    
 }
 
 
@@ -276,7 +279,7 @@ function DisplayNullCollab(country)
  */
 {
     $("#thumbmail-collab").empty();
-    var div = '<div class="alert alert-info">'+
+    var div = '<div class="alert alert-info info-thumbnail">'+
         '<strong> %s :</strong> '+
         'Nobody for you in this country.'
         '</div>';

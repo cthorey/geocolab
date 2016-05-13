@@ -235,7 +235,6 @@ class RecomendationSystem(mydb):
         return df
 
     def get_nb_collaborators(self, query):
-        print 'inside get collaborators', self.nb_collab
         df = self.get_collaborators(query)
         return len(df)
 
