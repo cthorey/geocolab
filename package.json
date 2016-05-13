@@ -21,7 +21,7 @@
         "url": "https://github.com/cthorey/geocolab/issues"
     },
     "homepage": "https://github.com/cthorey/geocolab#readme",
-    "devDependencies": {
+    "dependencies": {
         "bower": "^1.7.9"
     }
 }
