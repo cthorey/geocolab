@@ -56,7 +56,7 @@ def _get_map_spec():
 @app.route("/query_based_<searchby>", methods=['GET'])
 def query_based(searchby):
     # get the search request
-    RECOM.nb_collab = 25
+    RECOM.n_base_recom = 25
     search = request.args.get('search', "")
     Qry.set_query(search, searchby.lower())
     n, data, colors = RECOM.get_map_specification(Qry.get_query())
@@ -129,7 +129,7 @@ def _get_schedule_day():
 @app.route("/query_based_journey_<searchby>", methods=['GET'])
 def query_based_journey(searchby):
     # get the search request')
-    RECOM.nb_collab = 25
+    RECOM.n_base_recom = 25
     search = request.args.get('search', "")
     Qry.set_query(search, searchby.lower())
     df = RECOM.recomendation(Qry.get_query())
