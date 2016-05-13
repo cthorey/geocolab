@@ -182,12 +182,15 @@ function fillinlist(selector,content)
 
 function displayEmpty(selector,obj)
 {
-    var message = 'Seems like a perfect moment for sight-seeing' 
+    var message0 = 'Seems like a perfect moment for sight-seeing'
+    var message1 = 'Seems like a perfect moment or networking'
+    var messages = [message0,message1]
+    var idx = Math.floor(Math.random() * messages.length);
     var a = '<li class="list-group-item list-group-item-warning">'+
         '<h5 class="list-group-item-heading">Nothing for you here</h5>'+
         '<p class="list-group-item-text"> %s</p>'+
         '</li>'
-    return a.format(message)   
+    return a.format(message[idx])   
 }
 
 
