@@ -5,21 +5,22 @@ import sys
 sys.path.append('../')
 from src.model.recomendation import *
 
-if os.path.isfile('secret_key.txt'):
-    SECRET_KEY = open('secret_key.txt', 'r').read()
-else:
-    SECRET_KEY = 'devkey, should be in a file'
-
 app = Flask(__name__)
-app.config.from_object(__name__)
+
+# Load the default configuration
+app.config.from_object('config.default')
+
+# Load the file specified by the APP_CONFIG_FILE environment variable
+# Variables defined here will override those in the default configuration
+app.config.from_envvar('APP_CONFIG_FILE')
 
 # Load the db from s3
-name_model = 'LSA_500'
-s3 = S3geocolab()
-s3.download_db()
+if app.config['PROD']:
+    s3 = S3geocolab()
+    s3.download_db()
 
 # Load the model
-RECOM = RecomendationSystem(name_model, prod=True)
+RECOM = RecomendationSystem(app.config['MODEL'])
 Qry = Query()
 
 import webapp.routes
