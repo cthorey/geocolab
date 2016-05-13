@@ -3,7 +3,7 @@ import boto3
 from flask import Flask
 import sys
 sys.path.append('../')
-from src.model.recomendation import *
+from src.model.recomendation import RecomendationSystem, Query
 
 app = Flask(__name__)
 
