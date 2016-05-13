@@ -195,7 +195,7 @@ function displayEmpty(selector,obj)
         '<h5 class="list-group-item-heading">Nothing for you here</h5>'+
         '<p class="list-group-item-text"> %s</p>'+
         '</li>'
-    console.log(messages[idx])
+
     return a.format(messages[idx])   
 }
 
