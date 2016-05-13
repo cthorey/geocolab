@@ -5,8 +5,7 @@ webapp/static/bower_components/*
 
 # data
 data/database/*
-data/scrapped/2015/*.json
-data/scrapped/2014/*.json
+data/scrapped/*
 
 *Similar_Papers*
 # Byte-compiled / optimized / DLL files
