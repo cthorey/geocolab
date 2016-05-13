@@ -5,6 +5,7 @@ import sys
 sys.path.append('../')
 from src.model.recomendation import *
 
+
 app = Flask(__name__)
 
 # Load the default configuration
