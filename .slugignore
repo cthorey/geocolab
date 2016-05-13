@@ -1,2 +1,8 @@
-webapp/static/bower_components/*
+runserver.py
+report.org
+README.md
+notebooks/*
+src/database/*
+src/scrapping/scrap_*
+
 
