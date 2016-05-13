@@ -6,6 +6,7 @@ webapp/static/bower_components/*
 # data
 data/database/*
 data/scrapped/*
+models/*
 
 *Similar_Papers*
 # Byte-compiled / optimized / DLL files
@@ -14,7 +15,6 @@ __pycache__/
 *$py.class
 
 *chromedriver
-models/*
 # C extensions
 *.so
 
