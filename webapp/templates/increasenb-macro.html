@@ -1,0 +1,30 @@
+{% macro increasenb(app) %}
+    <div class="row">
+        <div class="container">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <label class="control-label" data-toggle="collapse" data-target="#toggle_more">
+                            {% if app=='schedule' %}
+                                Not satisfied with the number of results returned ?
+                            {% elif app=='collaborators' %}
+                                Not satisfied with the number of collaborators returned ?
+                            {% endif %}
+                        </label>
+                    </div>
+                    <div id="toggle_more" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>Try to increase N, the maximum numbers of contributions our recommendation engine is working with.</p>
+                            <br>
+                            <select class="selectpicker show-menu-arrow" data-style="btn-default" id="select-nb">
+                                <option> N = 25 </option>
+                                <option> N = 50 </option>
+                                <option> N = 100 </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

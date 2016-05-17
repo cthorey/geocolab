@@ -23,18 +23,13 @@
                                 </div>
                             </div>
                         </form>
-                        <button class ="btn btn-warning col-xs-8" data-toggle="collapse" data-target="#toggle_query">
+                        <button class ="btn btn-warning" data-toggle="collapse" data-target="#toggle_query">
                             {% if sby =='byquery' %}
                                 Used query ?
                             {% else %}
                                 Used abstract ?
                             {% endif %}
                         </button>
-                        <select class="selectpicker show-menu-arrow col-xs-4" data-style="btn-info" id="select-nb">
-                            <option title="Small"> Use only 25 first recommendations </option>
-                            <option title="Medium"> Use 50 first recommendations </option>
-                            <option title="Large"> Use 100 first recommendations </option>
-                        </select>
                     </div>
                 </div>
                 <div id="toggle_query" class="panel-collapse collapse">
@@ -55,9 +50,9 @@
 {% macro searchby(sby,search,query) %}
     {% call query_based(search,query,sby) %}
         {% if sby == 'byquery' %}
-            <h3> <strong> Query-based</strong> recommendation system. </h3>
+            <h3> <strong> Query-based</strong> recommendation system.</h3>
             <p> We use your raw query to identify a set of simular contributions to AGU.<br>
-                Type it here.</p>
+                We can put weights on specific keyword to emphasize their importance.<br> <small>Use keyword:weight. Default is keyword:1.</small></p>
         {% elif sby == 'bytitle' %}
             <h3> <strong> Abstract-based</strong> recommendation system. </h3>
             <p> We use an abstract to identify a set of similar contributions to AGU. <br>

@@ -29,16 +29,16 @@ function initMessageCollab()
 /**********************************************************************
 Refresh on click on changing Nb */
 
-var translation = {'Use only 25 first recommendations':25,
-                   'Use 50 first recommendations':50,
-                   'Use 100 first recommendations':100}
+var translation = {'N = 25':25,
+                   'N = 50':50,
+                   'N = 100':100}
     
 function onSelectNb()
 {
     $("#select-nb").on('changed.bs.select',function()
                        {
-                           var nb = $(this).val();
-                           changeNb(translation[nb.trim()]);
+                           var nb = parseInt($(this).val().split('=')[1].trim());
+                           changeNb(nb);
                            displayBlockMessage()
                            refreshMap()
                            refreshThumbnail()

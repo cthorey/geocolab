@@ -3,7 +3,7 @@
 {% from 'schedule-macro.html' import displaysession as dsession %}
 {% from 'schedule-macro.html' import display_buttons as dbuttons %}
 {% from 'nav-macro.html' import generatenav as gnav %}
-
+{% from 'increasenb-macro.html' import increasenb as inb %}
 
 <!-- nav bar -->
 {% block nav %}
@@ -48,8 +48,9 @@
     </div>
 {% endblock %}
 
-{% block loader %}
-{% endblock loader %}
+{% block increasenb %}
+    {{ inb('schedule') }}
+{% endblock increasenb %}
 
 <!-- late ls  -->
 {% block late_js %}

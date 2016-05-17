@@ -93,8 +93,19 @@ class Query(mydb):
         self.query = ""
         self.search = ""
 
+    def _check_weight(self, s):
+        try:
+            if len(s.split(':')) == 1:
+                return s + ' '
+            else:
+                return (s.split(':')[0] + ' ') * int(s.split(':')[-1])
+        except:
+            return s
+
     def query2query(self):
         query = self.search
+        query = reduce(lambda a, b: a + b,
+                       [self._check_weight(f) for f in query.split(' ')])
         return query
 
     def link2query(self):
@@ -130,7 +141,7 @@ class Query(mydb):
 
     def get_defaut_message(self, searchby):
         if searchby == 'query':
-            return 'Query example: Dynamics of magmatic intrusions'
+            return 'Query example: magmatic:5 intrusions:5 dynamics:2 granit folding'
         elif searchby == 'author':
             return 'Author example: Clement Thorey'
         elif searchby == 'link':

@@ -1,6 +1,7 @@
 {% extends "baseapp.html" %}
 {% from 'query-macro.html' import searchby as searchb %}
 {% from 'nav-macro.html' import generatenav as gnav %}
+{% from 'increasenb-macro.html' import increasenb as inb %}
 
 <!-- header -->
 {% block header %}
@@ -43,14 +44,19 @@
             </div>
         </div>
     </div>
+    <br>
 
     <!-- Display the thumbnail  -->
     <div class="row">
         <div class="container" id="thumbmail-collab">
         </div>
     </div>
-
+    <br>
 {% endblock %}
+
+{% block increasenb %}
+    {{ inb('collaborators') }}
+{% endblock increasenb %}
 
 {% block late_js %}
     <script text="type/javascript">

@@ -19,7 +19,7 @@ if app.config['PROD']:
     s3.download_db()
 
 # Load the model
-RECOM = RecomendationSystem(app.config['MODEL'])
+RECOM = RecomendationSystem(app.config['MODEL'], prod=app.config['PROD'])
 Qry = Query()
 
 import webapp.routes

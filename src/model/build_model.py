@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # Get the args
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', required=True, help='Name of the model')
-    parser.add_argument('--add_bigram', action='store', default=False)
+    parser.add_argument('--add_bigram', action='store_true')
     parser.add_argument('--ntopics', action="store", default=500)
     parser.add_argument('--tsne', action="store_true")
     parser.add_argument('--bow', action="store_true")
@@ -47,9 +47,9 @@ if __name__ == "__main__":
     conf = vars(parser.parse_args())
 
     name_model = conf['name'] + '_' + str(conf['ntopics'])
-    print('The model is called %s' % (name_model))
     if conf['add_bigram']:
         name_model += '_bigra'
+    print('The model is called %s' % (name_model))
     if not os.path.isdir(os.path.join(model_saved, name_model)):
         os.mkdir(os.path.join(model_saved, name_model))
 
