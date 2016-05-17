@@ -4,6 +4,7 @@ from flask import Flask
 import sys
 sys.path.append('../')
 from src.model.recomendation import *
+import time
 
 app = Flask(__name__)
 
@@ -20,7 +21,9 @@ if app.config['PROD']:
     s3.download_db()
 
 # Load the model
-RECOM = RecomendationSystem(app.config['MODEL'], prod=app.config['PROD'])
+t = time.time()
+RECOM = RecomendationSystem(app.config['MODEL'],
+                            prod=app.config['PROD'])
 Qry = Query()
 
 import webapp.routes

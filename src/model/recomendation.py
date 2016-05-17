@@ -173,7 +173,7 @@ class Query(mydb):
 
 class RecomendationSystem(mydb):
 
-    def __init__(self, name_model, min_score=0.3, prod=True):
+    def __init__(self, name_model, min_score=0.3, prod=True, verbose=False):
         self.min_score = min_score
 
         # Db local
@@ -190,9 +190,17 @@ class RecomendationSystem(mydb):
             self.name = os.path.join(root, 'models', name_model, name_model)
         # Load the necessary models, the lsi corpus and the corresponding index
         self.tokeniser = Tokenizer(False)
+        if verbose:
+            print 'Loading dictionary'
         self.dictionary = corpora.Dictionary.load(self.name + '.dict')
+        if verbose:
+            print 'Loading tfidf'
         self.tfidf = models.TfidfModel.load(self.name + '_tfidf.model')
+        if verbose:
+            print 'Loading lsi'
         self.lsi = models.LsiModel.load(self.name + '_lsi.model')
+        if verbose:
+            print 'Loading index'
         self.index = similarities.MatrixSimilarity.load(
             self.name + '_lsi.index')
         self.n_base_recom = 25
