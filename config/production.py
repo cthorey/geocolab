@@ -3,5 +3,5 @@
 # development.
 
 DEBUG = False  # Turns on debugging features in Flask
-MODEL = 'LSA_500_bigra'
+MODEL = 'LSA_500'
 PROD = True
