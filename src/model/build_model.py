@@ -128,7 +128,7 @@ if __name__ == "__main__":
         # Compute the tfidf of the corpus itself
         lsi_corpus = lsi[tfidf_corpus]
         # Serialize both for reuse
-        lsi.save(abstractf + '_lsi.model')
+        lsi.save(abstractf + '_lsi.model', separately=[""])
         corpora.MmCorpus.serialize(abstractf + '_lsi.mm', lsi_corpus)
 
         # index for similarities
