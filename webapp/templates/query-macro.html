@@ -52,19 +52,21 @@
         {% if sby == 'byquery' %}
             <h3> <strong> Query-based</strong> recommendation system.</h3>
             <p> We use your raw query to identify a set of simular contributions to AGU.<br>
-                We can put weights on specific keyword to emphasize their importance.<br> <small>Use keyword:weight. Default is keyword:1.</small></p>
+                <small>We can put weights on specific keyword to emphasize their importance.<br> Use keyword:weight. Default is keyword:1.</small></p>
         {% elif sby == 'bytitle' %}
             <h3> <strong> Abstract-based</strong> recommendation system. </h3>
             <p> We use an abstract to identify a set of similar contributions to AGU. <br>
-                Type the title of the abstract your want to use for your recomendation. </p>
+                <small>Type the title of the abstract your want to use for your recomendation. </small></p>
         {% elif sby == 'bylink' %}
             <h3> <strong> Abstract-based</strong> recommendation system. </h3>
             <p> We use an abstract to identify a set of similar contributions to AGU. <br>
-                Type the link of the abstract your want to use for your recomendation. </p>
+                <small>Type the link of the abstract your want to use for your recomendation.</small> </p>
         {% elif sby == 'byauthor' %}
             <h3> <strong> Abstract-based</strong> recommendation system. </h3>
             <p> We use an abstract to identify a set of similar contributions to AGU. <br>
-                Type the name of one author of the abstract your want to use for your recomendation. </p>
+                <small> Type the name of one author of the abstract you want to use for your recomendation. <br>
+                If several abstracts are linked to this author, we'll pick one randomly each time you refresh the search.</small>
+            </p>
         {% endif %}
     {% endcall %}
 {% endmacro %}

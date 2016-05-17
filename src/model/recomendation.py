@@ -10,6 +10,7 @@ import seaborn as sns
 import pycountry
 from helper import *
 from sklearn.externals import joblib
+import random
 
 
 class mydb(object):
@@ -136,7 +137,8 @@ class Query(mydb):
         if len(res) == 0:
             query = ""
         else:
-            query = res[0]['abstract']
+            idx = random.randint(0, len(res) - 1)
+            query = res[idx]['abstract']
         return query
 
     def get_defaut_message(self, searchby):
