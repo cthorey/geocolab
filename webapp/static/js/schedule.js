@@ -180,7 +180,7 @@ function displayEmpty(selector,obj)
 {
     var message0 = 'Seems like a perfect moment for sight-seeing'
     var message1 = 'Seems like a perfect moment for networking. '
-        + 'You might want to start <a href="'+ $SCRIPT_ROOT+'query_based_abstract">here</a>.'
+        + 'You might want to start <a href="'+ $SCRIPT_ROOT+'query_based_link">here</a>.'
     var message2 = 'Seems like a perfect moment for networking. '
         + 'You might want to start <a href="'+ $SCRIPT_ROOT+'query_based_title">here</a>.'
     var message3 = 'Seems like a perfect moment for networking. '
