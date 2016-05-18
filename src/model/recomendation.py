@@ -106,11 +106,12 @@ class Query(mydb):
 
     def query2query(self):
         query = self.search
-        query = reduce(lambda a, b: a + b,
-                       [self._check_weight(f) for f in query.split(' ')])
-        query = query.split(' ')
-        np.random.shuffle(query)
-        return ' '.join(query)
+        if len(shlex.split(query)) == 0:
+            query = ''
+        else:
+            query = reduce(lambda a, b: a + b,
+                           [self._check_weight(f) for f in shlex.split(query)])
+        return query
 
     def link2query(self):
         link = self.search

@@ -102,8 +102,7 @@ function refreshMessage(nb,is_qry)
     else if (nb == 0)
     {
         var message = 'we did not find any contributions that'+
-            ' could potentially match your request. Try with a different request. '+
-            ' different request.'
+            ' could potentially match your request. Try with a different request.'
         var content = '<div class="alert alert-warning">'+
             '<strong> Sorry, </strong> %s'+
             '</div>'

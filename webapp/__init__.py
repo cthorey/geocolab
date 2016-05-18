@@ -21,7 +21,7 @@ if app.config['PROD']:
     s3.download_db()
 
 # Load the model
-t = time.time()
+print app.config['MODEL']
 RECOM = RecomendationSystem(app.config['MODEL'],
                             prod=app.config['PROD'])
 Qry = Query()
