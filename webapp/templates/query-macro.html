@@ -52,7 +52,8 @@
         {% if sby == 'byquery' %}
             <h3> <strong> Query-based</strong> recommendation system.</h3>
             <p> We use your raw query to identify a set of simular contributions to AGU.<br>
-                <small>We can put weights on specific keyword to emphasize their importance.<br> Use keyword:weight. Default is keyword:1.</small></p>
+                <small>We can put weights on specific keyword to emphasize their importance.<br>
+                    Use word:weight. Default is word:1. For multiword word, use "word1 word2 ...":weight. </small></p>
         {% elif sby == 'bytitle' %}
             <h3> <strong> Abstract-based</strong> recommendation system. </h3>
             <p> We use an abstract to identify a set of similar contributions to AGU. <br>

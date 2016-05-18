@@ -147,7 +147,7 @@ class Query(mydb):
 
     def get_defaut_message(self, searchby):
         if searchby == 'query':
-            return 'Query example: magmatic:5 intrusions:5 dynamics:2 granit folding'
+            return 'Query example: magma "magmatic intrusions":5 dynamics:2 granit folding'
         elif searchby == 'author':
             return 'Author example: Clement Thorey'
         elif searchby == 'link':
