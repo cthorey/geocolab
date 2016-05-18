@@ -12,7 +12,8 @@
 
 <!-- JS to load at the starting of the page -->
 {% block early_js %}
-<script src="{{url_for('static',filename='js/schedule.js')}}"></script>
+    <script src="{{url_for('static',filename='js/schedule.js')}}"></script>
+    <script src="{{url_for('static',filename='bower_components/hideseek/jquery.hideseek.min.js')}}"></script>
 {% endblock %}
 
 <!-- Block with the query -->
@@ -56,11 +57,11 @@
 {% block late_js %}
     <script text="type/javascript">
      $(document).ready(function() {
-         dropdownMenuNav()
-         initMessageSchedule()
-         initMonday()
-         onClickDay()
-         onSelectNb()
+         dropdownMenuNav();
+         initMessageSchedule();
+         initMonday();
+         onClickDay();
+         onSelectNb();
      });
     </script>
 {% endblock %}
