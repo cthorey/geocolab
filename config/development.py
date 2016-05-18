@@ -3,4 +3,4 @@
 
 DEBUG = True  # Turns on debugging features in Flask
 PROD = False
-MODEL = 'LSA_250_bigra'
+MODEL = 'LSA_500'
