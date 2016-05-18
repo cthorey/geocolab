@@ -16,17 +16,11 @@ import boto3
 
 class Tokenizer(object):
 
-    def __init__(self, add_bigram):
-        self.add_bigram = add_bigram
+    def __init__(self):
         self.stopwords = get_stop_words('english')
         self.stopwords += [u's', u't', u'can',
                            u'will', u'just', u'don', u'now']
         self.stemmer = Stemmer.Stemmer('english')
-
-    def bigram(self, tokens):
-        if len(tokens) > 1:
-            for i in range(0, len(tokens) - 1):
-                yield tokens[i] + '_' + tokens[i + 1]
 
     def tokenize_and_stem(self, text):
         tokens = list(gensim.utils.tokenize(text))
@@ -42,17 +36,23 @@ class Tokenizer(object):
         filtered_tokens = [
             token for token in filtered_tokens if token not in self.stopwords]
         stems = map(self.stemmer.stemWord, filtered_tokens)
-        if self.add_bigram:
-            stems += [f for f in self.bigram(stems)]
         return map(str, stems)
 
 
 class MyCorpus(Tokenizer):
 
-    def __init__(self, name, add_bigram):
-        super(MyCorpus, self).__init__(add_bigram)
+    def __init__(self, name):
+        super(MyCorpus, self).__init__()
         self.name = name
         self.load_dict()
+        self.load_bigrams()
+
+    def load_bigrams(self):
+        if not os.path.isfile(self.name + '_bigram.model'):
+            print 'You should build the bigram first !'
+        else:
+            setattr(self, 'bigram',
+                    models.Phrases.load(self.name + '_bigram.model'))
 
     def load_dict(self):
         if not os.path.isfile(self.name + '.dict'):
@@ -65,7 +65,7 @@ class MyCorpus(Tokenizer):
         for line in open(self.name + '_data.txt'):
             # assume there's one document per line, tokens separated by
             # whitespace
-            yield self.dictionary.doc2bow(self.tokenize_and_stem(line))
+            yield self.dictionary.doc2bow(self.bigram[self.tokenize_and_stem(line)])
 
     def __str__(self, n):
         for i, line in enumerate(open(self.name + '_data.txt')):

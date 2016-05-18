@@ -38,7 +38,6 @@ if __name__ == "__main__":
     # Get the args
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', required=True, help='Name of the model')
-    parser.add_argument('--add_bigram', action='store_true')
     parser.add_argument('--ntopics', action="store", default=500)
     parser.add_argument('--tsne', action="store_true")
     parser.add_argument('--bow', action="store_true")
@@ -47,8 +46,6 @@ if __name__ == "__main__":
     conf = vars(parser.parse_args())
 
     name_model = conf['name'] + '_' + str(conf['ntopics'])
-    if conf['add_bigram']:
-        name_model += '_bigra'
     print('The model is called %s' % (name_model))
     if not os.path.isdir(os.path.join(model_saved, name_model)):
         os.mkdir(os.path.join(model_saved, name_model))
@@ -61,8 +58,11 @@ if __name__ == "__main__":
     abstracts = [f['abstract'] for f in papers]
     titles = [f['title'] for f in papers]
 
-    # abstracts = abstracts[:5000]
-    # titles = titles[:5000]
+    # Add the title to the end of the abstract.
+    abstracts = [f + ' ' + g for f, g in zip(abstracts, titles)]
+
+    # abstracts = abstracts[:500]
+    # titles = titles[:500]
 
     ##################################################
     # Build Bow_To_Vec_Representation
@@ -73,20 +73,24 @@ if __name__ == "__main__":
         write_clean_corpus(abstracts, abstractf + '_data.txt')
 
         # Initialize the model
-        tokenizer = Tokenizer(conf['add_bigram'])
-        # load the dictionary
+        tokenizer = Tokenizer()
+
+        # Initialize bigram finder.
+        bigram = models.Phrases(tokenizer.tokenize_and_stem(line)
+                                for line in open(abstractf + '_data.txt'))
+        bigram.save(abstractf + '_bigram.model')
         # Next create the dictionary by iterating of the abstract, one per line in
         # the txt file
-        dictionary = corpora.Dictionary(tokenizer.tokenize_and_stem(
-            line) for line in open(abstractf + '_data.txt'))
+
+        dictionary = corpora.Dictionary(bigram[tokenizer.tokenize_and_stem(
+            line)] for line in open(abstractf + '_data.txt'))
         dictionary.save(abstractf + '_raw.dict')
         dictionary.filter_extremes(no_below=5, no_above=0.80, keep_n=200000)
         dictionary.id2token = {k: v for v,
                                k in dictionary.token2id.iteritems()}
         dictionary.save(abstractf + '.dict')
         # Builde corpus
-        bow_corpus = MyCorpus(abstractf, add_bigram=conf['add_bigram'])
-        bow_corpus.load_dict()
+        bow_corpus = MyCorpus(abstractf)
         corpora.MmCorpus.serialize(abstractf + '_bow.mm', bow_corpus)
         # index for similarities
         index_bow = similarities.SparseMatrixSimilarity(bow_corpus,

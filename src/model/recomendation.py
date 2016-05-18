@@ -11,6 +11,7 @@ import pycountry
 from helper import *
 from sklearn.externals import joblib
 import random
+import shlex
 
 
 class mydb(object):
@@ -191,18 +192,11 @@ class RecomendationSystem(mydb):
             root = "s3://s3geocolab"
             self.name = os.path.join(root, 'models', name_model, name_model)
         # Load the necessary models, the lsi corpus and the corresponding index
-        self.tokeniser = Tokenizer(False)
-        if verbose:
-            print 'Loading dictionary'
+        self.tokeniser = Tokenizer()
+        self.bigram = models.Phrases.load(self.name + '_bigram.model')
         self.dictionary = corpora.Dictionary.load(self.name + '.dict')
-        if verbose:
-            print 'Loading tfidf'
         self.tfidf = models.TfidfModel.load(self.name + '_tfidf.model')
-        if verbose:
-            print 'Loading lsi'
         self.lsi = models.LsiModel.load(self.name + '_lsi.model')
-        if verbose:
-            print 'Loading index'
         self.index = similarities.MatrixSimilarity.load(
             self.name + '_lsi.index')
         self.n_base_recom = 25
@@ -211,7 +205,7 @@ class RecomendationSystem(mydb):
         # Transform the query in lsi space
         # Transform in the bow representation space
         vec_bow = self.dictionary.doc2bow(
-            self.tokeniser.tokenize_and_stem(query))
+            self.bigram[self.tokeniser.tokenize_and_stem(query)])
         # Transform in the tfidf representation space
         vec_tfidf = self.tfidf[vec_bow]
         # Transform in the lsi representation space
