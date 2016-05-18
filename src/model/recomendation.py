@@ -177,7 +177,7 @@ class Query(mydb):
 
 class RecomendationSystem(mydb):
 
-    def __init__(self, name_model, min_score=0.3, prod=True, verbose=False):
+    def __init__(self, name_model, min_score=0.3, prod=False, verbose=False):
         self.min_score = min_score
 
         # Db local
