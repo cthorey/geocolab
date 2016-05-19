@@ -1,5 +1,6 @@
 {% extends "baseapp.html" %}
 {% from 'query-macro.html' import searchby as searchb %}
+{% from 'query-macro.html' import query_based_v2 as query %}
 {% from 'schedule-macro.html' import displaysession as dsession %}
 {% from 'schedule-macro.html' import display_buttons as dbuttons %}
 {% from 'nav-macro.html' import generatenav as gnav %}
@@ -13,12 +14,11 @@
 <!-- JS to load at the starting of the page -->
 {% block early_js %}
     <script src="{{url_for('static',filename='js/schedule.js')}}"></script>
-    <script src="{{url_for('static',filename='bower_components/hideseek/jquery.hideseek.min.js')}}"></script>
 {% endblock %}
 
 <!-- Block with the query -->
 {% block query %}
-    {{ searchb(searchby,search,query) }}
+    {{ query() }}
 {% endblock %}
 
 <!-- Block with the message (success/nothing founds) -->
@@ -58,6 +58,7 @@
     <script text="type/javascript">
      $(document).ready(function() {
          dropdownMenuNav();
+         initSelectAuthor();
          initMessageSchedule();
          initMonday();
          onClickDay();

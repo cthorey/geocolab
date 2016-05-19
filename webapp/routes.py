@@ -25,6 +25,16 @@ def home():
     return render_template('home.html')
 
 ####################################################
+# Query search
+####################################################
+
+
+@app.route("/_get_authors", methods=['GET'])
+def _get_authors():
+    data = RECOM.get_all_authors()
+    return jsonify(data)
+
+####################################################
 # Collaborators search
 ####################################################
 

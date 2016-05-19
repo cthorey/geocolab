@@ -4,6 +4,27 @@ Events
 **********************************************************************
 *********************************************************************/
 
+function initSelectAuthor()
+{
+
+    $('#select-author').on('loaded.bs.select',function()
+                           {
+                               $.ajax({
+                                   dataType:"json",
+                                   url: $SCRIPT_ROOT + "/_get_authors",
+                                   success: function(result)
+                                   {
+                                       $.each(result,function (name,inst)
+                                              {
+                                                  var option = '<option data-subtext="%s">%s</option>'
+                                                  $('#select-author').append(option.format(inst,name))
+                                              })
+                                   }
+                               })
+                           })
+                          
+}
+
 function initMessageSchedule()
 {
     displayBlockMessage()

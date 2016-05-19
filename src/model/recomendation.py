@@ -46,6 +46,11 @@ class mydb(object):
         db.close()
         return (rv[0] if rv else None) if one else rv
 
+    def get_all_authors(self):
+        res = self.query_db('select distinct(name),inst from p2a')
+        data = {r['name']: r['inst'] for r in res}
+        return data
+
     def get_pie_spec_home(self):
 
         qry = 'select section,count(linkp) as n from papers ' +\
