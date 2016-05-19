@@ -4,27 +4,6 @@ Events
 **********************************************************************
 *********************************************************************/
 
-function autocompleteAuthor()
-{
-    
-    $("#autocomplete").autocomplete({
-    	//lookup: countries,
-    	serviceUrl:"_ajaxautocomplete_authors", //tell the script where to send requests
-    	type:'POST',
-        dataType:'json',
-        maxHeight:200,
-        minChars:3,
-    	//callback just to show it's working
-    	onSelect: function (suggestion) {
-            console.log(suggestion)
-       	    $('#selection').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
-    	},
-    	showNoSuggestionNotice: true,
-        noSuggestionNotice: 'Sorry, no matching results',
-    });
-    
-}
-
 function initMessageSchedule()
 {
     displayBlockMessage()

@@ -47,11 +47,14 @@ class mydb(object):
         return (rv[0] if rv else None) if one else rv
 
     def get_authors_autocomplete(self, typename):
-        qry = 'select distinct(name),inst from p2a where name like "%' + \
-            typename + '%"'
+        qry = 'select distinct(p2a.inverseName),papers.title ' +\
+              'from p2a,papers ' +\
+              'where papers.linkp=p2a.linkp and ' +\
+              'p2a.name like "%' + \
+              typename + '%" or p2a.inverseName like "%' + typename + '%" ' +\
+              'group by p2a.name'
         res = self.query_db(qry)
-        data = [r['name'] for r in res]
-        return list(set(data))
+        return res
 
     def get_pie_spec_home(self):
 
