@@ -96,6 +96,8 @@ if __name__ == "__main__":
     paper2author = pd.DataFrame(
         reduce(lambda a, b: a + b, paper2author), columns=['linkp', 'name', 'inst'])
     paper2author['formatName'] = map(lambda x: x.lower(), paper2author.name)
+    paper2author['inverseNames'] = map(lambda f: f.split(
+        ' ')[-1] + ' ' + ' '.join(f.split(' ')[:-1]), paper2author.name)
     paper2author.to_sql('p2a', con=conn, flavor='sqlite',
                         if_exists='append', index_label='id')
 

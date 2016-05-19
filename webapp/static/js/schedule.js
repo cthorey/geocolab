@@ -4,25 +4,25 @@ Events
 **********************************************************************
 *********************************************************************/
 
-function initSelectAuthor()
+function autocompleteAuthor()
 {
-
-    $('#select-author').on('loaded.bs.select',function()
-                           {
-                               $.ajax({
-                                   dataType:"json",
-                                   url: $SCRIPT_ROOT + "/_get_authors",
-                                   success: function(result)
-                                   {
-                                       $.each(result,function (name,inst)
-                                              {
-                                                  var option = '<option data-subtext="%s">%s</option>'
-                                                  $('#select-author').append(option.format(inst,name))
-                                              })
-                                   }
-                               })
-                           })
-                          
+    
+    $("#autocomplete").autocomplete({
+    	//lookup: countries,
+    	serviceUrl:"_ajaxautocomplete_authors", //tell the script where to send requests
+    	type:'POST',
+        dataType:'json',
+        maxHeight:200,
+        minChars:3,
+    	//callback just to show it's working
+    	onSelect: function (suggestion) {
+            console.log(suggestion)
+       	    $('#selection').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+    	},
+    	showNoSuggestionNotice: true,
+        noSuggestionNotice: 'Sorry, no matching results',
+    });
+    
 }
 
 function initMessageSchedule()

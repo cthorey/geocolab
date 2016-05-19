@@ -14,6 +14,7 @@
 <!-- JS to load at the starting of the page -->
 {% block early_js %}
     <script src="{{url_for('static',filename='js/schedule.js')}}"></script>
+    <script src="{{url_for('static',filename='bower_components/jquery-autocomplete/jquery.autocomplete.js')}}"></script>
 {% endblock %}
 
 <!-- Block with the query -->
@@ -58,7 +59,7 @@
     <script text="type/javascript">
      $(document).ready(function() {
          dropdownMenuNav();
-         initSelectAuthor();
+         autocompleteAuthor();
          initMessageSchedule();
          initMonday();
          onClickDay();

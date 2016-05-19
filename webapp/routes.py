@@ -29,10 +29,15 @@ def home():
 ####################################################
 
 
-@app.route("/_get_authors", methods=['GET'])
-def _get_authors():
-    data = RECOM.get_all_authors()
-    return jsonify(data)
+@app.route("/_ajaxautocomplete_authors", methods=['POST', 'GET'])
+def _ajaxautocomplete_authors():
+    if request.method == 'POST':
+        query = request.form['query']
+        data = RECOM.get_authors_autocomplete(query)
+        return json.dumps({"suggestions": data})
+    else:
+        return 'ooops'
+
 
 ####################################################
 # Collaborators search

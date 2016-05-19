@@ -46,10 +46,12 @@ class mydb(object):
         db.close()
         return (rv[0] if rv else None) if one else rv
 
-    def get_all_authors(self):
-        res = self.query_db('select distinct(name),inst from p2a')
-        data = {r['name']: r['inst'] for r in res}
-        return data
+    def get_authors_autocomplete(self, typename):
+        qry = 'select distinct(name),inst from p2a where name like "%' + \
+            typename + '%"'
+        res = self.query_db(qry)
+        data = [r['name'] for r in res]
+        return list(set(data))
 
     def get_pie_spec_home(self):
 

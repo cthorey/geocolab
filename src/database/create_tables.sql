@@ -32,6 +32,7 @@ CREATE TABLE "p2a" (
   "linkp" TEXT,
   "name" TEXT,
   "inst" TEXT,
-  "formatName" TEXT,  
+  "formatName" TEXT,
+  "inverseName" TEXT,
   PRIMARY KEY(id)
 );

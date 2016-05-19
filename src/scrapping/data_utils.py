@@ -11,8 +11,14 @@ import unicodedata
 import argparse
 import pycountry
 from src.model.helper import *
+import unicodedata
 
 #### utils ####
+
+
+def strip_accents(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s)
+                   if unicodedata.category(c) != 'Mn')
 
 
 def load_json(name):
@@ -35,6 +41,8 @@ class Paper(object):
         self.title = '; '.join(self.title)
         self.title = clean_title(self.title).strip()
         self.abstract = clean_abstract(self.abstract).strip()
+        self.authors = {strip_accents(key): strip_accents(
+            val) for key, val in self.authors.iteritems()}
 
 
 def get_ride_of_bad_ones(paper):
@@ -76,6 +84,7 @@ class Contributor(object):
                 setattr(self, key, val)
         self._ientify_country()
         self._identify_sections()
+        self.name = strip_accents(self.name)
 
     def _ientify_country(self):
         ''' return the country '''
