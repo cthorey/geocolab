@@ -40,6 +40,7 @@ class Paper(object):
                 setattr(self, key, val)
         self.title = '; '.join(self.title)
         self.title = clean_title(self.title).strip()
+        self.title = " ".join(self.title.split())
         self.abstract = clean_abstract(self.abstract).strip()
         self.authors = {strip_accents(key): strip_accents(
             val) for key, val in self.authors.iteritems()}

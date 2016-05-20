@@ -29,5 +29,8 @@
     "d3pie": "^0.1.9",
     "hideseek": "^0.7.1",
     "jquery-autocomplete": "^1.1.1"
+  },
+  "resolutions": {
+    "jquery": "^2.2.3"
   }
 }

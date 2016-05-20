@@ -37,8 +37,8 @@ function autocompleteAuthor()
         minChars:3,
     	//callback just to show it's working
         onSearchStart: function () {
-            $('#select-abstract').empty().selectpicker('refresh')
-            $('#fill-abstract').empty()
+            $('#select-abstract').empty().prop('disabled', true).selectpicker('refresh')
+            $('#button-abstract').prop('disabled',true)
         },
     	onSelect: function (suggestion) {
             chooseabstract(suggestion.data)
@@ -59,7 +59,8 @@ function chooseabstract(data)
     var option = '<option> %s </option>'
     if (data.titles.length == 1)
     {
-        selector.html(option.format(data.titles[0])).selectpicker('refresh')
+        console.log(option.format(data.titles))
+        selector.html(option.format(data.titles)).selectpicker('refresh')
     }
     else if (data.titles.length >1)
     {
@@ -79,8 +80,16 @@ function onSelectTitle(suggestion)
     $("#select-abstract").on('changed.bs.select',function()
                              {
                                  $('#button-abstract').prop('disabled',false)
-                                 var title = $("#select-abstract").val()
-                                 var idx = suggestion.titles.indexOf(title)
-                                 var abstract = '<p>%s</p>'.format(suggestion.abstracts[idx])
+                                 if (suggestion.titles.length==1)
+                                 {
+                                     abstract = '<p>%s</p>'.format(suggestion.abstracts)
+                                 }
+                                 else
+                                 {
+                                     var title = $("#select-abstract").val()
+                                     var idx = suggestion.titles.indexOf(title)
+                                     var abstract = '<p>%s</p>'.format(suggestion.abstracts[idx])
+                                 }
+                                 
                                  selector.html(abstract)})
 }

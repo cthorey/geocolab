@@ -144,8 +144,8 @@ def _get_schedule_day():
 def _on_search():
     RECOM.n_base_recom = 25
     search = request.args.get('search', "")
-    print search
     Qry.set_query(search)
+    print Qry.get_query()
     if not Qry.is_query():
         search = Qry.get_defaut_message(Qry.get_sby())
     return jsonify({'search': search, 'query': Qry.get_query(), 'searchby': Qry.get_sby()})
