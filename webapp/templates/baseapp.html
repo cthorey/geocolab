@@ -1,13 +1,19 @@
 {% extends "layout.html" %}
+{% from 'query-macro.html' import query_based,abstract_based %}
 
 {% block content %}
     <div class="container">
         <!-- Block with the query -->
-        {%block query %}
-        {%endblock%}
+        {% block query %}
+            {%if searchby == 'byabstract' %}
+                {{ abstract_based() }}
+            {% elif searchby == 'byquery' %}
+                {{ query_based() }}
+            {% endif %}
+        {% endblock %}
         
         <!-- Block with the massage (success/nothing founds) -->    
-        {%block message%}a
+        {%block message%}
         {%endblock%}
         
         <!-- Block with the app itself collab/schedule -->    
@@ -18,4 +24,10 @@
         {% endblock %}
     </div>
 {% endblock %}
+
+
+
+
+
+
 

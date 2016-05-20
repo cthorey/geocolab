@@ -1,4 +1,4 @@
-{% macro query_based_v2() %}
+{% macro abstract_based() %}
     <div class="row">
         <div class="container">
             <div class="panel-group" id="accordion">
@@ -6,18 +6,43 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading">
 	                <h2>Abstract-based recommendation</h2>
-	                <div class="row">
-	                    <div class="col-md-12">
-		                <input type="text" name="country" id="autocomplete-author"
-                                       class="form-control" placeholder="Enter author name" />
-		            </div>
-		            <div id="selection" class="required"></div>
-	                </div>
+                        <form role="form">
+                            <div class="form-group">
+		                <input type="text" name="name" id="autocomplete-author"
+                                       class="form-control" placeholder="Enter author name"></input>
+                                <select class="selectpicker form-control"
+                                        name="search"
+                                        id="select-abstract"
+                                        title="Which abstract?"
+                                        data-style="btn-primary" disabled>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 col-md-10 text-center">
+                                    <button class ="btn btn-warning btn-block"
+                                            data-toggle="collapse"
+                                            type="button"
+                                            data-target="#toggle_query"
+                                            id="button-abstract"
+                                            disabled>
+                                        See abstract 
+                                    </button>
+                                </div>
+                                
+                                <div class="col-xs-6 col-md-2 text-center">
+                                    <button type="button" class ="btn btn-default btn-block" id="search-click">
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div id="toggle_query" class="panel-collapse collapse">
-                    <div class="panel-body fixed-panel">
-                    </div>
+                    <form>
+                        <div class="panel-body fixed-panel" id="fill-abstract" name="abstract">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -34,7 +59,10 @@
                     <!-- Default panel contents -->
                     <div class="panel-heading">
                         <label class="control-label">
-                            {{ caller() }}
+                            <h3> <strong> Query-based</strong> recommendation system.</h3>
+                            <p> We use your raw query to identify a set of simular contributions to AGU.<br>
+                                <small>We can put weights on specific keyword to emphasize their importance.<br>
+                                    Use word:weight. Default is word:1. For multiword word, use "word1 word2 ...":weight. </small></p>
                         </label>
                         <form role="form">
                             <div class="form-group">
@@ -73,30 +101,3 @@
         </div>
     </div>
 {% endmacro %}
-
-{% macro searchby(sby,search,query) %}
-    {% call query_based(search,query,sby) %}
-        {% if sby == 'byquery' %}
-            <h3> <strong> Query-based</strong> recommendation system.</h3>
-            <p> We use your raw query to identify a set of simular contributions to AGU.<br>
-                <small>We can put weights on specific keyword to emphasize their importance.<br>
-                    Use word:weight. Default is word:1. For multiword word, use "word1 word2 ...":weight. </small></p>
-        {% elif sby == 'bytitle' %}
-            <h3> <strong> Abstract-based</strong> recommendation system. </h3>
-            <p> We use an abstract to identify a set of similar contributions to AGU. <br>
-                <small>Type the title of the abstract your want to use for your recomendation. </small></p>
-        {% elif sby == 'bylink' %}
-            <h3> <strong> Abstract-based</strong> recommendation system. </h3>
-            <p> We use an abstract to identify a set of similar contributions to AGU. <br>
-                <small>Type the link of the abstract your want to use for your recomendation.</small> </p>
-        {% elif sby == 'byauthor' %}
-            <h3> <strong> Abstract-based</strong> recommendation system. </h3>
-            <p> We use an abstract to identify a set of similar contributions to AGU. <br>
-                <small> Type the name of one author of the abstract you want to use for your recomendation. <br>
-                If several abstracts are linked to this author, we'll pick one randomly each time you refresh the search.</small>
-            </p>
-        {% endif %}
-    {% endcall %}
-{% endmacro %}
-
-

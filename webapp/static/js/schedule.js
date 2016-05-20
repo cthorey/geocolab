@@ -3,6 +3,28 @@
 Events
 **********************************************************************
 *********************************************************************/
+function onSearch()
+{
+    $('#search-click').click(function ()
+                       {
+                           console.log('click')
+                           search = $('select-abstract').val()
+                           $.ajax({
+                               dataType:"json",
+                               url: $SCRIPT_ROOT + "/query_based_journey/_on_search",
+                               data:search,
+                               success: function(result)
+                               {
+                                   displayBlockMessage()
+                                   day = $(".day.active").text()
+                                   displayBlockApp(day)
+                               }
+                           })
+                             
+                         })
+}
+
+
 
 function initMessageSchedule()
 {

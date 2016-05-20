@@ -1,4 +1,4 @@
-from __init__ import *
+dfrom __init__ import *
 import os
 import re
 import time

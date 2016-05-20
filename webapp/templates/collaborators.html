@@ -1,5 +1,4 @@
 {% extends "baseapp.html" %}
-{% from 'query-macro.html' import searchby as searchb %}
 {% from 'nav-macro.html' import generatenav as gnav %}
 {% from 'increasenb-macro.html' import increasenb as inb %}
 
@@ -21,11 +20,6 @@
 <!-- JS to load at the starting of the page -->
 {% block early_js %}
 <script src="{{url_for('static',filename='js/collaborator.js')}}"></script>
-{% endblock %}
-
-<!-- Block with the query -->
-{% block query %}
-    {{ searchb(searchby,search,query) }}
 {% endblock %}
 
 <!-- Block with the message (success/nothing founds) -->
@@ -65,6 +59,7 @@
          displayMap({{data|safe}},{{colors|safe}})
          onSelectNb()
          dropdownMenuNav()
+         autocompleteAuthor();
      });
     </script>
 {% endblock %}

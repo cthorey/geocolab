@@ -47,20 +47,28 @@ class mydb(object):
         return (rv[0] if rv else None) if one else rv
 
     def get_authors_autocomplete(self, typename):
-        qry = 'select distinct(p2a.inverseName),papers.title ' +\
-              'from p2a,papers ' +\
-              'where papers.linkp=p2a.linkp and ' +\
-              'p2a.name like "%' + \
-              typename + '%" or p2a.inverseName like "%' + typename + '%" ' +\
-              'group by p2a.name'
+        qry = ('select p2a.inverseName,papers.title,papers.abstract ' +
+               'from p2a,papers ' +
+               'where papers.linkp=p2a.linkp and ' +
+               '(p2a.name like "%' +
+               typename + '%" or p2a.inverseName like "%' + typename + '%")')
         res = self.query_db(qry)
-        return res
+        if len(res) > 0:
+            df = pd.DataFrame([[row[f] for f in res[0].keys()]
+                               for row in res], columns=res[0].keys())
+            dfg = df.groupby('inverseName')
+            suggestion = [{"value": name, "data": {'titles': gp.title.tolist(), 'abstracts': gp.abstract.tolist()}}
+                          for name, gp in dfg]
+        else:
+            suggestion = []
+
+        return suggestion
 
     def get_pie_spec_home(self):
 
-        qry = 'select section,count(linkp) as n from papers ' +\
-              'group by section ' +\
-              'order by n'
+        qry = ('select section,count(linkp) as n from papers ' +
+               'group by section ' +
+               'order by n')
         res = self.query_db(qry)
         df = pd.DataFrame([[row[f] for f in res[0].keys()]
                            for row in res], columns=res[0].keys())
@@ -123,17 +131,7 @@ class Query(mydb):
                            [self._check_weight(f) for f in shlex.split(query)])
         return query
 
-    def link2query(self):
-        link = self.search
-        res = self.query_db(
-            'select abstract from papers where linkp=?', [link])
-        if len(res) == 0:
-            query = ''
-        else:
-            query = res[0]['abstract']
-        return query
-
-    def title2query(self):
+    def abstract2query(self):
         title = self.search.lower()
         qry = 'select distinct(abstract) from papers where formatTitle=? '
         res = self.query_db(qry, [title])
@@ -141,18 +139,6 @@ class Query(mydb):
             query = ""
         else:
             query = res[0]['abstract']
-        return query
-
-    def author2query(self):
-        author = self.search.lower()
-        qry = 'select distinct(abstract) from papers,p2a ' +\
-              'where p2a.linkp=papers.linkp and p2a.formatName = ?'
-        res = self.query_db(qry, [author])
-        if len(res) == 0:
-            query = ""
-        else:
-            idx = random.randint(0, len(res) - 1)
-            query = res[idx]['abstract']
         return query
 
     def get_defaut_message(self, searchby):
@@ -173,9 +159,11 @@ class Query(mydb):
         else:
             return True
 
-    def set_query(self, search, searchby):
+    def set_query(self, search):
         self.search = search
-        self.query = getattr(self, searchby + '2query')()
+        self.query = getattr(self, self.sby[2:] + '2query')()
+
+    def set_sby(self, searchby):
         self.sby = 'by' + searchby
 
     def get_query(self):

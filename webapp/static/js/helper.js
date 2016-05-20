@@ -36,8 +36,13 @@ function autocompleteAuthor()
         maxHeight:200,
         minChars:3,
     	//callback just to show it's working
+        onSearchStart: function () {
+            $('#select-abstract').empty().selectpicker('refresh')
+            $('#fill-abstract').empty()
+        },
     	onSelect: function (suggestion) {
-       	    $('#selection').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+            chooseabstract(suggestion.data)
+            onSelectTitle(suggestion.data)
     	},
     	showNoSuggestionNotice: true,
         noSuggestionNotice: 'Sorry, no matching results',
@@ -45,4 +50,37 @@ function autocompleteAuthor()
     
 }
 
+function chooseabstract(data)
+{
+    selector = $('#select-abstract')
+    selectorabs = $('#fill-abstract')
+    selector.prop('disabled', false).selectpicker('refresh');
+    selector.empty().selectpicker('refresh');
+    var option = '<option> %s </option>'
+    if (data.titles.length == 1)
+    {
+        selector.html(option.format(data.titles[0])).selectpicker('refresh')
+    }
+    else if (data.titles.length >1)
+    {
+        var content = $.map(data.titles, function (title)
+                                  {
+                                      var t = option.format(title)
+                                      return t
+                                  })
+        selector.html(content).selectpicker('refresh');
+    }   
+}
 
+function onSelectTitle(suggestion)
+{
+    selector = $('#fill-abstract')
+    selector.empty()
+    $("#select-abstract").on('changed.bs.select',function()
+                             {
+                                 $('#button-abstract').prop('disabled',false)
+                                 var title = $("#select-abstract").val()
+                                 var idx = suggestion.titles.indexOf(title)
+                                 var abstract = '<p>%s</p>'.format(suggestion.abstracts[idx])
+                                 selector.html(abstract)})
+}

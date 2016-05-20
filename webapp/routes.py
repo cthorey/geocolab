@@ -33,11 +33,10 @@ def home():
 def _ajaxautocomplete_authors():
     if request.method == 'POST':
         query = request.form['query']
-        data = RECOM.get_authors_autocomplete(query)
-        return json.dumps({"suggestions": data})
+        suggestion = RECOM.get_authors_autocomplete(query)
+        return jsonify({"suggestions": suggestion})
     else:
         return 'ooops'
-
 
 ####################################################
 # Collaborators search
@@ -141,15 +140,27 @@ def _get_schedule_day():
             'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
 
 
+@app.route("/query_based_journey/_on_search", methods=['GET'])
+def _on_search():
+    RECOM.n_base_recom = 25
+    search = request.args.get('search', "")
+    print search
+    Qry.set_query(search)
+    if not Qry.is_query():
+        search = Qry.get_defaut_message(Qry.get_sby())
+    return jsonify({'search': search, 'query': Qry.get_query(), 'searchby': Qry.get_sby()})
+
+
 @app.route("/query_based_journey_<searchby>", methods=['GET'])
 def query_based_journey(searchby):
     # get the search request')
     RECOM.n_base_recom = 25
     search = request.args.get('search', "")
-    Qry.set_query(search, searchby.lower())
+    Qry.set_sby(searchby.lower())
+    Qry.set_query(search)
     df = RECOM.recomendation(Qry.get_query())
     if not Qry.is_query() or len(df) == 0:
-        search = Qry.get_defaut_message(searchby)
+        search = Qry.get_defaut_message(Qry.get_sby())
     return render_template('schedule.html',
                            nb=len(df),
                            search=search,
