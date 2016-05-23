@@ -24,6 +24,7 @@
     <body>
         <!-- JS to load at the starting of the page -->
         <script src="{{url_for('static',filename='js/helper.js')}}"></script>
+        <script src="{{url_for('static',filename='js/query.js')}}"></script>
         <script type="text/javascript">
          var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         </script>
@@ -40,7 +41,7 @@
             <!-- content -->    
             {% block content %}
             {% endblock %}
-
+            
             <div class="push"><!--//--></div>            
         </div>
 
@@ -55,10 +56,12 @@
             </footer>
         </div>
 
-        <!-- js late -->
-        {% block late_js %}
-        {% endblock %}
-        
+        <!-- late ls  -->
+        <script text="type/javascript">
+         $(document).ready(function() {
+             dropdownMenuNav()
+         });
+        </script>
     </body>
     <script type="text/javascript">
     </script>

@@ -143,23 +143,15 @@ class Query(mydb):
             query = res[0]['abstract']
         return query
 
-    def get_defaut_message(self, searchby):
-        if searchby == 'query':
-            return 'Query example: magma "magmatic intrusions":5 dynamics:2 granit folding'
-        elif searchby == 'author':
-            return 'Author example: Clement Thorey'
-        elif searchby == 'link':
-            return 'Link example: https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/67077'
-        elif searchby == 'title':
-            return 'Title example: Floor-Fractured Craters through Machine Learning Methods'
-        else:
-            return ''
-
     def is_query(self):
         if self.search == "":
             return False
         else:
             return True
+
+    def init_query(self):
+        self.search = ""
+        self.query = ""
 
     def set_query(self, search):
         self.search = search
@@ -256,14 +248,18 @@ class RecomendationSystem(mydb):
         df = self.get_collaborators(query)
         return len(df)
 
+    def init_map_spec(self):
+        data = {str(f): {"Nbcollab": 0,
+                         "fillKey": str(f)}
+                for f in self.name_to_iso3.values()}
+        fills = {}
+        fills.update({'defaultFill': 'grey'})
+        return data, fills
+
     def get_map_specification(self, query):
         df = self.get_collaborators(query)
-        if len(df) == 0:
-            data = {str(f): {"Nbcollab": 0,
-                             "fillKey": str(f)}
-                    for f in self.name_to_iso3.values()}
-            fills = {}
-        else:
+        data, fills = self.init_map_spec()
+        if len(df) != 0:
             df['iso3'] = map(lambda x: self._country_to_iso3(x), df.country)
 
             gp = df.groupby('iso3')
@@ -272,17 +268,10 @@ class RecomendationSystem(mydb):
             colors = sns.color_palette('Reds', len(values))
             colorscale = dict(
                 zip(values, colors.as_hex()))
-            data = {str(f): {"Nbcollab": 0,
-                             "fillKey": str(f)}
-                    for f in self.name_to_iso3.values()}
-            fills = {}
-
             for country, n in gp.size().iteritems():
                 if country not in ['']:
                     data[country].update({"Nbcollab": n})
                     fills[country] = str(colorscale[n]).upper()
-
-        fills.update({'defaultFill': 'grey'})
         return len(df), data, fills
 
     def get_number_results(self, query):

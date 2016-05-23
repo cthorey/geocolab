@@ -17,10 +17,9 @@
 <!-- Block with the message (success/nothing founds) -->
 {% block message %}
     <div class="row">
-        <div class="container" id="messageSchedule">
+        <div class="container" id="message">
         </div>
     </div>
-
 {% endblock %}
     
 <!-- Block with the app itself schedule -->
@@ -47,17 +46,15 @@
 {% endblock increasenb %}
 
 <!-- late ls  -->
-{% block late_js %}
+{% block appjs %}
     <script text="type/javascript">
-     $(document).ready(function() {
-         dropdownMenuNav();
-         autocompleteAuthor();
-         initMessageSchedule();
-         initMonday();
-         onClickDay();
-         onSearch()
-         onSelectNb();
-     });
+        $(document).ready(function() {
+            initMessageSchedule();
+            initMonday();
+            onClickDay();
+            onSearch('schedule')
+            onSelectNb();
+        });
     </script>
 {% endblock %}
 

@@ -110,7 +110,7 @@ Message */
 
 function refreshMessageCollab(nb,is_qry)
 {
-    var selector = $('#messageCollab')
+    var selector = $('#message')
     selector.empty()
     if (!(is_qry))
     {

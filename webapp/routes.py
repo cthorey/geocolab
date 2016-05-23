@@ -29,6 +29,24 @@ def home():
 ####################################################
 
 
+@app.route("/_on_search", methods=['GET'])
+def _on_search():
+    RECOM.n_base_recom = 25
+    search = request.args.get('search', "")
+    Qry.set_query(search)
+    if not Qry.is_query():
+        search = Qry.get_defaut_message(Qry.get_sby())
+    return jsonify({'search': search, 'query': Qry.get_query(), 'searchby': Qry.get_sby()})
+
+
+@app.route("/_modified_query", methods=['GET'])
+def _modified_query():
+    query = request.args.get('query', "")
+    print query
+    Qry.set_query(query)
+    return jsonify({"query": Qry.get_query()})
+
+
 @app.route("/_ajaxautocomplete_authors", methods=['POST', 'GET'])
 def _ajaxautocomplete_authors():
     if request.method == 'POST':
@@ -71,18 +89,13 @@ def _get_map_spec():
 def query_based(searchby):
     # get the search request
     RECOM.n_base_recom = 25
-    search = request.args.get('search', "")
     Qry.set_sby(searchby.lower())
-    Qry.set_query(search)
-    n, data, colors = RECOM.get_map_specification(Qry.get_query())
-    if not Qry.is_query() or n == 0:
-        search = Qry.get_defaut_message(searchby)
+    Qry.init_query()
+    data, fills = RECOM.init_map_spec()
     return render_template('collaborators.html',
-                           data=json.dumps(data),
-                           colors=json.dumps(colors),
-                           search=search,
-                           query=Qry.get_query(),
-                           searchby=Qry.get_sby())
+                           searchby=Qry.get_sby(),
+                           data=data,
+                           fills=fills)
 
 
 ####################################################
@@ -141,29 +154,11 @@ def _get_schedule_day():
             'posters': {'n': n_posters, 'am': poster_am, 'pm': poster_pm}})
 
 
-@app.route("/query_based_journey/_on_search", methods=['GET'])
-def _on_search():
-    RECOM.n_base_recom = 25
-    search = request.args.get('search', "")
-    Qry.set_query(search)
-    print Qry.get_query()
-    if not Qry.is_query():
-        search = Qry.get_defaut_message(Qry.get_sby())
-    return jsonify({'search': search, 'query': Qry.get_query(), 'searchby': Qry.get_sby()})
-
-
 @app.route("/query_based_journey_<searchby>", methods=['GET'])
 def query_based_journey(searchby):
     # get the search request')
     RECOM.n_base_recom = 25
-    search = request.args.get('search', "")
     Qry.set_sby(searchby.lower())
-    Qry.set_query(search)
-    df = RECOM.recomendation(Qry.get_query())
-    if not Qry.is_query() or len(df) == 0:
-        search = Qry.get_defaut_message(Qry.get_sby())
+    Qry.init_query()
     return render_template('schedule.html',
-                           nb=len(df),
-                           search=search,
-                           query=Qry.get_query(),
                            searchby=Qry.get_sby())

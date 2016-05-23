@@ -25,7 +25,7 @@
 <!-- Block with the message (success/nothing founds) -->
 {% block message %}
     <div class="row">
-        <div class="container" id="messageCollab">
+        <div class="container" id="message">
         </div>
     </div>
 {% endblock %}
@@ -52,14 +52,12 @@
     {{ inb('collaborators') }}
 {% endblock increasenb %}
 
-{% block late_js %}
+{% block appjs %}
     <script text="type/javascript">
      $(document).ready(function() {
          initMessageCollab()
-         displayMap({{data|safe}},{{colors|safe}})
+         displayMap({{data|safe}},{{fills|safe}})
          onSelectNb()
-         dropdownMenuNav()
-         autocompleteAuthor();
      });
     </script>
 {% endblock %}

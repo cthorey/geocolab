@@ -22,6 +22,29 @@
 
         {%block increasenb%}
         {% endblock %}
+
+        <!-- js associated with the query block -->
+        {%if searchby=='byabstract' %}
+            <script text="type/javascript">
+             $(document).ready(function() {
+                 dropdownMenuNav();
+                 autocompleteAuthor();
+                 onSearch()
+             });
+            </script>
+        {% elif searchby=='byquery' %}
+            <script text="type/javascript">
+             $(document).ready(function() {
+                 dropdownMenuNav();
+                 showQuery();
+                 onSearch()
+             });
+            </script>            
+        {% endif %}
+
+        <!-- js associated with the app itself -->
+        {%block appjs %}
+        {%endblock%}
     </div>
 {% endblock %}
 
