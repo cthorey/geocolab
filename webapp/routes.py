@@ -72,7 +72,8 @@ def query_based(searchby):
     # get the search request
     RECOM.n_base_recom = 25
     search = request.args.get('search', "")
-    Qry.set_query(search, searchby.lower())
+    Qry.set_sby(searchby.lower())
+    Qry.set_query(search)
     n, data, colors = RECOM.get_map_specification(Qry.get_query())
     if not Qry.is_query() or n == 0:
         search = Qry.get_defaut_message(searchby)
