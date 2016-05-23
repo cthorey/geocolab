@@ -13,14 +13,6 @@
 {% block early_js %}
     <script src="{{url_for('static',filename='js/schedule.js')}}"></script>
 {% endblock %}
-
-<!-- Block with the message (success/nothing founds) -->
-{% block message %}
-    <div class="row">
-        <div class="container" id="message">
-        </div>
-    </div>
-{% endblock %}
     
 <!-- Block with the app itself schedule -->
 
@@ -48,13 +40,23 @@
 <!-- late ls  -->
 {% block appjs %}
     <script text="type/javascript">
-        $(document).ready(function() {
-            initMessageSchedule();
-            initMonday();
-            onClickDay();
-            onSelectNb();
-            onSearch("schedule");
-        });
+     $(document).ready(function() {
+         $('#spin').hide()
+         initMessageSchedule();
+         initMonday();
+         onClickDay();
+         onSelectNb();
+         onSearch("schedule");
+     });
+     $(document).ajaxStart(function()
+         {
+             ajaxspinwheel('before')
+         });
+     $(document).ajaxComplete(function()
+         {
+             ajaxspinwheel('complete')
+         }
+     );
     </script>
 {% endblock %}
 

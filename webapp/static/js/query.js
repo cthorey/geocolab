@@ -9,31 +9,21 @@ function onSearch(app)
                                      dataType:"json",
                                      url: $SCRIPT_ROOT + "/_on_search",
                                      data: {'search': search },
-                                     beforeSend: function() {
-                                         $('#message').empty()
-                                         var waiting = '<div class="text-center">'+
-                                             '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>'+
-                                             '<span class="sr-only"> Loading... </span><br>'+
-                                             '</div>'
-                                         $('#message').html(waiting)
-                                     },
                                      success: function(result)
                                      {
                                          if (app=='schedule')
                                          {
-                                             console.log(app)
-                                             displayBlockMessage()
                                              day = $(".day.active").text()
                                              displayBlockApp(day)
+                                             displayBlockMessage()
                                          }
                                          else if (app=="collab")
                                          {
-                                             console.log(app)
-                                             displayBlockMessage()
                                              refreshMap()
                                              refreshThumbnail()
-                                         }                                             
-                                     }
+                                             displayBlockMessage()
+                                         }
+                                     },
                                  })
                                  
                              })

@@ -55,11 +55,20 @@
 {% block appjs %}
     <script text="type/javascript">
      $(document).ready(function() {
+         $('#spin').hide()
          initMessageCollab()
          displayMap({{data|safe}},{{fills|safe}})
          onSelectNb()
          onSearch("collab")
      });
+     $(document).ajaxStart(function(){
+         ajaxspinwheel('before')
+     });
+     $(document).ajaxComplete(function()
+         {
+             ajaxspinwheel('complete')
+         }
+         );
     </script>
 {% endblock %}
 

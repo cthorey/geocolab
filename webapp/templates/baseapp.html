@@ -13,8 +13,16 @@
         {% endblock %}
         
         <!-- Block with the massage (success/nothing founds) -->    
-        {%block message%}
-        {%endblock%}
+        <div class="row">
+            <div class="container">
+                <div class="alert alert-info" id="message">
+                    <div id="info">
+                        <strong> Info: </strong> Fill the form above to initialize the recomendation engine. <br> When ready, click the search button.
+                    </div>
+                    <i class="fa fa-spinner fa-spin fa-2x fa-fw" id="spin"></i>
+                </div>
+            </div>
+        </div>
         
         <!-- Block with the app itself collab/schedule -->    
         {%block app%}

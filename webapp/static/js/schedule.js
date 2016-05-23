@@ -90,23 +90,18 @@ Message */
 function refreshMessage(nb,is_qry)
 {
     var selector = $('#message')
-    selector.empty()
     if (!(is_qry))
     {
-        var message = 'Make sure you choose an abstract in the panel above.'
-        var content = '<div class="alert alert-info">'+
-            '<strong> Info: </strong> %s'+
-            '</div>'
-        selector.append(content.format(message))
+
+        var message = '<strong> Info: </strong> Select an abstract to initialize the recomendation engine.'
+        selector.attr('class', 'alert alert-info');
     }
     else if (nb == 0)
     {
-        var message = 'we did not find any contributions that'+
-            ' could potentially match your request. Try with a different request.'
-        var content = '<div class="alert alert-warning">'+
-            '<strong> Sorry, </strong> %s'+
-            '</div>'
-        selector.append(content.format(message))
+        var message = '<strong> Sorry: </strong> we did not find any contributions that'+
+            ' could potentially match this request. Try with something different.'
+        selector.attr('class', 'alert alert-warning');
+        selector.find("#info").html(message)
     }
     else
     {
@@ -114,10 +109,9 @@ function refreshMessage(nb,is_qry)
             'could interest you during the week. '+
             'Click on each day to get the details.'
         var message = message.format(nb)
-        var content = '<div class="alert alert-success">'+
-            '<strong> Looks like a busy AGU for you. </strong> %s'+
-            '</div>'
-        selector.append(content.format(message))
+        var content = '<strong> Looks like a busy AGU for you. </strong> %s'.format(message)
+        selector.attr('class', 'alert alert-success');
+        selector.find("#info").html(content)
     }  
 }
 

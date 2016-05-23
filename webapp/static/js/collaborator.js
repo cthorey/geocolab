@@ -58,7 +58,7 @@ function displayBlockMessage()
         url: $SCRIPT_ROOT + "/query_based/_get_nb_collabs",
         success: function(result)
         {
-            refreshMessageCollab(result.n,result.is_qry)
+            refreshMessage(result.n,result.is_qry)
         }
     })
 }
@@ -108,39 +108,37 @@ Helpers
 /*********************************************************************
 Message */
 
-function refreshMessageCollab(nb,is_qry)
+function refreshMessage(nb,is_qry)
 {
     var selector = $('#message')
-    selector.empty()
     if (!(is_qry))
     {
-        var message = 'Type something in the search panel above to help us identify what you are looking for.'
-        var content = '<div class="alert alert-info">'+
-            '<strong> Info: </strong> %s'+
-            '</div>'
-        selector.append(content.format(message))
+
+        var message = '<strong> Info: </strong> Fill the form above to initialize the recomendation engine.'
+        selector.attr('class', 'alert alert-info');
+        $('#message').find('#info').show()
     }
     else if (nb == 0)
     {
-        var message = 'we did not find any contributors that'+
-            ' could potentially match your request. Try with a different request.'
-        var content = '<div class="alert alert-warning">'+
-            '<strong> Sorry, </strong> %s'+
-            '</div>'
-        selector.append(content.format(message))
+        var message = '<strong> Sorry: </strong> we did not find any contributions that'+
+            ' could potentially match this abstract. Try with another one.'
+        selector.attr('class', 'alert alert-warning');
+        selector.find("#info").text(message)
+        $('#message').find('#info').show()
     }
     else
     {
-        var message = 'we found %s researchers across the world for you to work with. '+
-            'Click on each country to get the details.'
+        var message = 'We select %s contributions that '+
+            'could interest you during the week. '+
+            'Click on each day to get the details.'
         var message = message.format(nb)
-        var content = '<div class="alert alert-success">'+
-            '<strong> Congratulations, </strong> %s'+
-            '</div>'
-        selector.append(content.format(message))
-    }
-  
+        var content = '<strong> Looks like a busy AGU for you. </strong> %s'.format(message)
+        selector.attr('class', 'alert alert-success');
+        selector.find("#info").html(content)
+        $('#message').find('#info').show()
+    }  
 }
+
 
 
 /*********************************************************************

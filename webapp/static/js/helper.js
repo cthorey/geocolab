@@ -22,4 +22,18 @@ function changeNb(nb)
     })
 }
 
+function ajaxspinwheel(arg)
+{
+    if (arg=='before')
+    {
+        $('#message').find("#info").hide()
+        $('#message').find("#spin").show()
+    }
+    else if (arg=='complete')
+    {
+        $('#message').find("#spin").hide()
+        $('#message').removeClass('text-center')
+        $('#message').find("#info").show()
+    }    
+}
 
