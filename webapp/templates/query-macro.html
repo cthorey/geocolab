@@ -12,9 +12,18 @@
                         </label>
                         <form role="form">
                             <div class="form-group">
-		                <input type="text" name="name" id="autocomplete-author"
-                                       class="form-control"
-                                       placeholder="Author example: Thorey Clement"></input>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">
+                                        <i class="fa fa-search" id="search-user"></i>
+                                    </span>
+                                    <input type="text" name="name"
+                                           id="autocomplete-author"
+                                           class="form-control"
+                                           aria-describedby="basic-addon1"
+                                           placeholder="Author example: Thorey Clement">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <select class="selectpicker form-control"
                                         name="search"
                                         id="search"
@@ -35,7 +44,6 @@
                                         See abstract 
                                     </button>
                                 </div>
-                                
                                 <div class="col-xs-6 col-md-2 text-center">
                                     <button type="button" class ="btn btn-default btn-block" id="search-click">
                                         Search

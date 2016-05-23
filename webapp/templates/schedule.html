@@ -41,7 +41,6 @@
 {% block appjs %}
     <script text="type/javascript">
      $(document).ready(function() {
-         $('#spin').hide()
          initMessageSchedule();
          initMonday();
          onClickDay();
@@ -51,12 +50,13 @@
      $(document).ajaxStart(function()
          {
              ajaxspinwheel('before')
-         });
-     $(document).ajaxComplete(function()
+         }
+     );
+     $(document).ajaxStop(function()
          {
              ajaxspinwheel('complete')
          }
-     );
+     )
     </script>
 {% endblock %}
 

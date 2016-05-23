@@ -2,9 +2,7 @@ function onSearch(app)
 {
     $('#search-click').click(function ()
                              {
-                                 console.log('click')
                                  search = $('#search').val()
-                                 console.log(search)
                                  $.ajax({
                                      dataType:"json",
                                      url: $SCRIPT_ROOT + "/_on_search",
@@ -15,18 +13,17 @@ function onSearch(app)
                                          {
                                              day = $(".day.active").text()
                                              displayBlockApp(day)
-                                             displayBlockMessage()
                                          }
                                          else if (app=="collab")
                                          {
                                              refreshMap()
                                              refreshThumbnail()
-                                             displayBlockMessage()
                                          }
-                                     },
+                                         displayBlockMessage()
+                                     }
                                  })
-                                 
                              })
+
 }
 
 
@@ -42,16 +39,15 @@ function autocompleteAuthor()
         dataType:'json',
         maxHeight:200,
         minChars:3,
+        ajaxSettings:{'global':false},
     	//callback just to show it's working
         onSearchStart: function () {
             $('#search').empty().prop('disabled', true).selectpicker('refresh')
             $('#button-abstract').prop('disabled',true)
+            $('#search-user').attr('class','fa fa-spinner fa-spin fa-1x')
         },
-        search: function(event, ui) { 
-            $('.spinner').show();
-        },
-        response: function(event, ui) {
-            $('.spinner').hide();
+        onSearchComplete: function() {
+            $('#search-user').attr('class','fa fa-search')
         },
     	onSelect: function (suggestion) {
             chooseabstract(suggestion.data)

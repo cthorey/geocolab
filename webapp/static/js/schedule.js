@@ -6,6 +6,7 @@ Events
 
 function initMessageSchedule()
 {
+    $('#message').find("#spin").hide()
     displayBlockMessage()
 }
 
@@ -56,7 +57,7 @@ function displayBlockMessage()
         url: $SCRIPT_ROOT + "/query_based_journey/_get_nb_results",
         success: function(result)
         {
-            refreshMessage(result.n,result.is_qry)
+            var clas = refreshMessage(result.n,result.is_qry)
         }
     })
 }
@@ -69,12 +70,12 @@ function displayBlockApp(day)
         dataType:"json",
         url: $SCRIPT_ROOT + "/query_based_journey/_get_schedule_day",
         data: {'day': day },
+        global: false,
         success: function(result) {
             $.each(result,function(sess,obj) {
                 displaySpan(sess,obj);
                 displaySessions(sess,obj);
-            })
-        }
+            })}
     });     
 }
 
@@ -94,14 +95,14 @@ function refreshMessage(nb,is_qry)
     {
 
         var message = '<strong> Info: </strong> Select an abstract to initialize the recomendation engine.'
-        selector.attr('class', 'alert alert-info');
+        selector.attr('class','alert alert-info')
     }
     else if (nb == 0)
     {
         var message = '<strong> Sorry: </strong> we did not find any contributions that'+
             ' could potentially match this request. Try with something different.'
-        selector.attr('class', 'alert alert-warning');
         selector.find("#info").html(message)
+        selector.attr('class','alert alert-warning')
     }
     else
     {
@@ -110,9 +111,9 @@ function refreshMessage(nb,is_qry)
             'Click on each day to get the details.'
         var message = message.format(nb)
         var content = '<strong> Looks like a busy AGU for you. </strong> %s'.format(message)
-        selector.attr('class', 'alert alert-success');
+        selector.attr('class','alert alert-success')
         selector.find("#info").html(content)
-    }  
+    }
 }
 
 /*********************************************************************

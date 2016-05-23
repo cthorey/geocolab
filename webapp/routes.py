@@ -31,7 +31,6 @@ def home():
 
 @app.route("/_on_search", methods=['GET'])
 def _on_search():
-    RECOM.n_base_recom = 25
     search = request.args.get('search', "")
     Qry.set_query(search)
     if not Qry.is_query():

@@ -31,8 +31,8 @@ function ajaxspinwheel(arg)
     }
     else if (arg=='complete')
     {
+        console.log('hello')
         $('#message').find("#spin").hide()
-        $('#message').removeClass('text-center')
         $('#message').find("#info").show()
     }    
 }
