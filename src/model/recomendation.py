@@ -149,6 +149,14 @@ class Query(mydb):
         else:
             return True
 
+    def get_defaut_message(self, searchby):
+        if searchby == 'query':
+            return 'Query example: magma "magmatic intrusions":5 dynamics:2 granit folding'
+        elif searchby == 'author':
+            return 'Author example: Clement Thorey'
+        else:
+            return ''
+
     def init_query(self):
         self.search = ""
         self.query = ""
@@ -252,8 +260,7 @@ class RecomendationSystem(mydb):
         data = {str(f): {"Nbcollab": 0,
                          "fillKey": str(f)}
                 for f in self.name_to_iso3.values()}
-        fills = {}
-        fills.update({'defaultFill': 'grey'})
+        fills = {'defaultFill': 'grey'}
         return data, fills
 
     def get_map_specification(self, query):

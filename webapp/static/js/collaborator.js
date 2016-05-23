@@ -157,6 +157,7 @@ function displayMap(data,fills)
  * @param array $fills classic input for datamap.
  */
 {
+    console.log(data)
     $('#map-container-collab').empty()
     var map = new Datamap({
         scope : 'world',

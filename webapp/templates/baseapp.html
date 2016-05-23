@@ -24,20 +24,19 @@
         {% endblock %}
 
         <!-- js associated with the query block -->
+        <script text="type/javascript">
+         dropdownMenuNav();
+        </script>
         {%if searchby=='byabstract' %}
             <script text="type/javascript">
              $(document).ready(function() {
-                 dropdownMenuNav();
                  autocompleteAuthor();
-                 onSearch()
              });
             </script>
         {% elif searchby=='byquery' %}
             <script text="type/javascript">
              $(document).ready(function() {
-                 dropdownMenuNav();
                  showQuery();
-                 onSearch()
              });
             </script>            
         {% endif %}
