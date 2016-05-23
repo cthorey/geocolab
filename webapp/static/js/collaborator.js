@@ -69,6 +69,7 @@ function displayBlockThumbnails(country)
         dataType:"json",
         url: $SCRIPT_ROOT + "/query_based/_get_thumbnails",
         data: {'country': dict_code_country[country]},
+        global:false,
         success: function(result) {
             displayThumbnails(result,country)
         }
