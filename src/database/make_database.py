@@ -101,11 +101,11 @@ if __name__ == "__main__":
     paper2author.to_sql('p2a', con=conn, flavor='sqlite',
                         if_exists='append', index_label='id')
 
-    # Create table homemap
-    pprogress('Create homemap table')
-    qry = open(os.path.join(ROOT_DIR, 'create_homemap.sql'), 'r').read()
-    conn.executescript(qry)
-    conn.commit()
+    # # Create table homemap
+    # pprogress('Create homemap table')
+    # qry = open(os.path.join(ROOT_DIR, 'create_homemap.sql'), 'r').read()
+    # conn.executescript(qry)
+    # conn.commit()
 
     # Close everything
     pprogress('Successs')
