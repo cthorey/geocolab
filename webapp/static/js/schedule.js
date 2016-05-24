@@ -32,8 +32,8 @@ function onSelectNb()
                        {
                            var nb = parseInt($(this).val().split('=')[1].trim());
                            changeNb(nb);
-                           displayBlockMessage()
                            day = $(".day.active").text()
+                           displayBlockMessage('schedule')
                            displayBlockApp(day)
                        })
 }
@@ -43,18 +43,6 @@ function onSelectNb()
 Block display
 **********************************************************************
 *********************************************************************/
-
-function displayBlockMessage()
-{
-    $.ajax({
-        dataType:"json",
-        url: $SCRIPT_ROOT + "/query_based_journey/_get_nb_results",
-        success: function(result)
-        {
-            refreshMessage(result.n,result.is_qry)
-        }
-    })
-}
 
 function displayBlockApp(day)
 {
@@ -78,39 +66,6 @@ function displayBlockApp(day)
 Helpers
 **********************************************************************
 *********************************************************************/
-
-/*********************************************************************
-Message */
-
-function refreshMessage(nb,is_qry)
-{
-    var selector = $('#message')
-    console.log('is_qry_message',is_qry)
-    if (!(is_qry))
-    {
-        var message = '<strong> Warning: </strong> The form above in not properly filled. Make sure to choose an author'+
-            ' and an abstract before running the search.'
-        selector.find("#info").html(message)
-        selector.attr('class','alert alert-warning')
-    }
-    else if (nb == 0)
-    {
-        var message = '<strong> Sorry: </strong> we did not find any contributions that'+
-            ' could potentially match this request. Try with something different.'
-        selector.find("#info").html(message)
-        selector.attr('class','alert alert-warning')
-    }
-    else
-    {
-        var message = 'We select %s contributions that '+
-            'could interest you during the week. '+
-            'Click on each day to get the details.'
-        var message = message.format(nb)
-        var content = '<strong> Looks like a busy AGU for you. </strong> %s'.format(message)
-        selector.attr('class','alert alert-success')
-        selector.find("#info").html(content)
-    }
-}
 
 /*********************************************************************
 App */

@@ -21,11 +21,11 @@ Events
 /*********************************************************************
 Init message */
 
-function initMessageCollab()
+function initThumbnail()
 {
-    displayBlockMessage()
-}
+    $('#thumbnail-container').hide()
 
+}
 /**********************************************************************
 Refresh on click on changing Nb */
 
@@ -39,9 +39,8 @@ function onSelectNb()
                        {
                            var nb = parseInt($(this).val().split('=')[1].trim());
                            changeNb(nb);
-                           displayBlockMessage()
-                           refreshMap()
-                           refreshThumbnail()
+                           displayBlockMessage('collab')
+                           refreshApp()
                        })
 }
 
@@ -50,17 +49,20 @@ function onSelectNb()
 Block display
 **********************************************************************
 *********************************************************************/
-
-function displayBlockMessage()
+function refreshApp()
 {
     $.ajax({
         dataType:"json",
-        url: $SCRIPT_ROOT + "/query_based/_get_nb_collabs",
-        success: function(result)
-        {
-            refreshMessage(result.n,result.is_qry)
-        }
-    })
+        url: $SCRIPT_ROOT + "/query_based/_get_map_spec",
+        success: function(result) {
+            displayMap(result.data,result.colors,result.nb)
+            if (result.nb != 0){
+                refreshThumbnail()
+            } else {
+                $('#thumbnail-container').hide()
+            }
+        }  
+    })    
 }
 
 function displayBlockThumbnails(country)
@@ -71,34 +73,32 @@ function displayBlockThumbnails(country)
         data: {'country': dict_code_country[country]},
         global:false,
         beforeSend:function(){
-            
-        }
-        
+            $('#thumbnail-info').hide()
+            $('#thumbnail-spin').show()
+            $('#thumbnail-container').show()
+        },
         success: function(result) {
             displayThumbnails(result,country)
+        },
+        complete:function(){
+            $('#thumbnail-info').show()
+            $('#thumbnail-spin').hide()
         }
     })
-}
-
-function refreshMap()
-{
-    $.ajax({
-        dataType:"json",
-        url: $SCRIPT_ROOT + "/query_based/_get_map_spec",
-        success: function(result) {
-            displayMap(result.data,result.colors)
-        }  
-    })
-    
 }
 
 function refreshThumbnail()
 {
-    var country = $('.info-thumbnail strong').text()
+    var country = $('#thumbnail-info').find('strong').text()
     var country = country.split(':')[0].trim()
+    console.log(country)
     if (country != "")
     {
         displayBlockThumbnails(country)
+    }
+    else
+    {
+        $('#thumbnail-container').hide()
     }
     
 }
@@ -110,46 +110,11 @@ Helpers
 **********************************************************************
 *********************************************************************/
 
-/*********************************************************************
-Message */
-
-function refreshMessage(nb,is_qry)
-{
-    var selector = $('#message')
-    if (!(is_qry))
-    {
-
-        var message = '<strong> Info: </strong> Fill the form above to initialize the recomendation engine.'
-        selector.attr('class', 'alert alert-info');
-        $('#message').find('#info').show()
-    }
-    else if (nb == 0)
-    {
-        var message = '<strong> Sorry: </strong> we did not find any contributions that'+
-            ' could potentially match this abstract. Try with another one.'
-        selector.attr('class', 'alert alert-warning');
-        selector.find("#info").text(message)
-        $('#message').find('#info').show()
-    }
-    else
-    {
-        var message = 'We select %s contributions that '+
-            'could interest you during the week. '+
-            'Click on each day to get the details.'
-        var message = message.format(nb)
-        var content = '<strong> Looks like a busy AGU for you. </strong> %s'.format(message)
-        selector.attr('class', 'alert alert-success');
-        selector.find("#info").html(content)
-        $('#message').find('#info').show()
-    }  
-}
-
-
 
 /*********************************************************************
 App */
 
-function displayMap(data,fills)
+function displayMap(data,fills,nb)
 /**
  * @summary Diplay the map of collaborators.
  *
@@ -160,7 +125,6 @@ function displayMap(data,fills)
  * @param array $fills classic input for datamap.
  */
 {
-    console.log(data)
     $('#map-container-collab').empty()
     var map = new Datamap({
         scope : 'world',
@@ -170,7 +134,11 @@ function displayMap(data,fills)
         data : data,
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-                displayBlockThumbnails(geography.properties.name);
+                if (nb !=0)
+                    {
+                        displayBlockThumbnails(geography.properties.name);
+                    } else {
+                        $('#thumbnail-container').hide()}
             })},
         geographyConfig: {
             popupTemplate: function(geography, data) {
@@ -191,18 +159,15 @@ function displayMap(data,fills)
 
 function displayThumbnails(result,country)
 {
-    if (!(result.is_qry))
-    {
-        $("#thumbmail-collab").empty()
-    }
-    else if ($.isEmptyObject(result.result))
-    {
-        DisplayNullCollab(country)
-    }
-    else
-    {
-        DisplayCollabThumbmail(result.result,country)
-    }
+    if (!(result.is_qry)){
+        $("#thumbmail-container").hide();
+    } else {
+        $('#thumbnail-container').show();
+        if ($.isEmptyObject(result.result)){
+            DisplayNullCollab(country);
+        } else {
+            DisplayCollabThumbmail(result.result,country);
+        }}
 }
 
 function CollabDisplay(author)
@@ -239,13 +204,8 @@ function DisplayCollabThumbmail(result,country)
  * @param str $country coutry clicked.
  */
 {
-    // // empty the element
-    $("#thumbmail-collab").empty();
         // // Sucess of the request
-    var div = '<div class="alert alert-info info-thumbnail">'+
-        '<strong> %s :</strong> '+
-        '%s waiting for your call there.'+
-        '</div>';
+    var message = '<strong> %s :</strong> %s waiting for your call there.'
     var n = Object.keys(result).length
     if (n ==1)
     {
@@ -255,24 +215,26 @@ function DisplayCollabThumbmail(result,country)
     {
         var mess = '%s collaborators are '.format(n)
     }
-    var div = div.format(country,mess)
-    $("#thumbmail-collab").append(div);
+    var messfinal = message.format(country,mess)
+    $("#thumbnail-info").html(messfinal);
+    $("#thumbnail-info").show()
     // Fill in the thumbnails
+    $("#thumbnail-body").empty()
     // First sort the results
     var arr = $.map(result,function(obj,idx){return obj}) //Create the array
     var arr = arr.sort(function(a, b) {
         return -(parseFloat(a.score) - parseFloat(b.score));});
     // Next fill in
     arr.forEach(function(author) {
-        $("#thumbmail-collab").append(CollabDisplay(author));
+        $("#thumbnail-body").append(CollabDisplay(author));
     });
+    $('#thumbnail-body').show()
     // Some jquery to uniform their sizes
     var maxHeight = 0;			
     $(".thumbnail").each(function(){
         if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
     });			
     $(".thumbnail").height(maxHeight);
-
 }
 
 function DisplayNullCollab(country)
@@ -282,11 +244,10 @@ function DisplayNullCollab(country)
  * @param str $country coutry clicked.
  */
 {
-    $("#thumbmail-collab").empty();
-    var div = '<div class="alert alert-info info-thumbnail">'+
-        '<strong> %s :</strong> '+
-        'Nobody for you in this country.'
-        '</div>';
-    $("#thumbmail-collab").append(div.format(country));
+    $('#thumbnail-body').hide()
+    message = '<strong> %s :</strong> Nobody for you in this country.'
+    var messfinal = message.format(country)
+    $("#thumbnail-info").html(messfinal);
+    $("#thumbnail-info").show()
 }
 

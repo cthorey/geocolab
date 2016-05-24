@@ -83,8 +83,8 @@ def _get_nb_collabs():
 
 @app.route("/query_based/_get_map_spec", methods=['GET'])
 def _get_map_spec():
-    _, data, colors = RECOM.get_map_specification(Qry.get_query())
-    return jsonify({'data': data, 'colors': colors})
+    nb, data, colors = RECOM.get_map_specification(Qry.get_query())
+    return jsonify({'data': data, 'colors': colors, 'nb': nb})
 
 
 @app.route("/query_based_<searchby>", methods=['GET'])

@@ -7,14 +7,14 @@
                     <div class="panel-heading">
                         <label class="control-label">
                             <h3> <strong> Abstract-based</strong> recommendation engine.</h3>
-                            <p> We use the content of an abstract to initialize or recommendation engine.<br>
+                            <p> We use the content of an abstract to initialize our recommendation engine.<br>
                                 <small> Type one of its author and select the corresponding abstract to get it running.</small></p>
                         </label>
                         <form role="form">
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon1">
-                                        <i class="fa fa-search" id="search-user"></i>
+                                        <i class="fa fa-user" id="search-user"></i>
                                     </span>
                                     <input type="text" name="name"
                                            id="autocomplete-author"
@@ -79,11 +79,16 @@
                         </label>
                         <form role="form">
                             <div class="form-group">
-                                <input class="form-control"
-                                       type="text"
-                                       placeholder='Query example: magma "magmatic intrusions":5 dynamics:2 granit folding'
-                                       id="search"
-                                       name="search"></input>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">
+                                        <i class="fa fa-search" id="search-user"></i>
+                                    </span>
+                                    <input class="form-control"
+                                           type="text"
+                                           placeholder='Query example: magma "magmatic intrusions":5 dynamics:2 granit folding'
+                                           id="search"
+                                           name="search"></input>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-6 col-md-10 text-center">

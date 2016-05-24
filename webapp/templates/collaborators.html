@@ -22,13 +22,6 @@
 <script src="{{url_for('static',filename='js/collaborator.js')}}"></script>
 {% endblock %}
 
-<!-- Block with the message (success/nothing founds) -->
-{% block message %}
-    <div class="row">
-        <div class="container" id="message">
-        </div>
-    </div>
-{% endblock %}
 
 {% block app %}
     <!-- Display the map  -->
@@ -42,8 +35,15 @@
 
     <!-- Display the thumbnail  -->
     <div class="row">
-        <div class="container" id="thumbmail-collab">
-            <div class="alert alert-info info-thumbnail">
+        <div class="container" id="thumbnail-container">
+            <div class="alert alert-info" id="thumbnail-header">
+                <div id="thumbnail-info">
+                </div>
+                <div class="text-center" id="thumbnail-spin">
+                    <i class="fa fa-spinner fa-spin fa-2x fa-fw text-center"></i>
+                </div>
+            </div>
+            <div id="thumbnail-body">
             </div>
         </div>
     </div>
@@ -57,8 +57,7 @@
 {% block appjs %}
     <script text="type/javascript">
      $(document).ready(function() {
-         $('#spin').hide()
-         $('.info-thumbnail').hide()
+         $('#thumbnail-container').hide()
          displayMap({{data|safe}},{{fills|safe}})
          onSelectNb()
          onSearch("collab")
