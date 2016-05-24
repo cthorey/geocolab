@@ -6,8 +6,11 @@ Events
 
 function initMessageSchedule()
 {
-    $('#message').find("#spin").hide()
-    displayBlockMessage()
+    selector = $('#message')
+    selector.find("#spin").hide()
+    var message = '<strong> Info: </strong> Fill in the form above by picking an author and the '
+        +'abstract you want to use for your recommendation to initialize the engine. When ready, click on the search button.'
+    selector.find("#info").html(message)
 }
 
 function initMonday()
@@ -57,7 +60,7 @@ function displayBlockMessage()
         url: $SCRIPT_ROOT + "/query_based_journey/_get_nb_results",
         success: function(result)
         {
-            var clas = refreshMessage(result.n,result.is_qry)
+            refreshMessage(result.n,result.is_qry)
         }
     })
 }
@@ -91,11 +94,13 @@ Message */
 function refreshMessage(nb,is_qry)
 {
     var selector = $('#message')
+    console.log('is_qry_message',is_qry)
     if (!(is_qry))
     {
-
-        var message = '<strong> Info: </strong> Select an abstract to initialize the recomendation engine.'
-        selector.attr('class','alert alert-info')
+        var message = '<strong> Warning: </strong> The form above in not properly filled. Make sure to choose an author'+
+            ' and an abstract before running the search.'
+        selector.find("#info").html(message)
+        selector.attr('class','alert alert-warning')
     }
     else if (nb == 0)
     {

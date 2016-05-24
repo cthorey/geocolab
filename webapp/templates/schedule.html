@@ -47,16 +47,7 @@
          onSelectNb();
          onSearch("schedule");
      });
-     $(document).ajaxStart(function()
-         {
-             ajaxspinwheel('before')
-         }
-     );
-     $(document).ajaxStop(function()
-         {
-             ajaxspinwheel('complete')
-         }
-     )
+     ajaxwait()
     </script>
 {% endblock %}
 

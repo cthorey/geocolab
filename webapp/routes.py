@@ -35,7 +35,10 @@ def _on_search():
     Qry.set_query(search)
     if not Qry.is_query():
         search = Qry.get_defaut_message(Qry.get_sby())
-    return jsonify({'search': search, 'query': Qry.get_query(), 'searchby': Qry.get_sby()})
+    return jsonify({'search': search,
+                    'query': Qry.get_query(),
+                    'searchby': Qry.get_sby(),
+                    'isquery': Qry.is_query()})
 
 
 @app.route("/_modified_query", methods=['GET'])

@@ -2,26 +2,26 @@
   DEFAULT BOOTSTRAP STYLES
 **************************/
 
-.btn {
-  display: inline-block;
-  padding: 6px 16px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 10px 16px;
-}
+/* .btn { */
+/*   display: inline-block; */
+/*   padding: 6px 16px; */
+/*   margin-bottom: 0; */
+/*   font-size: 14px; */
+/*   font-weight: normal; */
+/*   line-height: 1.42857143; */
+/*   text-align: center; */
+/*   white-space: nowrap; */
+/*   vertical-align: middle; */
+/*   cursor: pointer; */
+/*   -webkit-user-select: none; */
+/*      -moz-user-select: none; */
+/*       -ms-user-select: none; */
+/*           user-select: none; */
+/*   background-image: none; */
+/*   border: 1px solid transparent; */
+/*   border-radius: 4px; */
+/*   padding: 10px 16px; */
+/* } */
   
 .btn-lg {
   font-size: 18px;
@@ -246,4 +246,9 @@ input-group {
     border: 1px solid #CCC; 
     display: block; 
     margin: 20px 0; 
+}
+
+/* collapse resolve size */
+.dropdown-menu > li > a {
+    white-space: normal;
 }

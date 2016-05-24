@@ -22,18 +22,19 @@ function changeNb(nb)
     })
 }
 
-function ajaxspinwheel(arg)
+function ajaxwait()
 {
-    if (arg=='before')
-    {
-        $('#message').find("#info").hide()
-        $('#message').find("#spin").show()
-    }
-    else if (arg=='complete')
-    {
-        console.log('hello')
-        $('#message').find("#spin").hide()
-        $('#message').find("#info").show()
-    }    
+     $(document).ajaxStart(function()
+         {
+             $('#message').find("#info").hide()
+             $('#message').find("#spin").show()
+         }
+     );
+     $(document).ajaxStop(function()
+         {
+             $('#message').find("#spin").hide()
+             $('#message').find("#info").show()
+         }
+     )
 }
 

@@ -133,8 +133,8 @@ class Query(mydb):
 
     def abstract2query(self):
         title = self.search.lower()
-        qry = ('select distinct(abstract) from papers where formatTitle like "%'
-               + title + '%"')
+        qry = ('select distinct(abstract) from papers where formatTitle="'
+               + title + '"')
         print qry
         res = self.query_db(qry)
         if len(res) == 0:
