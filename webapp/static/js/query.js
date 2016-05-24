@@ -105,7 +105,7 @@ function autocompleteAuthor()
     	type:'POST',
         dataType:'json',
         maxHeight:200,
-        minChars:2,
+        minChars:1,
         ajaxSettings:{'global':false},
     	//callback just to show it's working
         onSearchStart: function () {

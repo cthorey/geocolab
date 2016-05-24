@@ -53,6 +53,10 @@ function displayBlockApp(day)
         url: $SCRIPT_ROOT + "/query_based_journey/_get_schedule_day",
         data: {'day': day },
         global: false,
+        beforeSend:function()
+        {
+            $('.badge').html('<i class="fa fa-spinner fa-spin pull right"></i>')
+        },
         success: function(result) {
             $.each(result,function(sess,obj) {
                 displaySpan(sess,obj);
