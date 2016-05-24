@@ -36,6 +36,8 @@
         <!-- js associated with the query block -->
         <script text="type/javascript">
          dropdownMenuNav();
+         initMessage("{{searchby}}")
+         ajaxwait()
         </script>
         {%if searchby=='byabstract' %}
             <script text="type/javascript">

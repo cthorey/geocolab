@@ -4,15 +4,6 @@ Events
 **********************************************************************
 *********************************************************************/
 
-function initMessageSchedule()
-{
-    selector = $('#message')
-    selector.find("#spin").hide()
-    var message = '<strong> Info: </strong> Fill in the form above by picking an author and the '
-        +'abstract you want to use for your recommendation to initialize the engine. When ready, click on the search button.'
-    selector.find("#info").html(message)
-}
-
 function initMonday()
 {
     displayBlockApp("Mon")

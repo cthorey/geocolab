@@ -26,6 +26,21 @@ function onSearch(app)
 
 }
 
+function initMessage(searchby)
+{
+    selector = $('#message')
+    selector.find("#spin").hide()
+    if (searchby == 'byabstract')
+    {
+        var message = '<strong> Info: </strong> Fill in the form above by picking an author and the '
+            +'abstract you want to use to initialize the recomendation engine. When ready, click on the search button.'
+    }
+    else if (searchby == 'byquery')
+    {
+        var message = '<strong> Info: </strong> Fill in the form above by providing a query you want to use to initialize the recomendation engine. When ready, click on the search button.'
+    }
+    selector.find("#info").html(message)
+}
 
 // Abstract-based recomendation engine
 

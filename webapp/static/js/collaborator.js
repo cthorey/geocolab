@@ -70,6 +70,10 @@ function displayBlockThumbnails(country)
         url: $SCRIPT_ROOT + "/query_based/_get_thumbnails",
         data: {'country': dict_code_country[country]},
         global:false,
+        beforeSend:function(){
+            
+        }
+        
         success: function(result) {
             displayThumbnails(result,country)
         }

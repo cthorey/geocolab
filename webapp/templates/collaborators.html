@@ -43,6 +43,8 @@
     <!-- Display the thumbnail  -->
     <div class="row">
         <div class="container" id="thumbmail-collab">
+            <div class="alert alert-info info-thumbnail">
+            </div>
         </div>
     </div>
     <br>
@@ -56,21 +58,13 @@
     <script text="type/javascript">
      $(document).ready(function() {
          $('#spin').hide()
-         initMessageCollab()
+         $('.info-thumbnail').hide()
          displayMap({{data|safe}},{{fills|safe}})
          onSelectNb()
          onSearch("collab")
      });
-     $(document).ajaxStart(function()
-         {
-             ajaxspinwheel('before')
-         }
-     );
-     $(document).ajaxStop(function()
-         {
-             ajaxspinwheel('complete')
-         }
-     )
     </script>
 {% endblock %}
+
+
 
