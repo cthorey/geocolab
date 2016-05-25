@@ -1,4 +1,4 @@
-{% macro generatenav(home, collab, schedule) %}
+{% macro generatenav(home, collab, schedule,about) %}
     <!-- nav bar: http://www.bootply.com/ceoQOzQykG# -->
     <div class="container">        
         <nav class="navbar navbar-inverse navbar-static-top marginBottom-0" role="navigation">
@@ -26,7 +26,7 @@
                             <li><a href="{{url_for('query_based',searchby='query')}}"><strong>Query-based</strong> recommendation</a></li>
                         </ul>
                     </li>
-                    <li class="tab {{home}}" id="about"><a href="{{url_for('about')}}">Home</a></li>
+                    <li class="tab {{about}}" id="about"><a href="{{url_for('about')}}">Home</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>
