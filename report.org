@@ -19,6 +19,9 @@ Listing of all the important task to do
 ** DONE Incorporate the database in the recommendation system
    CLOSED: [2016-04-27 Wed 17:44]
 
+** TODO Accelerate the db stuff search ? possible 
+
+
 
 * Web app stuff
 
