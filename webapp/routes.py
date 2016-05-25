@@ -164,3 +164,12 @@ def query_based_journey(searchby):
     Qry.init_query()
     return render_template('schedule.html',
                            searchby=Qry.get_sby())
+
+####################################################
+# About
+####################################################
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')

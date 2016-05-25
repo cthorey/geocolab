@@ -13,57 +13,133 @@
 
 {% block content %}
     <div class="container">
-        <!-- Slide 1 -->
-        <div class="jumbotron">
-            <h2 class="text-center"> About</h2>
-            <p class="lead text-center"> A attempt to simplify the AGU experience and networking in geoscience.</p>
-        </div>
-
         <div class="container">
-            <p class="lead text-center"><q> With nearly 24,000 attendees, AGU Fall Meeting is the largest Earth and space science meeting in the world. </q><br>
-                Based on all AGU contributions and state-of-the-art natural language processing techniques, we design a recomendation engine able to extract
-                relevant absracts throughout the 25000's submited to AGU. 
+            <h2 class="text-center"> FAQ</h2>
+            <hr class="featurette-divider">
+            <h4> Why are these apps useful ? </h4>
+            <p class="lead"> <small> They spare your time by finding
+                relevant contributions for you, organizing your week
+                and finding some colleagues you could potential work
+                with.</small>
             </p>
-        </div>
-        <!-- Slide 2 -->
+            
+            <h4> How does it work ? </h4>
+            <p class="lead"> <small> Both apps are built on top of the
+            same recommendation engine which find relevant abstracts
+            for you given the query or the abstract you specify.</small>
+            </p>
+            
+            <h4> I mean, the recommendation engine ? </h4>
+            <p class="lead"> <small> It builds a representation of
+                each abstract in a high-dimensional space (500 to be
+                precise) and computes similarities between each ones.
+                The engine just returns the closest abstracts (in term
+                of this similarity measure) to your request, be it some keywords
+                or an abstract.</small>
+            </p>
+            
+            <h4> A representation ? </h4>
+            <p class="lead"> <small> Yes, it associates to each
+            abstract a 500-dimensional vector in a 500-dimensional
+            space.</small>
+            </p>
+            
+            <h4> Based on what ? </h4>
+            <p class="lead"> <small> Essentially, the bag of word
+                model. Long story short, it first passes through all
+                the abstracts and builds a dictionary, let's call it a
+                corpus dictionary, of all the words it met on the
+                way. Then, a vector for each abstract is a vector with
+                the same size as the corpus dictionary where each word
+                has been replaced by the count of how many times it
+                appears in this specific abstract. </small>
+            </p>
+            
+            <h4> Mostly zeros then ? </h4>
+            <p class="lead"> <small> Yes basically, expect for the
+            words that appear in that abstract. </small>
+            </p>
+            
+            <h4> And there are only 500 different words in the whole
+            abstract corpus of AGU ? </h4>
+            <p class="lead"> <small> Well .... No. It is more like
+                15739. It then uses a technique called Latent Semantic
+                Analysis (LSA) to shrink the representation to 500
+                dimensions.  It is a common method in information
+                retrieval to reduce the dimensions of the
+                representation space. It aims to reduce the dimensions
+                while keeping as much information possible present in
+                the higher dimensional space by identifying deep
+                semantic pattern in the corpus.</small>
+            </p>
 
-        <hr class="featurette-divider">
-        
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-md-8 vcenter">
-                    <h2 class="lead text-center"> Ever been lost in the scientific program ? <span class="text-muted">Not anymore.</span></h2>
-                    <p class="lead text-center"> Based on our recommendation engine, we design an app that allows you too painlessly plan your
-                        AGU. Just give it a query or an abstract as a reference and it will propose you a set of interesting contributions
-                        to fill out your week with great science. </p>
-                </div><!--
-                         --><div class="col-xs-12 col-md-4 vcenter">
-                    <form action="{{url_for('query_based_journey',searchby='abstract')}}" method="get">
-                        <input type="submit" value="Try it out"  class="btn btn-success btn-circle btn-lg center-block">
-                    </form>
-                         </div>
-            </div>
-        </div>
-        
-        <hr class="featurette-divider">
-        <!-- Slide  -->
+            <h4> An example ? </h4>
+            <p class="lead"> <small> Well, for instance, the token
+            global and warming are more likely to occur together.
+            Combining these two dimensions to only one reduces the
+            dimensional space without much losses of information. For
+            more details, check-out this blog post I wrote about
+                <a href="http://cthorey.github.io./AGU_Part3/">the
+                recommendation engine</a>  </small>
+            </p>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-md-4 vcenter">
-                    <form action="{{url_for('query_based',searchby='abstract')}}" method="get">
-                        <input type="submit" value="Try it out"  class="btn btn-circle btn-lg center-block"> 
-                    </form>
-                </div><!--
-                         --><div class="col-xs-12 col-md-8 vcenter">
-                    <h2 class="lead text-center"> Find it hard to create your network ? <span class="text-muted"> Not anymore.</span> </h2>
-                    <p class="lead text-center"> Based on our recomendation engine, we develop an app that makes networking in geoscience easy.
-                        Just give it a query or an abstract as a reference and it will propose you a set of people across the world
-                        that are working on similar topics.</p>
-                         </div>
-            </div>
+            <h4> Ok. So, at the end, each abstract is a point in this  500-dimension space, whatever that
+            looks like, right ?</h4>
+            <p class="lead"> <small> Yes, a vector to be exact. And,
+            your request, be it a combination of keywords or an abstract, is also transformed to live in
+            this representation space.</small>
+            </p>
+
+            <h4> And so, what is this similarity measure which allows
+            the engine to find only relevant contributions ? </h4>
+            <p class="lead"> <small> It is the cosine similarity
+                between your request vector against all the abstract
+                vectors. See it as the angle your request vector makes
+                with all contributions. It is one when one
+                contribution points in the same direction as your
+                request, i.e. share a lot in term of semantics and
+                topic and -1 otherwise.</small>
+            </p>
+
+            <h4> Then, for a specific request, the engine only returns
+            those that are close to 1? </h4>
+            <p class="lead"> <small> Right. Larger than 0.3 exactly.</small>
+            </p>
+            
+            <h4> And how do you know it works? </h4>
+            <p class="lead"> <small> First, It gives highly relevant
+                results for my two contributions and for those of my
+                colleagues in Paris. But may be you like something more
+                qualitative.  Take a look at the figure below. It give
+                you a sense of the structure of the 500-dimensional
+                space the engine has designed. In particular, abstract
+                close up there (whatever that means in 500 dimensions)
+                are close on the figure.
+            </small>
+            </p>
+
+            <h4> Nice, it appears to be able to grab the
+            section/section structure of the conference ! </h4>
+            <p class="lead"> <small> Yes, I was really exited about
+                it. But, may be more importantly, it is also able to
+                find relevant contribution from totally different
+                section and surely, will widens the field of
+                interesting contribution you will see at AGU next
+                year. 
+            </small>
+            </p>
+            
+            <h4> Thanks. I think it is very useful indeed. Why did you
+            do that in the first place? </h4>
+            <p class="lead"> <small> Mostly, I wanted to learn about
+                natural language processing techniques, relational
+                databases and build my one web application.  Trying to
+                navigate through the AGU conference last year, I
+                figured it could be a good idea to use the abstract
+                content of the conference and try to build something
+                on top of it.
+            </p></small>
         </div>
-    </div>
 
 {% endblock %}
 
