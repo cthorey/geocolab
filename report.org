@@ -80,12 +80,11 @@ Listing of all the important task to do
    CLOSED: [2016-05-10 Tue 15:18]
    Complicated to so smth responsiv
 
-** TODO Panel scrolle in abstract
-
-** TODO Change info on query depends on what is it
-
-
-
+** DONE Panel scrolle in abstract
+   CLOSED: [2016-05-25 Wed 10:15]
+** DONE Change info on query depends on what is it
+   CLOSED: [2016-05-25 Wed 10:15]
+** TODO Message collab nb collaborators !
  
 * Geocollab
 

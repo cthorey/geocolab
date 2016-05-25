@@ -44,14 +44,22 @@ function initMessage(searchby)
 
 function displayBlockMessage(app)
 {
-    $.ajax({
-        dataType:"json",
-        url: $SCRIPT_ROOT + "/query_based_journey/_get_nb_results",
-        success: function(result)
-        {
-            refreshMessage(result.n,result.is_qry,app)
-        }
-    })
+    if (app =="schedule") {
+        $.ajax({
+            dataType:"json",
+            url: $SCRIPT_ROOT + "/query_based_journey/_get_nb_results",
+            success: function(result) {
+                refreshMessage(result.n,result.is_qry,app);
+            }
+        })}
+    else if (app=='collab') {
+        $.ajax({
+            dataType:"json",
+            url: $SCRIPT_ROOT + "/query_based/_get_nb_collabs",
+            success: function(result){
+                refreshMessage(result.n,result.is_qry,app);
+            }
+        })}
 }
 
 function refreshMessage(nb,is_qry,app)
@@ -179,12 +187,19 @@ function showQuery()
             dataType:"json",
             url: $SCRIPT_ROOT + "/_modified_query",
             data: {'query': query },
+            global:false,
+            beforeSend: function(){
+                $('#search-user').attr('class','fa fa-spinner fa-spin fa-1x')
+            },
             success: function(result)
             {
                 selector = $('#fill-abstract')
                 selector.empty()
                 var query = '<p>%s</p>'.format(result.query)
                 selector.html(query)
-            }
+            },
+            complete: function() {
+                $('#search-user').attr('class','fa fa-search')
+            },
         })
     });}
