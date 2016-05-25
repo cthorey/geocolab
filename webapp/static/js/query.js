@@ -1,3 +1,19 @@
+var NBSTART = 3
+
+function controlLenthAuthor() {
+    var field = $('#autocomplete-author')
+    field.change(function(){
+        if (field.val().length < NBSTART)
+        {
+            console.log('hello')
+            $('#search').empty().prop('disabled', true).selectpicker('refresh')
+            $('#button-abstract').prop('disabled',true)
+        }
+    })   
+}
+                                    
+
+
 function onSearch(app)
 {
     $('#search-click').click(function ()
