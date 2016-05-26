@@ -32,10 +32,11 @@
             <h4> I mean, the recommendation engine ? </h4>
             <p class="lead"> <small> It builds a representation of
                 each abstract in a high-dimensional space (500 to be
-                precise) and computes similarities between each ones.
-                The engine just returns the closest abstracts (in term
-                of this similarity measure) to your request, be it some keywords
-                or an abstract.</small>
+                precise) and computes the similarity of your request
+                against all the contributions.  The engine just
+                returns the closest ones (in term of this
+                similarity measure) to your request, be it some
+                keywords or an abstract.</small>
             </p>
             
             <h4> A representation ? </h4>
@@ -45,8 +46,8 @@
             </p>
             
             <h4> Based on what ? </h4>
-            <p class="lead"> <small> Essentially, the bag of word
-                model. Long story short, it first passes through all
+            <p class="lead"> <small> Essentially, the <a href="https://en.wikipedia.org/wiki/Bag-of-words_model">Bag Of Word
+                model</a>. Long story short, it first passes through all
                 the abstracts and builds a dictionary, let's call it a
                 corpus dictionary, of all the words it met on the
                 way. Then, a vector for each abstract is a vector with
@@ -63,10 +64,10 @@
             <h4> And there are only 500 different words in the whole
             abstract corpus of AGU ? </h4>
             <p class="lead"> <small> Well .... No. It is more like
-                15739. It then uses a technique called Latent Semantic
-                Analysis (LSA) to shrink the representation to 500
+                15739. It then uses a technique called <a href="https://en.wikipedia.org/wiki/Latent_semantic_analysis">Latent Semantic
+                Analysis (LSA)</a> to shrink the representation to 500
                 dimensions.  It is a common method in information
-                retrieval to reduce the dimensions of the
+                retrieval to reduce the dimension of the
                 representation space. It aims to reduce the dimensions
                 while keeping as much information possible present in
                 the higher dimensional space by identifying deep
@@ -83,11 +84,12 @@
                 recommendation engine</a>  </small>
             </p>
 
-            <h4> Ok. So, at the end, each abstract is a point in this  500-dimension space, whatever that
-            looks like, right ?</h4>
+            <h4> Ok. So, at the end, each abstract is a point in this
+            500-dimension space, whatever that looks like, right ?</h4>
             <p class="lead"> <small> Yes, a vector to be exact. And,
-            your request, be it a combination of keywords or an abstract, is also transformed to live in
-            this representation space.</small>
+            your request, be it a combination of keywords or an
+            abstract, is also transformed to live in this
+            representation space.</small>
             </p>
 
             <h4> And so, what is this similarity measure which allows
@@ -95,10 +97,10 @@
             <p class="lead"> <small> It is the cosine similarity
                 between your request vector against all the abstract
                 vectors. See it as the angle your request vector makes
-                with all contributions. It is one when one
+                with all the contributions. It is one when the
                 contribution points in the same direction as your
-                request, i.e. share a lot in term of semantics and
-                topic and -1 otherwise.</small>
+                request, i.e. they share a lot in term of semantics and
+                topics and -1 otherwise.</small>
             </p>
 
             <h4> Then, for a specific request, the engine only returns
@@ -110,7 +112,7 @@
             <p class="lead"> <small> First, It gives highly relevant
                 results for my two contributions and for those of my
                 colleagues in Paris. But may be you like something more
-                qualitative.  Take a look at the figure below. It give
+                qualitative.  Take a look at the figure below. It gives
                 you a sense of the structure of the 500-dimensional
                 space the engine has designed. In particular, abstracts
                 close up there (whatever that means in 500 dimensions)
@@ -118,21 +120,22 @@
             </small>
             </p>
 
-            <div>
-                <a href="https://plot.ly/~clement.thorey/41/"
-                   target="_blank"
-                   title="t-sne of the 500 LSA embedding"
-                   style="display: block; text-align: center;">
-                    <img src="https://plot.ly/~clement.thorey/41.png"
-                         alt="t-sne of the 500 LSA embedding"
-                         style="max-width: 100%;width: 900px;"
-                         width="900"
-                         onerror="this.onerror=null;this.src='https://plot.ly/404.png';" /></a>
-                <script data-plotly="clement.thorey:41"  src="https://plot.ly/embed.js" async></script>
+            <div class="text-center">
+                <figure>
+                    <a href="https://plot.ly/~clement.thorey/56/t-sne-of-the-500-lsa-embedding/"
+                       target="_blank"
+                       title="t-sne of the 500 LSA embedding"
+                       style="display: block; text-align: center;">
+                        <img src="{{url_for('static',filename='images/tsne_LSA_500_geocolab.png')}}"
+                             alt="t-sne of the 500 LSA embedding"
+                             style="max-width: 100%;width: 800px;"
+                             width="800" /></a>
+                </figure>
+                <figcaption> Click on the figure to get its interactive counterpart.</figcaption>
             </div>
             
-            <h4> Nice, it appears to be able to grab the
-            section/section structure of the conference ! </h4>
+            <h4> Nice, it is able to grab the section/session
+            structure of the conference ! </h4>
             <p class="lead"> <small> Yes, I was really exited about
                 it. But, may be more importantly, it is also able to
                 find relevant contributions from totally different
@@ -142,8 +145,7 @@
             </small>
             </p>
             
-            <h4> Thanks. I think it is very useful indeed. Why did you
-            do that in the first place? </h4>
+            <h4> Why did you do that in the first place? </h4>
             <p class="lead"> <small> Mostly, I wanted to learn about
                 natural language processing techniques, relational
                 databases and build my own web application.  Trying to

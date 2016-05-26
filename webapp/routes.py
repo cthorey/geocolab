@@ -44,7 +44,6 @@ def _on_search():
 @app.route("/_modified_query", methods=['GET'])
 def _modified_query():
     query = request.args.get('query', "")
-    print query
     Qry.set_query(query)
     return jsonify({"query": Qry.get_query()})
 
