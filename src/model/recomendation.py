@@ -14,9 +14,13 @@ import shlex
 
 from psycopg2 import connect
 from psycopg2.extras import DictCursor
+import urlparse
 
 
 class mydb(object):
+
+    urlparse.uses_netloc.append("postgres")
+    url = urlparse.urlparse(os.environ["DATABASE_URL"])
 
     name_to_iso3 = {
         elt.name.upper(): elt.alpha3 for elt in pycountry.countries}
@@ -36,8 +40,13 @@ class mydb(object):
             return ''
 
     def query_db(self, query, args=(), one=False):
-        conn = connect(user='thorey', database='geocolab',
-                       cursor_factory=DictCursor)
+        conn = connect(
+            database=self.url.path[1:],
+            user=self.url.username,
+            password=self.url.password,
+            host=self.url.hostname,
+            port=self.url.port,
+            cursor_factory=DictCursor)
         dict_cur = conn.cursor()
         dict_cur.execute(query, args)
         res = dict_cur.fetchall()
