@@ -11,14 +11,14 @@ CREATE TABLE "papers" (
   "date" TEXT,
   "place" TEXT,
   "section" TEXT,
-  "formatTitle" TEXT,  
+  "ftitle" TEXT,  
   "id_paper" INTEGER,
   PRIMARY KEY (linkp)    
 );
 
 -- Insert  authors
 CREATE TABLE "authors" (
-"name" TEXT,
+"name" TEXT, 
   "country" TEXT,
   "linka" TEXT,
   "address" TEXT,
@@ -29,10 +29,12 @@ CREATE TABLE "authors" (
 -- create  p2a
 CREATE TABLE "p2a" (
 "id" INTEGER,
-  "linkp" TEXT,
-  "name" TEXT,
-  "inst" TEXT,
-  "formatName" TEXT,
-  "inverseName" TEXT,
-  PRIMARY KEY(id)
-);
+"linkp" TEXT,
+"name" TEXT,
+"inst" TEXT,
+"nname" TEXT,
+"iname" TEXT,
+PRIMARY KEY(id,name,iname,nname));
+
+
+

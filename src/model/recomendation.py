@@ -5,7 +5,6 @@ import time
 from tqdm import *
 import numpy as np
 import pandas as pd
-import sqlite3
 import seaborn as sns
 import pycountry
 from helper import *
@@ -13,10 +12,12 @@ from sklearn.externals import joblib
 import random
 import shlex
 
+from psycopg2 import connect
+from psycopg2.extras import DictCursor
+
 
 class mydb(object):
 
-    db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
     name_to_iso3 = {
         elt.name.upper(): elt.alpha3 for elt in pycountry.countries}
     iso3_to_name = {
@@ -34,29 +35,27 @@ class mydb(object):
         except:
             return ''
 
-    def get_db(self):
-        db = sqlite3.connect(self.db_path)
-        db.row_factory = sqlite3.Row
-        return db
-
     def query_db(self, query, args=(), one=False):
-        db = self.get_db()
-        res = db.cursor().execute(query, args)
-        rv = res.fetchall()
-        db.close()
-        return (rv[0] if rv else None) if one else rv
+        conn = connect(user='thorey', database='geocolab',
+                       cursor_factory=DictCursor)
+        dict_cur = conn.cursor()
+        dict_cur.execute(query, args)
+        res = dict_cur.fetchall()
+        dict_cur.close()
+        conn.close()
+        return res
 
     def get_authors_autocomplete(self, typename):
-        qry = ('select p2a.inverseName,papers.title,papers.abstract ' +
+        qry = ('select p2a.iname,papers.title,papers.abstract ' +
                'from p2a,papers ' +
                'where papers.linkp=p2a.linkp and ' +
-               '(p2a.name like "%' +
-               typename + '%" or p2a.inverseName like "%' + typename + '%")')
-        res = self.query_db(qry)
+               '(p2a.name like %s or p2a.iname like %s)')
+        name = '%' + typename + '%'
+        res = self.query_db(qry, (name, name))
         if len(res) > 0:
             df = pd.DataFrame([[row[f] for f in res[0].keys()]
                                for row in res], columns=res[0].keys())
-            dfg = df.groupby('inverseName')
+            dfg = df.groupby('iname')
             suggestion = [{"value": name, "data": {'titles': gp.title.tolist(), 'abstracts': gp.abstract.tolist()}}
                           for name, gp in dfg]
         else:
@@ -133,10 +132,8 @@ class Query(mydb):
 
     def abstract2query(self):
         title = self.search.lower()
-        qry = ('select distinct(abstract) from papers where formatTitle="'
-               + title + '"')
-        print qry
-        res = self.query_db(qry)
+        qry = ('select distinct(abstract) from papers where ftitle=%s')
+        res = self.query_db(qry, (title,))
         if len(res) == 0:
             query = ""
         else:
@@ -181,7 +178,6 @@ class RecomendationSystem(mydb):
         self.min_score = min_score
 
         # Db local
-        self.db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
         # Load the titles and abstract + links
         qry = self.query_db('select title,linkp from papers')
         self.titles = [f['title'] for f in qry]
@@ -239,7 +235,7 @@ class RecomendationSystem(mydb):
             qry = 'select p2a.name,p2a.inst,auth.country,p.title,p2a.linkp ' +\
                   'from p2a, authors as auth, papers as p ' +\
                   'where auth.name = p2a.name and p2a.linkp=p.linkp ' +\
-                  'and p2a.linkp in (%s)' % (', '.join(['?'] * len(links)))
+                  'and p2a.linkp in (%s)' % (', '.join(['%s'] * len(links)))
             res = self.query_db(qry, links)
             df = pd.DataFrame([[row[f] for f in res[0].keys()]
                                for row in res], columns=res[0].keys())
@@ -294,8 +290,8 @@ class RecomendationSystem(mydb):
             links = df0.link.tolist()
             qry = 'select date,time,place,linkp,tag ' +\
                   'from papers ' +\
-                  'where date like ?' +\
-                  ' and linkp in (%s)' % (', '.join(['?'] * len(links)))
+                  'where date like %s' +\
+                  ' and linkp in (%s)' % (', '.join(['%s'] * len(links)))
             res = self.query_db(qry, [day + '%'] + links)
             nb_res = len(res)
             if nb_res != 0:
