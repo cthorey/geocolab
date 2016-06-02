@@ -59,9 +59,9 @@ class mydb(object):
         qry = ('select p2a.iname,papers.title,papers.abstract ' +
                'from p2a,papers ' +
                'where papers.linkp=p2a.linkp and ' +
-               '(p2a.name like %s or p2a.iname like %s)')
+               '(lower(p2a.name) like %s or lower(p2a.iname) like %s)')
         name = '%' + typename + '%'
-        res = self.query_db(qry, (name, name))
+        res = self.query_db(qry, (name.lower(), name.lower()))
         if len(res) > 0:
             df = pd.DataFrame([[row[f] for f in res[0].keys()]
                                for row in res], columns=res[0].keys())
