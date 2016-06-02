@@ -46,6 +46,7 @@ class mydb(object):
             password=self.url.password,
             host=self.url.hostname,
             port=self.url.port,
+            sslmode='require',
             cursor_factory=DictCursor)
         dict_cur = conn.cursor()
         dict_cur.execute(query, args)
