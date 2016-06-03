@@ -16,20 +16,34 @@ from helper import *
 import sqlite3
 from src.scrapping.data_utils import *
 
+from psycopg2 import connect
+from psycopg2.extras import DictCursor
+import urlparse
+
+urlparse.uses_netloc.append("postgres")
+url = urlparse.urlparse(os.environ["DATABASE_URL"])
+
 
 def query_db(query, args=(), one=False):
-    db = sqlite3.connect(db_path)
-    db.row_factory = sqlite3.Row
-    res = db.cursor().execute(query, args)
-    rv = res.fetchall()
-    db.close()
-    return (rv[0] if rv else None) if one else rv
+    conn = connect(
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port,
+        sslmode='require',
+        cursor_factory=DictCursor)
+    dict_cur = conn.cursor()
+    dict_cur.execute(query, args)
+    res = dict_cur.fetchall()
+    dict_cur.close()
+    conn.close()
+    return res
 
 if __name__ == "__main__":
 
     model_saved = os.path.join(ROOT, 'models')
     path_data = os.path.join(ROOT, 'data', 'scrapped')
-    db_path = os.path.join(ROOT, 'data', 'database', 'geocolab.db')
 
     if not os.path.isdir(model_saved):
         os.mkdir(model_saved)
