@@ -130,12 +130,10 @@ function displayEmpty(selector,obj)
 {
     var message0 = 'Seems like a perfect moment for sight-seeing'
     var message1 = 'Seems like a perfect moment for networking. '
-        + 'You might want to start <a href="'+ $SCRIPT_ROOT+'query_based_link">here</a>.'
+        + 'You might want to start <a href="'+ $SCRIPT_ROOT+'query_based_abstract">here</a>.'
     var message2 = 'Seems like a perfect moment for networking. '
-        + 'You might want to start <a href="'+ $SCRIPT_ROOT+'query_based_title">here</a>.'
-    var message3 = 'Seems like a perfect moment for networking. '
         + 'You might want to start <a href="'+ $SCRIPT_ROOT+'query_based_query">here</a>.'
-    var messages = [message0,message1,message2,message3]
+    var messages = [message0,message1,message2]
     var idx = Math.floor(Math.random() * messages.length);
     var a = '<li class="list-group-item list-group-item-warning">'+
         '<h5 class="list-group-item-heading">Nothing for you here</h5>'+
