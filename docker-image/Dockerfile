@@ -21,6 +21,6 @@ RUN pip install --upgrade pip &&\
     jupyter nbextensions_configurator enable --user &&\
 
     pip install docker-py &&\
-    pip install python-docker-machine
-    
-
+    pip install python-docker-machine &&\
+    pip install pycountry &&\    
+    pip install ftfy

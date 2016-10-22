@@ -7,11 +7,11 @@ import time
 from tqdm import *
 import numpy as np
 import pandas as pd
-import unicodedata
 import argparse
 import pycountry
-from src.model.helper import *
+# from src.model.helper import *
 import unicodedata
+from ftfy import fix_text
 
 #### utils ####
 
@@ -22,7 +22,7 @@ def strip_accents(s):
 
 
 def load_json(name):
-    with codecs.open(name, 'r', 'utf8') as f:
+    with open(name, 'r') as f:
         return json.load(f)
 
 ##### PAPERS ########
@@ -33,7 +33,7 @@ class Paper(object):
 
     def __init__(self, link, data):
         self.link = link
-        for key, val in data.iteritems():
+        for key, val in data.items():
             try:
                 setattr(self, key, val.strip())
             except:
@@ -43,7 +43,7 @@ class Paper(object):
         self.title = " ".join(self.title.split())
         self.abstract = clean_abstract(self.abstract).strip()
         self.authors = {strip_accents(key): strip_accents(
-            val) for key, val in self.authors.iteritems()}
+            val) for key, val in self.authors.items()}
 
 
 def get_ride_of_bad_ones(paper):
@@ -58,13 +58,14 @@ def get_all_papers(path_data):
     Paper object '''
 
     name = os.listdir(path_data)
-    name = [f for f in name if f.split('_')[-1] == 'V3.json']
+    # name = [f for f in name if f.split('_')[-1] == 'V3.json']
+    name = [f for f in name if f.split('_')[1] == 'paper']
     papers = []
     for json in tqdm(name):
         json_file = os.path.join(path_data, json)
         papers += [Paper(key, val) for key, val
-                   in load_json(json_file)['papers'].iteritems()]
-    papers = np.array(map(get_ride_of_bad_ones, papers))
+                   in load_json(json_file)['papers'].items()]
+    papers = np.array([f for f in map(get_ride_of_bad_ones, papers)])
     return list(papers[papers != 0])
 
 #### Annuary #####
@@ -78,7 +79,7 @@ class Contributor(object):
 
     def __init__(self, link, data):
         self.link = link
-        for key, val in data.iteritems():
+        for key, val in data.items():
             try:
                 setattr(self, key, clean(val))
             except:
@@ -163,7 +164,7 @@ def get_all_contrib(path_data):
         json_file = os.path.join(path_data, json)
         try:
             contributors += [Contributor(key, val) for key, val
-                             in load_json(json_file)['names'].iteritems()]
+                             in load_json(json_file)['names'].items()]
         except:
             pass
 
@@ -178,12 +179,9 @@ def get_all_contrib(path_data):
 
 def clean_abstract(text):
     ''' Clean an abstract '''
+    abstract = fix_text(text)
     if text.split('\n')[0].split(' ')[0] == 'ePoster':
         text = ' '.join(text.split('\n')[1:])
-    try:
-        text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore')
-    except:
-        pass
     text = text.replace('\n', ' ')
     return text
 
@@ -194,12 +192,9 @@ def get_raw_titles(sources):
 
 
 def clean_title(text):
+    text = fix_text(text)
     if text.split(' ')[-1] == '(Invited)':
         text = ' '.join(text.split(' ')[:-1])
-    try:
-        text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore')
-    except:
-        pass
     text = text.replace('\n', ' ')
     return text
 
@@ -213,7 +208,7 @@ def get_clean_titles(sources):
     ''' Return a clean version of the  abstract corpus '''
 
     raw_titles = get_raw_titles(sources)
-    titles = map(clean_title, raw_titles)
+    titles = [f for f in map(clean_title, raw_titles)]
     return titles
 
 
@@ -221,7 +216,7 @@ def get_clean_abstracts(sources):
     ''' Return a clean version of the  abstract corpus '''
 
     raw_abstracts = get_raw_abstracts(sources)
-    abstracts = map(clean_abstract, raw_abstracts)
+    abstracts = [f for f in map(clean_abstract, raw_abstracts)]
     return abstracts
 
 
