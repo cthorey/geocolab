@@ -20,6 +20,7 @@ RUN pip install --upgrade pip &&\
     jupyter contrib nbextension install --user &&\
     jupyter nbextensions_configurator enable --user &&\
 
-    pip install docker-py                 
+    pip install docker-py &&\
+    pip install python-docker-machine
     
 

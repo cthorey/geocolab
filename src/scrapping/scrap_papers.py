@@ -1,4 +1,8 @@
 '''
+
+[GoodRead1](http://danielfrg.com/blog/2015/09/28/crawling-python-selenium-docker/)
+[GoodRead2](http://stackoverflow.com/questions/29781266/docker-using-container-with-headless-selenium-chromedriver)
+
 Scrapper for AGU
 
 2016
@@ -35,7 +39,7 @@ from tqdm import *
 import boltons.iterutils as biter
 
 IP_SELENIUM = '192.168.99.100'
-PORT_SELENIUM = '32769'
+PORT_SELENIUM = '4444'
 
 
 class AGUSpyder(object):
@@ -85,21 +89,21 @@ class AGUSpyder(object):
             self.dirname, '{}_progress_{}_{}.txt'.format(self.cat, str(self.firstid), str(self.lastid)))
         if i == 0:
             stdout = open(f, 'w+')
-            stdout.write('Processing {} from {} to {}'.format(
+            stdout.write('Processing {} from {} to {}\n'.format(
                 self.cat, str(self.firstid), str(self.lastid)))
-            stout.close()
+            stdout.close()
 
         stdout = open(f, 'a')
-        stdout.write('{}'.format(datetime.datetime.now().isoformat()))
+        stdout.write('{}\n'.format(datetime.datetime.now().isoformat()))
         stdout.write('Processing chunk {}: {} to {} \n'.format(
             i, chunk[0], chunk[-1]))
-        stdout.write('-' * 50)
+        stdout.write('-' * 50 + '\n')
         stdout.close()
 
     def scrap(self):
         for i, chunk in enumerate(biter.chunked_iter(range(self.firstid, self.lastid + 1), self.chunk_size)):
-            _ = self.chunk2data(chunk, dump=True)
             self.update_stdout(i, chunk)
+            _ = self.chunk2data(chunk, dump=True)
 
 
 class PaperSpyder(AGUSpyder):
