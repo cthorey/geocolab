@@ -1,3 +1,20 @@
+'''
+Scrapper for AGU
+
+2016
+first= 100000
+lastid = 200000
+
+2015
+first= 58180
+lastid = 87000
+
+2014
+firstid = 2180
+lastid = 35000
+
+
+'''
 import os
 import sys
 ROOT_DIR = os.environ['ROOT_DIR']
@@ -18,19 +35,72 @@ from tqdm import *
 import boltons.iterutils as biter
 
 IP_SELENIUM = '192.168.99.100'
-PORT_SELENIUM = '4444'
+PORT_SELENIUM = '32769'
 
 
-class AGUSpider(object):
+class AGUSpyder(object):
 
-    def __init__(self, base_url, firstid=None, lastid=None):
-        self.wd = webdriver.Remote(command_executor='http://{}:{}/wd/hub'.format(IP_SELENIUM, PORT_SELENIUM),
+    def __init__(self, year, firstid=None, lastid=None, chunk_size=1000, port=PORT_SELENIUM, ip=IP_SELENIUM):
+        self.wd = webdriver.Remote(command_executor='http://{}:{}/wd/hub'.format(ip, port),
                                    desired_capabilities=DesiredCapabilities.CHROME)
-        self.timeout = 15
+        self.ip = ip
+        self.port = port
+        self.chunk_size = chunk_size
+        self.timeout = 6
         self.latency = 3
-        self.base_url = base_url
+        self.base_url = self.get_base_url(year)
+        self.cat = self.get_cat()
         self.firstid = firstid
         self.lastid = lastid
+        self.name = self.base_url.split('/')[4]
+        self.dirname = os.path.join(ROOT_DIR, 'data', 'scrapped', self.name)
+        if not os.path.isdir(self.dirname):
+            os.mkdir(self.dirname)
+
+    def chunk2data(self, chunk, dump=False):
+        papers = {}
+        errors = []
+        for pageid in tqdm(chunk, total=len(chunk), file=stdout):
+            link = os.path.join(self.base_url, str(pageid))
+            try:
+                papers.update({link: self.process_page(link)})
+            except:
+                errors.append(link)
+        data = {'papers': papers, 'error': errors}
+        jsonfile = os.path.join(self.dirname,
+                                '{}_{}_{}_{}.json'.format(self.name,
+                                                          self.cat,
+                                                          str(chunk[0]),
+                                                          str(chunk[-1])))
+        if dump:
+            json.dump(data,
+                      open(jsonfile, 'w+'),
+                      sort_keys=True,
+                      indent=4,
+                      ensure_ascii=False)
+        stdout.close()
+        return data
+
+    def scrap(self):
+        fprogress = os.path.join(
+            self.dirname, '{}_progress_{}_{}.txt'.format(self.cat, str(self.firstid), str(self.lastid)))
+        stdout = open(fprogress, 'w+')
+        for i, chunk in enumerate(biter.chunked_iter(range(self.firstid, self.lastid + 1), self.chunk_size)):
+            stdout.write('{}'.format(datetime.datetime.now().isoformat()))
+            stdout.write('Processing chunk {}: {} to {} \n'.format(
+                i, chunk[0], chunk[-1]))
+            _ = self.chunk2data(chunk, dump=True)
+            stdout.write('-' * 50)
+        stdout.close()
+
+
+class PaperSpyder(AGUSpyder):
+
+    def get_base_url(self, year):
+        return 'https://agu.confex.com/agu/fm{}/meetingapp.cgi/Paper/'.format(str(year))
+
+    def get_cat(self):
+        return 'paper'
 
     def wait_for_elements(self):
         '''
@@ -45,9 +115,8 @@ class AGUSpider(object):
                 EC.visibility_of_element_located((By.CLASS_NAME, classe)))
         time.sleep(self.latency)
 
-    def scrap(self, link):
-        ''' Scrapping of the page
-
+    def process_page(self, link):
+        '''
         Args:
         link (str): link to go scrap
 
@@ -91,160 +160,131 @@ class AGUSpider(object):
                      self.wd.find_element_by_class_name('infoBox').text.split("\n")[2].split(':')[-1]})
         return data
 
-    def process_chunk(self, chunk):
-        for pageid in chunk:
-            link = '{}{}'.format(self.base_url, pageid)
+
+class PaperSpyder(AGUSpyder):
+
+    def get_base_url(self, year):
+        return 'https://agu.confex.com/agu/fm{}/meetingapp.cgi/Paper/'.format(str(year))
+
+    def get_cat(self):
+        return 'paper'
+
+    def wait_for_elements(self):
+        '''
+        Wait for elements to appear on the page
+        '''
+        classes = ['itemTitle', 'SlotDate',
+                   'SlotTime', 'propertyInfo', 'Additional',
+                   'PersonList', 'SessionListItem', 'infoBox']
+        for classe in classes:
+            # wait for the different sections to download
+            WebDriverWait(self.wd, self.timeout).until(
+                EC.visibility_of_element_located((By.CLASS_NAME, classe)))
+        time.sleep(self.latency)
+
+    def process_page(self, link):
+        '''
+        Args:
+        link (str): link to go scrap
+
+        Returns:
+        A dictionnary which contains information about
+        the paper which is contained in link. In particular,
+        the scrapper collects information about tag, title, date,
+        time, place, abstract, reference, authors, session, section.
+
+        Warning:
+        Their is no tag in the title in AGU 2014 !!
+        '''
+        self.wd.get(link)
+        self.wait_for_elements()
+        data = {}
+
+        data.update({'tag':
+                     self.wd.find_element_by_class_name('itemTitle').text.split(':')[0]})
+        data.update({'title':
+                     self.wd.find_element_by_class_name('itemTitle').text.split(':')[1:]})
+        data.update({'date':
+                     self.wd.find_element_by_class_name('SlotDate').text})
+        data.update({'time':
+                     self.wd.find_element_by_class_name('SlotTime').text})
+        data.update({'place':
+                     self.wd.find_element_by_class_name('propertyInfo').text})
+        data.update({'abstract':
+                     self.wd.find_element_by_class_name('Additional').text.split('Reference')[0]})
+        try:
+            data.update({'reference':
+                         self.wd.find_element_by_class_name('Additional').text.split('Reference')[1]})
+        except:
+            data.update({'reference': ''})
+        authors = self.wd.find_elements_by_class_name('RoleListItem')
+        data.update({'authors':
+                     {author.text.split('\n')[0]: ', '.join(author.text.split('\n')[1:])
+                      for author in authors}})
+        data.update({'session':
+                     self.wd.find_element_by_class_name('SessionListItem').text.split(':')[1]})
+        data.update({'section':
+                     self.wd.find_element_by_class_name('infoBox').text.split("\n")[2].split(':')[-1]})
+        return data
+
+
+class PersonSpyder(AGUSpyder):
+
+    def get_base_url(self, year):
+        return 'https://agu.confex.com/agu/fm{}/meetingapp.cgi/Person/'.format(str(year))
+
+    def get_cat(self):
+        return 'person'
+
+    def wait_for_elements(self, classes):
+        '''
+        Wait for elements to appear on the page
+        '''
+        for classe in classes:
+            # wait for the different sections to download
             try:
-                papers.update({link: self.process_page(pageid)})
+                WebDriverWait(self.wd, self.timeout).until(
+                    EC.visibility_of_element_located((By.CLASS_NAME, classe)))
             except:
-                errors.append(link)
-        return {'papers': papers, 'error': errors}
+                time.sleep(self.latency)
 
-    def process_all(self):
+    def process_page(self, link):
         '''
-        hello
+        Args:
+        link (str): link to go scrap
+
+        Returns:
+        A dictionnary which contains information about
+        the paper which is contained in link. In particular,
+        the scrapper collects information about tag, title, date,
+        time, place, abstract, reference, authors, session, section.
+
+        Warning:
+        Their is no tag in the title in AGU 2014 !!
         '''
-
-        papers = {}
-        errors = []
-        progress = open(os.path.join(racine, year + '_progress.txt'), 'w+')
-        for chunk in tqdm(bi.chunk_iter(range(self.firstid, self.lastid), file=progress)):
-            for pageid in chunk:
-                link = '{}{}'.format(self.base_url, pageid)
-                try:
-                    papers.update({link: self.process_page(pageid)})
-                except:
-                    errors.append(link)
-        progress.close()
-        return {'papers': papers, 'error': errors}
-
-        def Jsoner(data, year, name):
-            ''' Store the results from the scrapping as a .json file
-
-            Args:
-            data (dict): A dictionary containing the result of run_scrapping
-            year (str): The year considered
-            name (str): Name of the .json file
-
-            '''
-            name_json = os.path.join(racine, 'Data', str(year), name)
-            with codecs.open(name_json + '.json', 'w+', 'utf8') as outfile:
-                json.dump(data,
-                          outfile,
-                          sort_keys=True,
-                          indent=4,
-                          ensure_ascii=False)
-
-
-def isdirok(year):
-    ''' Ensure the directory exist before scrapping
-
-    Args:
-        year (str): directory where the json file are going to
-        be stored
-
-    '''
-
-    output = os.path.join(racine, 'Data')
-    if not os.path.isdir(output):
-        os.mkdir(output)
-    if not os.path.isdir(os.path.join(output, year)):
-        os.mkdir(os.path.join(output, year))
-
-
-def calc_end(end, base_end):
-    ''' Ensure the ending integer not larger than the bounds
-
-    Args:
-        end (int): Proposed ending integer
-        base_end (int): Maximum integer value.
-
-    Note:
-        It is advised to run the scrapping step by step, i.e.
-        1000 papers by 1000 and then store json file each
-        1000 papers. This function decide if the upper bound for
-        the next scrapping does not depass the maximum.
-
-    '''
-
-    if end > base_end:
-        return base_end
-    else:
-        return end
-
-
-def calc_start(base_start, year):
-    '''Calc beginning integer according to what's already done
-
-    Args:
-        base_start (int): Minimum integer of the sequence
-        year (int): Year that your want to scrape
-
-    Note:
-        It is advised to run the scrapping step by step, i.e.  1000
-        papers by 1000 and then store json file each 1000 papers. This
-        function decide if the lower bound for the next scrapping is
-        in agreement with the minimum.
-
-    '''
-    done_papers = os.listdir(os.path.join(racine, 'Data', year))
-    done_papers = [f for f in done_papers
-                   if (len(f.split('_')) == 3) and (f[0] != '.') and (f.split('_')[-1] == 'V2.json')]
-    print(done_papers)
-    if len(done_papers) == 0:
-        print(base_start)
-        return base_start
-    else:
-        print(max(map(int, [f.split('_')[1] for f in done_papers])))
-        return max(map(int, [f.split('_')[1] for f in done_papers]))
+        self.wd.get(link)
+        self.wait_for_elements()
+        data = {}
+        self.wait_for_elements(['AddressList'])
+        data.update({'name':
+                     wd.find_element_by_class_name('itemTitle').text})
+        data.update({'address':
+                     wd.find_element_by_class_name('AddressList').text})
+        self.wait_for_elements(['SessionListItem', 'PaperListItem'])
+        data.update({'name':
+                     wd.find_element_by_class_name('itemTitle').text})
+        data.update({'address':
+                     wd.find_element_by_class_name('AddressList').text})
+        data.update({'session': {f.text.split(' ')[0]: ' '.join(f.text.split(' ')[1:])
+                                 for f
+                                 in wd.find_elements_by_class_name('SessionListItem')}})
+        data.update({'papers': {f.text.split(' ')[0]: ' '.join(f.text.split(' ')[1:])
+                                for f in
+                                wd.find_elements_by_class_name('PaperListItem')}})
+        return data
 
 
 if __name__ == "__main__":
-    ''' Run the scrapping '''
 
-    if len(sys.argv) != 2:
-        raise ValueError('Either provide 2014 or 2015 as argument')
-    elif int(sys.argv[1]) not in [2014, 2015]:
-        raise ValueError('Either provide 2014 or 2015 as argument')
-    else:
-        print('Let scrap AGU data from %s' % (str(sys.argv[1])))
-        year = 'agu' + str(sys.argv[1])
-
-    step = 1000
-    isdirok(year)
-
-    if year.split('agu')[-1] == '2015':
-        base_url = 'https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/'
-        base_start = 58180
-        base_end = 87000
-    elif year.split('agu')[-1] == '2014':
-        base_url = 'https://agu.confex.com/agu/fm14/meetingapp.cgi/Paper/'
-        base_start = 2180
-        base_end = 35000
-    else:
-        print('Error base_url : %s' % (base_url))
-        raise Exception
-
-    # What remains to do
-    start = calc_start(base_start, year)
-    end = calc_end(start + step, base_end)
-
-    bilan = open(os.path.join(racine, year + '_bilan.txt'), 'a')
-    bilan.write('hello, we are processing %s \n' % (year))
-    bilan.write('Scrapping commencer le %s \n' % (str(datetime.date.today())))
-    bilan.write('We take back from paper %d \n' % (start))
-    bilan.close()
-
-    bool_end = True
-    while bool_end:
-        data = run_scrapping(start, end, base_url)
-        name = str(start) + '_' + str(end) + '_V3'
-        Jsoner(data, year, name)
-        bilan = open(os.path.join(racine, year + '_bilan.txt'), 'a')
-        bilan.write('Succesfully donwload papers from %d to %d \n' %
-                    (start, end))
-        bilan.close()
-        start = end
-        end = calc_end(start + step, base_end)
-        if end == base_end:
-            bool_end = False
+    spyder = PaperSpyder(year=16, firstid=165160, lastid=165180, chunk_size=5)
+    spyder.scrap()
