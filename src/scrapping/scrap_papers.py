@@ -21,7 +21,6 @@ Attributes:
 
 .. _AGU website:
    https://agu.confex.com/agu/fm15/meetingapp.cgi
-
 """
 
 import os
@@ -73,7 +72,7 @@ def wait_for_elements(wd, timeout=15):
     time.sleep(3)
 
 
-def Scrap_page(wd, link):
+def scrap_page(wd, link):
     ''' Scrapping of the page
 
     Args:
@@ -129,7 +128,7 @@ def Scrap_page(wd, link):
     return data
 
 
-def Run_Scrapping(start, end, base_url):
+def run_scrapping(start, end, base_url):
     ''' Start the scrapping of all papers for one specific
     agu.
 
@@ -161,7 +160,7 @@ def Run_Scrapping(start, end, base_url):
         For the year 2015,
 
         >>> base_url = 'https://agu.confex.com/agu/fm15/meetingapp.cgi/Paper/'
-        >>> Run_Scrapping(58000,87000,base_url)
+        >>> run_scrapping(58000,87000,base_url)
 
         looks to scrap almost all the papers. 
 
@@ -175,7 +174,7 @@ def Run_Scrapping(start, end, base_url):
         idx = str(idx)
         link = os.path.join(base_url, idx)
         try:
-            papers.update({link: Scrap_page(wd, link)})
+            papers.update({link: scrap_page(wd, link)})
         except:
             errors.append(link)
     wd.quit()
@@ -268,7 +267,6 @@ if __name__ == "__main__":
     ''' Run the scrapping '''
 
     step = 1000
-
     isdirok(year)
 
     if year.split('agu')[-1] == '2015':
@@ -295,7 +293,7 @@ if __name__ == "__main__":
 
     bool_end = True
     while bool_end:
-        data = Run_Scrapping(start, end, base_url)
+        data = run_scrapping(start, end, base_url)
         name = str(start) + '_' + str(end) + '_V3'
         Jsoner(data, year, name)
         bilan = open(os.path.join(racine, year + '_bilan.txt'), 'a')
