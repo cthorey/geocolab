@@ -60,7 +60,7 @@ class AGUSpyder(object):
     def chunk2data(self, chunk, dump=False):
         papers = {}
         errors = []
-        for pageid in tqdm(chunk, total=len(chunk), file=stdout):
+        for pageid in tqdm(chunk, total=len(chunk)):
             link = os.path.join(self.base_url, str(pageid))
             try:
                 papers.update({link: self.process_page(link)})
@@ -78,20 +78,28 @@ class AGUSpyder(object):
                       sort_keys=True,
                       indent=4,
                       ensure_ascii=False)
-        stdout.close()
         return data
 
-    def scrap(self):
-        fprogress = os.path.join(
+    def update_stdout(self, i, chunk):
+        f = os.path.join(
             self.dirname, '{}_progress_{}_{}.txt'.format(self.cat, str(self.firstid), str(self.lastid)))
-        stdout = open(fprogress, 'w+')
-        for i, chunk in enumerate(biter.chunked_iter(range(self.firstid, self.lastid + 1), self.chunk_size)):
-            stdout.write('{}'.format(datetime.datetime.now().isoformat()))
-            stdout.write('Processing chunk {}: {} to {} \n'.format(
-                i, chunk[0], chunk[-1]))
-            _ = self.chunk2data(chunk, dump=True)
-            stdout.write('-' * 50)
+        if i == 0:
+            stdout = open(f, 'w+')
+            stdout.write('Processing {} from {} to {}'.format(
+                self.cat, str(self.firstid), str(self.lastid)))
+            stout.close()
+
+        stdout = open(f, 'a')
+        stdout.write('{}'.format(datetime.datetime.now().isoformat()))
+        stdout.write('Processing chunk {}: {} to {} \n'.format(
+            i, chunk[0], chunk[-1]))
+        stdout.write('-' * 50)
         stdout.close()
+
+    def scrap(self):
+        for i, chunk in enumerate(biter.chunked_iter(range(self.firstid, self.lastid + 1), self.chunk_size)):
+            _ = self.chunk2data(chunk, dump=True)
+            self.update_stdout(i, chunk)
 
 
 class PaperSpyder(AGUSpyder):
