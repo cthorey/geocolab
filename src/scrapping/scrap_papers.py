@@ -44,7 +44,7 @@ if len(sys.argv) != 2:
 elif int(sys.argv[1]) not in [2014, 2015]:
     raise ValueError('Either provide 2014 or 2015 as argument')
 else:
-    print 'Let scrap AGU data from %s' % (str(sys.argv[1]))
+    print('Let scrap AGU data from %s' % (str(sys.argv[1])))
     year = 'agu' + str(sys.argv[1])
 
 
@@ -254,12 +254,12 @@ def calc_start(base_start, year):
     done_papers = os.listdir(os.path.join(racine, 'Data', year))
     done_papers = [f for f in done_papers
                    if (len(f.split('_')) == 3) and (f[0] != '.') and (f.split('_')[-1] == 'V2.json')]
-    print done_papers
+    print(done_papers)
     if len(done_papers) == 0:
-        print base_start
+        print(base_start)
         return base_start
     else:
-        print max(map(int, [f.split('_')[1] for f in done_papers]))
+        print(max(map(int, [f.split('_')[1] for f in done_papers])))
         return max(map(int, [f.split('_')[1] for f in done_papers]))
 
 
@@ -278,7 +278,7 @@ if __name__ == "__main__":
         base_start = 2180
         base_end = 35000
     else:
-        print 'Error base_url : %s' % (base_url)
+        print('Error base_url : %s' % (base_url))
         raise Exception
 
     # What remains to do
