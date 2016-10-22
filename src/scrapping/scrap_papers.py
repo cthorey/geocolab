@@ -1,7 +1,7 @@
 """ Module to ease the scrap of the `AGU website`_
 
 This module ease the scrapping of the abstract form the `AGU website`_
-for the year 2014 and 2015. Before this date, the program was only
+for the year 2014 and beyond. Before this date, the program was only
 available as a pdf file.
 
 Example:
