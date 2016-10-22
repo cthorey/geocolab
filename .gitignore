@@ -1,3 +1,7 @@
+#notebooks
+notebooks/exploratory/*
+*.deb
+
 .env
 
 # webapp module

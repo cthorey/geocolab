@@ -1,5 +1,6 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
+root = os.environ['ROOT_DIR']
 
 
 class Config(object):
@@ -18,3 +19,4 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     DEBUG = True
     MODEL = 'LSA_500'
+    SRC = os.path.join(root, 'src')
