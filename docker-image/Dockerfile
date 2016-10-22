@@ -11,7 +11,6 @@ RUN pip install --upgrade pip &&\
     pip install bs4 &&\
     pip install pyyaml &&\
     pip install requests &&\
-
     ## NLP
     pip install --upgrade gensim &&\
 
@@ -19,6 +18,8 @@ RUN pip install --upgrade pip &&\
     pip install https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tarball/master &&\
     pip install jupyter_nbextensions_configurator &&\
     jupyter contrib nbextension install --user &&\
-    jupyter nbextensions_configurator enable --user
+    jupyter nbextensions_configurator enable --user &&\
+
+    pip install docker-py                 
     
 

@@ -1,27 +1,3 @@
-""" Module to ease the scrap of the `AGU website`_
-
-This module ease the scrapping of the abstract form the `AGU website`_
-for the year 2014 and beyond. Before this date, the program was only
-available as a pdf file.
-
-Example:
-    For instance, if I wan to scrap all the abstract for 2015
-    2015 `AGU website`_, I just have to run::
-
-        $ python LoadData.py
-
-    and be patient as this may take some time ;)
-
-Attributes:
-    HOME (str): Home folder your computer. 
-    racine (str): Racine of the working directory. When run,
-    the program is going to create a directory 'Data' to store
-    the json file containing the results of the scrapping.
-    year (str): Either 'agu2015' or 'agu2014'
-
-.. _AGU website:
-   https://agu.confex.com/agu/fm15/meetingapp.cgi
-"""
 import os
 import sys
 ROOT_DIR = os.environ['ROOT_DIR']
@@ -31,25 +7,29 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 import time
 import datetime
 import codecs
 import json
-from bs4 import BeautifulSoup
 from tqdm import *
 
 import boltons.iterutils as biter
 
+IP_SELENIUM = '192.168.99.100'
+PORT_SELENIUM = '4444'
 
-class AGUScrapper(object):
 
-    def __init__(self, base_url, firstid, lastid):
-        self.wd = webdriver.Chrome(os.path.join(
-            ROOT_DIR, 'src', 'scrapping', 'chromedriver'))
+class AGUSpider(object):
+
+    def __init__(self, base_url, firstid=None, lastid=None):
+        self.wd = webdriver.Remote(command_executor='http://{}:{}/wd/hub'.format(IP_SELENIUM, PORT_SELENIUM),
+                                   desired_capabilities=DesiredCapabilities.CHROME)
         self.timeout = 15
         self.latency = 3
         self.base_url = base_url
-        self.firstid = firsid
+        self.firstid = firstid
         self.lastid = lastid
 
     def wait_for_elements(self):
@@ -65,7 +45,7 @@ class AGUScrapper(object):
                 EC.visibility_of_element_located((By.CLASS_NAME, classe)))
         time.sleep(self.latency)
 
-    def process_link(self, link):
+    def scrap(self, link):
         ''' Scrapping of the page
 
         Args:
@@ -81,37 +61,34 @@ class AGUScrapper(object):
         Their is no tag in the title in AGU 2014 !!
         '''
         self.wd.get(link)
-        wait_for_elements(self.wd)
+        self.wait_for_elements()
         data = {}
-        if year == 'agu2015':
-            data.update({'tag':
-                         wd.find_element_by_class_name('itemTitle').text.split(':')[0]})
-            data.update({'title':
-                         wd.find_element_by_class_name('itemTitle').text.split(':')[1:]})
-        elif year == 'agu2014':
-            data.update({'title':
-                         wd.find_element_by_class_name('itemTitle').text})
+
+        data.update({'tag':
+                     self.wd.find_element_by_class_name('itemTitle').text.split(':')[0]})
+        data.update({'title':
+                     self.wd.find_element_by_class_name('itemTitle').text.split(':')[1:]})
         data.update({'date':
-                     wd.find_element_by_class_name('SlotDate').text})
+                     self.wd.find_element_by_class_name('SlotDate').text})
         data.update({'time':
-                     wd.find_element_by_class_name('SlotTime').text})
+                     self.wd.find_element_by_class_name('SlotTime').text})
         data.update({'place':
-                     wd.find_element_by_class_name('propertyInfo').text})
+                     self.wd.find_element_by_class_name('propertyInfo').text})
         data.update({'abstract':
-                     wd.find_element_by_class_name('Additional').text.split('Reference')[0]})
+                     self.wd.find_element_by_class_name('Additional').text.split('Reference')[0]})
         try:
             data.update({'reference':
-                         wd.find_element_by_class_name('Additional').text.split('Reference')[1]})
+                         self.wd.find_element_by_class_name('Additional').text.split('Reference')[1]})
         except:
             data.update({'reference': ''})
-        authors = wd.find_elements_by_class_name('RoleListItem')
+        authors = self.wd.find_elements_by_class_name('RoleListItem')
         data.update({'authors':
                      {author.text.split('\n')[0]: ', '.join(author.text.split('\n')[1:])
                       for author in authors}})
         data.update({'session':
-                     wd.find_element_by_class_name('SessionListItem').text.split(':')[1]})
+                     self.wd.find_element_by_class_name('SessionListItem').text.split(':')[1]})
         data.update({'section':
-                     wd.find_element_by_class_name('infoBox').text.split("\n")[2].split(':')[-1]})
+                     self.wd.find_element_by_class_name('infoBox').text.split("\n")[2].split(':')[-1]})
         return data
 
     def process_chunk(self, chunk):

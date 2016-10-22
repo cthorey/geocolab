@@ -19,4 +19,5 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     DEBUG = True
     MODEL = 'LSA_500'
-    SRC = os.path.join(root, 'src')
+    IP_SELENIUM = '192.168.99.100'
+    PORT_SELENIUM = '4444'
