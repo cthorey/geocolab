@@ -4,6 +4,8 @@
 [GoodRead2](http://stackoverflow.com/questions/29781266/docker-using-container-with-headless-selenium-chromedriver)
 
 Scrapper for AGU
+Need to run the selenium serveur with this docker image
+
 
 2016
 first= 100000
@@ -101,7 +103,7 @@ class AGUSpyder(object):
         stdout.close()
 
     def scrap(self):
-        for i, chunk in enumerate(biter.chunked_iter(range(self.firstid, self.lastid + 1), self.chunk_size)):
+        for i, chunk in enumerate(biter.chunked_iter(range(self.firstid, self.lastid), self.chunk_size)):
             self.update_stdout(i, chunk)
             _ = self.chunk2data(chunk, dump=True)
 
@@ -298,5 +300,17 @@ class PersonSpyder(AGUSpyder):
 
 if __name__ == "__main__":
 
-    spyder = PaperSpyder(year=16, firstid=165160, lastid=165180, chunk_size=5)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--year', required=True)
+    parser.add_argument('--firstid', action="store", default=168730)
+    parser.add_argument('--lastid', action="store", default=168740)
+    parser.add_argument('--host', action='store', default=4444)
+    parser.add_argument('--ip', action="store", default=192.168.99.100)
+    parser.add_argument('--chunk_size', action="store", default=5)
+    config = vars(parser.parse_args())
+
+    spyder = PaperSpyder(year=config['year'],
+                         firstid=config['firsid'],
+                         lastid=config['lastid'],
+                         chunk_size=config['chunk_size'])
     spyder.scrap()
