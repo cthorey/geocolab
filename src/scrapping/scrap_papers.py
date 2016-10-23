@@ -22,6 +22,7 @@ lastid = 35000
 
 '''
 import os
+import argparse
 import sys
 ROOT_DIR = os.environ['ROOT_DIR']
 sys.path.append(ROOT_DIR)
@@ -53,11 +54,11 @@ class AGUSpyder(object):
         self.port = port
         self.chunk_size = chunk_size
         self.timeout = 6
-        self.latency = 3
+        self.latency = 2
         self.base_url = self.get_base_url(year)
         self.cat = self.get_cat()
-        self.firstid = firstid
-        self.lastid = lastid
+        self.firstid = int(firstid)
+        self.lastid = int(lastid)
         self.name = self.base_url.split('/')[4]
         self.dirname = os.path.join(ROOT_DIR, 'data', 'scrapped', self.name)
         if not os.path.isdir(self.dirname):
@@ -116,17 +117,15 @@ class PaperSpyder(AGUSpyder):
     def get_cat(self):
         return 'paper'
 
-    def wait_for_elements(self):
+    def wait_for_elements(self, classes):
         '''
         Wait for elements to appear on the page
         '''
-        classes = ['itemTitle', 'SlotDate',
-                   'SlotTime', 'propertyInfo', 'Additional',
-                   'PersonList', 'SessionListItem', 'infoBox']
         for classe in classes:
             # wait for the different sections to download
             WebDriverWait(self.wd, self.timeout).until(
                 EC.visibility_of_element_located((By.CLASS_NAME, classe)))
+
         time.sleep(self.latency)
 
     def process_page(self, link):
@@ -144,9 +143,8 @@ class PaperSpyder(AGUSpyder):
         Their is no tag in the title in AGU 2014 !!
         '''
         self.wd.get(link)
-        self.wait_for_elements()
         data = {}
-
+        self.wait_for_elements(['itemTitle', 'SlotDate', 'SlotTime'])
         data.update({'tag':
                      self.wd.find_element_by_class_name('itemTitle').text.split(':')[0]})
         data.update({'title':
@@ -155,73 +153,8 @@ class PaperSpyder(AGUSpyder):
                      self.wd.find_element_by_class_name('SlotDate').text})
         data.update({'time':
                      self.wd.find_element_by_class_name('SlotTime').text})
-        data.update({'place':
-                     self.wd.find_element_by_class_name('propertyInfo').text})
-        data.update({'abstract':
-                     self.wd.find_element_by_class_name('Additional').text.split('Reference')[0]})
-        try:
-            data.update({'reference':
-                         self.wd.find_element_by_class_name('Additional').text.split('Reference')[1]})
-        except:
-            data.update({'reference': ''})
-        authors = self.wd.find_elements_by_class_name('RoleListItem')
-        data.update({'authors':
-                     {author.text.split('\n')[0]: ', '.join(author.text.split('\n')[1:])
-                      for author in authors}})
-        data.update({'session':
-                     self.wd.find_element_by_class_name('SessionListItem').text.split(':')[1]})
-        data.update({'section':
-                     self.wd.find_element_by_class_name('infoBox').text.split("\n")[2].split(':')[-1]})
-        return data
-
-
-class PaperSpyder(AGUSpyder):
-
-    def get_base_url(self, year):
-        return 'https://agu.confex.com/agu/fm{}/meetingapp.cgi/Paper/'.format(str(year))
-
-    def get_cat(self):
-        return 'paper'
-
-    def wait_for_elements(self):
-        '''
-        Wait for elements to appear on the page
-        '''
-        classes = ['itemTitle', 'SlotDate',
-                   'SlotTime', 'propertyInfo', 'Additional',
-                   'PersonList', 'SessionListItem', 'infoBox']
-        for classe in classes:
-            # wait for the different sections to download
-            WebDriverWait(self.wd, self.timeout).until(
-                EC.visibility_of_element_located((By.CLASS_NAME, classe)))
-        time.sleep(self.latency)
-
-    def process_page(self, link):
-        '''
-        Args:
-        link (str): link to go scrap
-
-        Returns:
-        A dictionnary which contains information about
-        the paper which is contained in link. In particular,
-        the scrapper collects information about tag, title, date,
-        time, place, abstract, reference, authors, session, section.
-
-        Warning:
-        Their is no tag in the title in AGU 2014 !!
-        '''
-        self.wd.get(link)
-        self.wait_for_elements()
-        data = {}
-
-        data.update({'tag':
-                     self.wd.find_element_by_class_name('itemTitle').text.split(':')[0]})
-        data.update({'title':
-                     self.wd.find_element_by_class_name('itemTitle').text.split(':')[1:]})
-        data.update({'date':
-                     self.wd.find_element_by_class_name('SlotDate').text})
-        data.update({'time':
-                     self.wd.find_element_by_class_name('SlotTime').text})
+        self.wait_for_elements(['propertyInfo', 'Additional',
+                                'PersonList', 'SessionListItem', 'infoBox'])
         data.update({'place':
                      self.wd.find_element_by_class_name('propertyInfo').text})
         data.update({'abstract':
@@ -305,12 +238,12 @@ if __name__ == "__main__":
     parser.add_argument('--firstid', action="store", default=168730)
     parser.add_argument('--lastid', action="store", default=168740)
     parser.add_argument('--host', action='store', default=4444)
-    parser.add_argument('--ip', action="store", default=192.168.99.100)
+    parser.add_argument('--ip', action="store", default='192.168.99.100')
     parser.add_argument('--chunk_size', action="store", default=5)
     config = vars(parser.parse_args())
 
     spyder = PaperSpyder(year=config['year'],
-                         firstid=config['firsid'],
+                         firstid=config['firstid'],
                          lastid=config['lastid'],
                          chunk_size=config['chunk_size'])
     spyder.scrap()
