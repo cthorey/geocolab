@@ -24,8 +24,6 @@ lastid = 35000
 import os
 import argparse
 import sys
-ROOT_DIR = os.environ['ROOT_DIR']
-sys.path.append(ROOT_DIR)
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -41,6 +39,7 @@ from tqdm import *
 
 import boltons.iterutils as biter
 
+ROOT_DIR = os.environ['ROOT_DIR']
 IP_SELENIUM = '192.168.99.100'
 PORT_SELENIUM = '4444'
 
@@ -48,6 +47,7 @@ PORT_SELENIUM = '4444'
 class AGUSpyder(object):
 
     def __init__(self, year, firstid=None, lastid=None, chunk_size=1000, port=PORT_SELENIUM, ip=IP_SELENIUM):
+        print(year, firstid, lastid, port, ip)
         self.wd = webdriver.Remote(command_executor='http://{}:{}/wd/hub'.format(ip, port),
                                    desired_capabilities=DesiredCapabilities.CHROME)
         self.ip = ip
@@ -202,9 +202,9 @@ class PersonSpyder(AGUSpyder):
 
         Returns:
         A dictionnary which contains information about
-        the paper which is contained in link. In particular,
         the scrapper collects information about tag, title, date,
         time, place, abstract, reference, authors, session, section.
+        the paper which is contained in link. In particular,
 
         Warning:
         Their is no tag in the title in AGU 2014 !!
@@ -233,17 +233,18 @@ class PersonSpyder(AGUSpyder):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--year', required=True)
-    parser.add_argument('--firstid', action="store", default=168730)
-    parser.add_argument('--lastid', action="store", default=168740)
-    parser.add_argument('--host', action='store', default=4444)
-    parser.add_argument('--ip', action="store", default='192.168.99.100')
-    parser.add_argument('--chunk_size', action="store", default=5)
-    config = vars(parser.parse_args())
+    PORT = os.environ['PORT']
+    YEAR = os.environ['YEAR']
+    FIRSTID = os.environ['FIRSTID']
+    LASTID = os.environ['LASTID']
+    CHUNK_SIZE = os.environ['CHUNK_SIZE']
+    IP = os.environ['IP']
+    PORT = os.environ['PORT']
 
-    spyder = PaperSpyder(year=config['year'],
-                         firstid=config['firstid'],
-                         lastid=config['lastid'],
-                         chunk_size=config['chunk_size'])
+    spyder = PaperSpyder(year=YEAR,
+                         firstid=FIRSTID,
+                         lastid=LASTID,
+                         chunk_size=CHUNK_SIZE,
+                         ip=IP,
+                         port=PORT)
     spyder.scrap()
