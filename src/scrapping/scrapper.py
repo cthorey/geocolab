@@ -54,7 +54,7 @@ class AGUSpyder(object):
         self.port = port
         self.chunk_size = chunk_size
         self.timeout = 6
-        self.latency = 2
+        self.latency = 3
         self.base_url = self.get_base_url(year)
         self.cat = self.get_cat()
         self.firstid = int(firstid)
@@ -233,18 +233,17 @@ class PersonSpyder(AGUSpyder):
 
 if __name__ == "__main__":
 
-    PORT = os.environ['PORT']
     YEAR = os.environ['YEAR']
     FIRSTID = os.environ['FIRSTID']
     LASTID = os.environ['LASTID']
     CHUNK_SIZE = os.environ['CHUNK_SIZE']
     IP = os.environ['IP']
     PORT = os.environ['PORT']
-
-    spyder = PaperSpyder(year=YEAR,
-                         firstid=FIRSTID,
-                         lastid=LASTID,
-                         chunk_size=CHUNK_SIZE,
-                         ip=IP,
-                         port=PORT)
+    print(IP, PORT)
+    spyder = PaperSpyder(year=int(YEAR),
+                         firstid=int(FIRSTID),
+                         lastid=int(LASTID),
+                         chunk_size=int(CHUNK_SIZE),
+                         ip=str(IP),
+                         port=int(PORT))
     spyder.scrap()
