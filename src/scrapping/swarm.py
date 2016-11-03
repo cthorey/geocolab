@@ -125,7 +125,3 @@ if __name__ == "__main__":
             ip=ip,
             name='spyder_{}'.format(name))
         start_container(client, spyder_container)
-
-        # Weird but for some reason.
-        if len(client.containers()) < j * 2:
-            start_container(client, spyder_container)

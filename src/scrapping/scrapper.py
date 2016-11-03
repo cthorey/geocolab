@@ -44,17 +44,36 @@ IP_SELENIUM = '192.168.99.100'
 PORT_SELENIUM = '4444'
 
 
+def try_until_success(func):
+    '''
+    handle error on the client side (docker).
+    '''
+    def func_wrapper(*args, **kwargs):
+        passing = False
+        i = 0
+        while not passing:
+            if i > 100:
+                raise Exception('Sorry, has try the max number of times')
+            try:
+                res = func(*args)
+                passing = True
+            except:
+                i += 1
+                pass
+        return res
+    return func_wrapper
+
+
 class AGUSpyder(object):
 
     def __init__(self, year, firstid=None, lastid=None, chunk_size=1000, port=PORT_SELENIUM, ip=IP_SELENIUM):
         print(year, firstid, lastid, port, ip)
-        self.wd = webdriver.Remote(command_executor='http://{}:{}/wd/hub'.format(ip, port),
-                                   desired_capabilities=DesiredCapabilities.CHROME)
+        self.wd = self.connect2wd(ip, port)
         self.ip = ip
         self.port = port
         self.chunk_size = chunk_size
-        self.timeout = 6
-        self.latency = 3
+        self.timeout = 30
+        self.latency = 0
         self.base_url = self.get_base_url(year)
         self.cat = self.get_cat()
         self.firstid = int(firstid)
@@ -63,6 +82,12 @@ class AGUSpyder(object):
         self.dirname = os.path.join(ROOT_DIR, 'data', 'scrapped', self.name)
         if not os.path.isdir(self.dirname):
             os.mkdir(self.dirname)
+
+    @try_until_success
+    def connect2wd(self, ip, port):
+        wd = webdriver.Remote(command_executor='http://{}:{}/wd/hub'.format(ip, port),
+                              desired_capabilities=DesiredCapabilities.CHROME)
+        return wd
 
     def chunk2data(self, chunk, dump=False):
         papers = {}
@@ -142,6 +167,7 @@ class PaperSpyder(AGUSpyder):
         Warning:
         Their is no tag in the title in AGU 2014 !!
         '''
+        print(link)
         self.wd.get(link)
         data = {}
         self.wait_for_elements(['itemTitle', 'SlotDate', 'SlotTime'])
@@ -170,8 +196,8 @@ class PaperSpyder(AGUSpyder):
                       for author in authors}})
         data.update({'session':
                      self.wd.find_element_by_class_name('SessionListItem').text.split(':')[1]})
-        data.update({'section':
-                     self.wd.find_element_by_class_name('infoBox').text.split("\n")[2].split(':')[-1]})
+        # data.update({'section':
+        #              self.wd.find_element_by_class_name('infoBox').text.split("\n")[2].split(':')[-1]})
         return data
 
 
